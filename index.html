@@ -92,13 +92,19 @@
       display: flex;
       align-items: center;
       padding-top: 60px;
+      padding-bottom: 64px;
     }
     .hero-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+      width: 100%;
+    }
+    .hero-top {
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 64px;
       align-items: center;
-      width: 100%;
     }
     .hero-badge {
       display: inline-flex;
@@ -122,12 +128,12 @@
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
     .hero h1 {
-      font-size: clamp(40px, 6vw, 64px);
-      font-weight: 900;
-      letter-spacing: -2.5px;
-      line-height: 1.05;
-      margin-bottom: 20px;
-      color: var(--fg);
+      font-size: clamp(22px, 2.8vw, 32px);
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      line-height: 1.3;
+      margin-bottom: 16px;
+      color: var(--fg2);
     }
     .hero-tagline {
       font-size: 18px;
@@ -210,6 +216,88 @@
       border-radius: 6px;
     }
 
+    /* HERO PROJECTS GALLERY */
+    .hero-gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .hero-proj {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 0;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .hero-proj .proj-thumb {
+      width: 100%;
+      height: 118px;
+      background-size: cover;
+      background-position: top center;
+      flex-shrink: 0;
+    }
+    .hero-proj .proj-body {
+      padding: 13px 15px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .hero-proj:hover {
+      border-color: #a1a1aa;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+    }
+    .hero-proj.featured {
+      border-color: #a3e635;
+      background: linear-gradient(135deg, #f7ffe0, var(--bg));
+    }
+    .hero-proj-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .hero-proj-emoji { font-size: 24px; line-height: 1; }
+    .hero-proj-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: #ecfccb;
+      color: #3f6212;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero-proj-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--fg);
+    }
+    .hero-proj-desc {
+      font-size: 12px;
+      color: var(--fg2);
+      line-height: 1.5;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .hero-proj-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .hero-proj-tag {
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--bg2);
+      color: var(--fg3);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
     /* ABOUT */
     .about-text {
       font-size: 20px;
@@ -233,6 +321,14 @@
     .exp-item:first-child { padding-top: 0; }
     .exp-item:last-child { border-bottom: none; }
     .exp-meta { }
+    .exp-logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: block;
+    }
     .exp-period {
       font-size: 12px;
       color: var(--fg3);
@@ -302,15 +398,28 @@
       background: var(--bg);
       border: 1.5px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 0;
       text-decoration: none;
       color: inherit;
       transition: all 0.2s;
       display: flex;
       flex-direction: column;
-      gap: 12px;
       position: relative;
       overflow: hidden;
+    }
+    .project-card .proj-thumb {
+      width: 100%;
+      height: 160px;
+      background-size: cover;
+      background-position: top center;
+      flex-shrink: 0;
+    }
+    .project-card .proj-body {
+      padding: 20px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
     }
     .project-card:hover {
       border-color: #a1a1aa;
@@ -473,8 +582,9 @@
       .nav-links { display: none; }
       .container { padding: 0 20px; }
       section { padding: 64px 0; }
-      .hero-inner { grid-template-columns: 1fr; }
+      .hero-top { grid-template-columns: 1fr; }
       .hero-photo { width: 100px; height: 100px; border-radius: 16px; }
+      .hero-gallery { grid-template-columns: repeat(2, 1fr); }
       .exp-item { grid-template-columns: 1fr; gap: 8px; }
       .edu-item { grid-template-columns: 1fr; gap: 8px; }
       .contact-section { padding: 40px 24px; border-radius: 16px; }
@@ -498,7 +608,6 @@
 <nav>
   <a class="nav-logo" href="#">Haoqi Shen</a>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact" class="nav-cta">Say hi →</a></li>
@@ -509,46 +618,94 @@
 <section class="hero">
   <div class="container">
     <div class="hero-inner">
-      <div>
-        <div class="hero-badge">Available · SF Bay Area</div>
-        <h1>Builder.<br>Product.<br>Engineer.</h1>
-        <p class="hero-tagline">
-          I build things at the intersection of <strong>AI and product</strong>.
-          From training RL systems at <strong>Amazon AGI Lab</strong> to shipping
-          products trusted by 1B+ users — I close the gap between vision and execution.
-        </p>
-        <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary">See my work →</a>
-          <a href="mailto:haoqi.shen@hotmail.com" class="btn btn-secondary">Get in touch</a>
-          <a href="https://www.linkedin.com/in/shenhaoqi/" target="_blank" class="btn btn-secondary">LinkedIn ↗</a>
-        </div>
-        <div class="hero-companies">
-          <span class="hero-companies-label">Previously at</span>
-          <span class="company-tag">Amazon</span>
-          <span class="company-tag">PingAn</span>
-          <span class="company-tag">Tencent</span>
-          <span class="company-tag">ByteDance</span>
-        </div>
-      </div>
-      <div class="hero-photo">
-        <img src="avatar.jpg" alt="Haoqi Shen" />
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ABOUT -->
-<section id="about" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-  <div class="container">
-    <p class="section-label">About</p>
-    <p class="about-text fade-in">
-      I'm a technical product manager and builder with a bias for <strong>shipping</strong>.
-      I've spent my career at the edge where research meets reality —
-      building AI infrastructure at Amazon, deploying computer vision at scale at PingAn,
-      and running product at Tencent and ByteDance.
-      Right now I'm <em>building Pawsona</em>, an AI-powered cyber pet companion,
-      from zero. I believe the best PMs can also write the code.
-    </p>
+      <!-- Top: intro + photo -->
+      <div class="hero-top">
+        <div>
+          <div class="hero-badge">Available · SF Bay Area</div>
+          <h1>Builder. Product. Engineer.</h1>
+          <p class="hero-tagline">
+            I build things at the intersection of <strong>AI and product</strong>.
+            From training RL systems at <strong>Amazon AGI Lab</strong> to shipping
+            products trusted by 1B+ users — I close the gap between vision and execution.
+          </p>
+          <div class="hero-actions">
+            <a href="#projects" class="btn btn-primary">See my work →</a>
+            <a href="mailto:haoqi.shen@hotmail.com" class="btn btn-secondary">Get in touch</a>
+            <a href="https://www.linkedin.com/in/shenhaoqi/" target="_blank" class="btn btn-secondary">LinkedIn ↗</a>
+          </div>
+          <div class="hero-companies">
+            <span class="hero-companies-label">Previously at</span>
+            <span class="company-tag">Amazon</span>
+            <span class="company-tag">PingAn</span>
+            <span class="company-tag">Tencent</span>
+            <span class="company-tag">ByteDance</span>
+          </div>
+        </div>
+        <div class="hero-photo">
+          <img src="avatar.jpg" alt="Haoqi Shen" />
+        </div>
+      </div>
+
+      <!-- Bottom: project gallery -->
+      <div class="hero-gallery">
+
+        <a href="pawsona-landing.html" class="hero-proj featured">
+          <div class="proj-thumb" style="background-image:url(preview-pawsona.jpg)"></div>
+          <div class="proj-body">
+            <div class="hero-proj-top">
+              <div class="hero-proj-name">Pawsona</div>
+              <span class="hero-proj-badge">Building now</span>
+            </div>
+            <div class="hero-proj-desc">AI-powered cyber pet companion. Smart collar + LLM = your real pet's digital soul, talking to you all day.</div>
+            <div class="hero-proj-tags">
+              <span class="hero-proj-tag">React</span>
+              <span class="hero-proj-tag">LLM</span>
+              <span class="hero-proj-tag">IoT</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="feed2-landing.html" class="hero-proj">
+          <div class="proj-thumb" style="background-image:url(preview-feed2.jpg)"></div>
+          <div class="proj-body">
+            <div class="hero-proj-name">Feed2</div>
+            <div class="hero-proj-desc">AI assistant that structures your feed saves and reminds you — that book, film, essay you never came back to.</div>
+            <div class="hero-proj-tags">
+              <span class="hero-proj-tag">LLM</span>
+              <span class="hero-proj-tag">Mobile</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="neulif-landing.html" class="hero-proj">
+          <div class="proj-thumb" style="background-image:url(preview-neulif.jpg)"></div>
+          <div class="proj-body">
+            <div class="hero-proj-name">NEULIF</div>
+            <div class="hero-proj-desc">97% accuracy AI-text detection via stylometric features + 1D CNN. No transformers. Runs on CPU. Published JAIR.</div>
+            <div class="hero-proj-tags">
+              <span class="hero-proj-tag">ML</span>
+              <span class="hero-proj-tag">NLP</span>
+              <span class="hero-proj-tag">Research</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="claimguard-landing.html" class="hero-proj">
+          <div class="proj-thumb" style="background-image:url(preview-claimguard.jpg)"></div>
+          <div class="proj-body">
+            <div class="hero-proj-name">ClaimGuard</div>
+            <div class="hero-proj-desc">Workday expense reimbursement reduced to one photo upload — AI fills every field and flags policy risks.</div>
+            <div class="hero-proj-tags">
+              <span class="hero-proj-tag">AI Agent</span>
+              <span class="hero-proj-tag">Workday</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -637,59 +794,68 @@
     <p class="section-label">Projects</p>
     <div class="projects-grid">
 
-      <a href="#" class="project-card featured fade-in">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-          <div class="project-emoji">🐾</div>
-          <span class="project-tag-featured">Building now</span>
-        </div>
-        <div class="project-name">Pawsona</div>
-        <div class="project-desc">AI-powered cyber pet companion. Smart collar + LLM = your real pet's digital soul, talking to you all day. Pre-seed stage.</div>
-        <div class="project-footer">
-          <div class="project-tags">
-            <span class="project-tag">React</span>
-            <span class="project-tag">LLM</span>
-            <span class="project-tag">IoT</span>
+      <a href="pawsona-landing.html" class="project-card featured fade-in">
+        <div class="proj-thumb" style="background-image:url(preview-pawsona.jpg)"></div>
+        <div class="proj-body">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div class="project-name">Pawsona</div>
+            <span class="project-tag-featured">Building now</span>
           </div>
-          <span class="project-link">WIP →</span>
-        </div>
-      </a>
-
-      <a href="#" class="project-card fade-in">
-        <div class="project-emoji">🔧</div>
-        <div class="project-name">Project 2</div>
-        <div class="project-desc">Your React side project goes here. Add a description that shows what it does and why you built it.</div>
-        <div class="project-footer">
-          <div class="project-tags">
-            <span class="project-tag">React</span>
-            <span class="project-tag">TypeScript</span>
+          <div class="project-desc">AI-powered cyber pet companion. Smart collar + LLM = your real pet's digital soul, talking to you all day. Pre-seed stage.</div>
+          <div class="project-footer">
+            <div class="project-tags">
+              <span class="project-tag">React</span>
+              <span class="project-tag">LLM</span>
+              <span class="project-tag">IoT</span>
+            </div>
+            <span class="project-link">WIP →</span>
           </div>
-          <span class="project-link">View →</span>
         </div>
       </a>
 
-      <a href="#" class="project-card fade-in">
-        <div class="project-emoji">⚡</div>
-        <div class="project-name">Project 3</div>
-        <div class="project-desc">Add your side projects here. Each card links to a live demo or GitHub repo.</div>
-        <div class="project-footer">
-          <div class="project-tags">
-            <span class="project-tag">Python</span>
-            <span class="project-tag">Flask</span>
+      <a href="feed2-landing.html" class="project-card fade-in">
+        <div class="proj-thumb" style="background-image:url(preview-feed2.jpg)"></div>
+        <div class="proj-body">
+          <div class="project-name">Feed2</div>
+          <div class="project-desc">AI assistant that structures your feed saves and reminds you — that book, film, essay you never came back to.</div>
+          <div class="project-footer">
+            <div class="project-tags">
+              <span class="project-tag">LLM</span>
+              <span class="project-tag">Mobile</span>
+            </div>
+            <span class="project-link">View →</span>
           </div>
-          <span class="project-link">GitHub →</span>
         </div>
       </a>
 
-      <a href="#" class="project-card fade-in">
-        <div class="project-emoji">🧠</div>
-        <div class="project-name">Project 4</div>
-        <div class="project-desc">Another project. Keep descriptions short — one sentence is enough. The link does the rest.</div>
-        <div class="project-footer">
-          <div class="project-tags">
-            <span class="project-tag">ML</span>
-            <span class="project-tag">PyTorch</span>
+      <a href="neulif-landing.html" class="project-card fade-in">
+        <div class="proj-thumb" style="background-image:url(preview-neulif.jpg)"></div>
+        <div class="proj-body">
+          <div class="project-name">NEULIF</div>
+          <div class="project-desc">97% accuracy AI-text detection via stylometric features + 1D CNN. No transformers needed. Runs on standard CPU. Published in JAIR.</div>
+          <div class="project-footer">
+            <div class="project-tags">
+              <span class="project-tag">ML</span>
+              <span class="project-tag">NLP</span>
+              <span class="project-tag">Research</span>
+            </div>
+            <span class="project-link">Paper →</span>
           </div>
-          <span class="project-link">Demo →</span>
+        </div>
+      </a>
+
+      <a href="claimguard-landing.html" class="project-card fade-in">
+        <div class="proj-thumb" style="background-image:url(preview-claimguard.jpg)"></div>
+        <div class="proj-body">
+          <div class="project-name">ClaimGuard</div>
+          <div class="project-desc">Workday expense reimbursement reduced to one photo upload — AI fills every field and flags policy risks before submission.</div>
+          <div class="project-footer">
+            <div class="project-tags">
+              <span class="project-tag">AI Agent</span>
+              <span class="project-tag">Workday</span>
+            </div>
+            <span class="project-link">Demo →</span>
+          </div>
         </div>
       </a>
 
@@ -751,7 +917,7 @@
   <div class="container">
     <div class="contact-section fade-in">
       <h2>Let's build something.</h2>
-      <p>Open to product, engineering, and founding roles. STEM OPT through 2029.</p>
+      <p>Open to product, engineering, and founding roles.</p>
       <div class="contact-links">
         <a href="mailto:haoqi.shen@hotmail.com" class="contact-link contact-link-primary">haoqi.shen@hotmail.com</a>
         <a href="https://www.linkedin.com/in/shenhaoqi/" target="_blank" class="contact-link contact-link-secondary">LinkedIn ↗</a>

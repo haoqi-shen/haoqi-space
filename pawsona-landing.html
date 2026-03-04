@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pawsona — Your Pet's Digital Soul</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #5a8a4a;
+      --green-light: #7ab05e;
+      --green-pale: #f0f7ec;
+      --cream: #fdf9f3;
+      --coral: #f07050;
+      --coral-light: #f5906e;
+      --charcoal: #2a2a2a;
+      --gray: #6b7280;
+      --gray-light: #f3f4f6;
+      --white: #ffffff;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(253,249,243,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      z-index: 100;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo span { font-size: 24px; }
+    .nav-cta {
+      background: var(--coral);
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--coral-light); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      background: linear-gradient(160deg, #f0f7ec 0%, var(--cream) 50%, #fff5f0 100%);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-pale);
+      color: var(--green);
+      border: 1px solid rgba(90,138,74,0.2);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 76px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      color: var(--charcoal);
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--green);
+    }
+    .hero-sub {
+      font-size: clamp(17px, 2.5vw, 21px);
+      color: var(--gray);
+      max-width: 560px;
+      margin: 0 auto 48px;
+    }
+    .hero-form {
+      display: flex;
+      gap: 12px;
+      max-width: 460px;
+      width: 100%;
+      margin: 0 auto 20px;
+    }
+    .hero-form input {
+      flex: 1;
+      padding: 14px 20px;
+      border: 2px solid rgba(0,0,0,0.08);
+      border-radius: 100px;
+      font-size: 15px;
+      background: white;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .hero-form input:focus { border-color: var(--green); }
+    .hero-form button {
+      background: var(--coral);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .hero-form button:hover { background: var(--coral-light); transform: scale(1.02); }
+    .hero-note {
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    /* SOCIAL PROOF BAR */
+    .proof-bar {
+      background: white;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    .proof-item strong { color: var(--charcoal); font-size: 16px; }
+
+    /* STORY SECTION */
+    .story {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 96px 24px;
+      text-align: center;
+    }
+    .story h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+    }
+    .story p {
+      font-size: 18px;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+    .story p strong { color: var(--charcoal); }
+
+    /* HOW IT WORKS */
+    .how {
+      background: var(--green-pale);
+      padding: 96px 24px;
+    }
+    .how-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .section-label {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 64px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 32px;
+    }
+    .step {
+      background: white;
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .step-num {
+      width: 40px; height: 40px;
+      background: var(--green);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .step h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .step p {
+      color: var(--gray);
+      font-size: 15px;
+    }
+
+    /* FEATURES */
+    .features {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 24px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .feature-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .feature-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      color: var(--gray);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* DEMO MESSAGES */
+    .demo {
+      background: var(--charcoal);
+      padding: 96px 24px;
+      color: white;
+    }
+    .demo-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .demo .section-label { color: var(--green-light); }
+    .demo .section-title { color: white; }
+    .demo-messages {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+    .msg {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px 24px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .msg-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .msg-body {}
+    .msg-name {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 6px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .msg-text {
+      font-size: 16px;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.5;
+    }
+    .msg-time {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      margin-top: 6px;
+    }
+
+    /* CTA */
+    .cta {
+      padding: 96px 24px;
+      text-align: center;
+      background: linear-gradient(160deg, #fff5f0 0%, var(--cream) 100%);
+    }
+    .cta h2 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+    .cta p {
+      font-size: 18px;
+      color: var(--gray);
+      margin-bottom: 40px;
+    }
+    .cta-form {
+      display: flex;
+      gap: 12px;
+      max-width: 420px;
+      margin: 0 auto 16px;
+    }
+    .cta-form input {
+      flex: 1;
+      padding: 14px 20px;
+      border: 2px solid rgba(0,0,0,0.08);
+      border-radius: 100px;
+      font-size: 15px;
+      background: white;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .cta-form input:focus { border-color: var(--coral); }
+    .cta-form button {
+      background: var(--coral);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .cta-form button:hover { background: var(--coral-light); }
+
+    /* FOOTER */
+    footer {
+      background: var(--charcoal);
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 13px;
+    }
+    footer strong { color: rgba(255,255,255,0.7); }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .hero-form { flex-direction: column; }
+      .hero-form button { width: 100%; }
+      .cta-form { flex-direction: column; }
+      .cta-form button { width: 100%; }
+      .proof-bar { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><span>🐾</span> Pawsona</div>
+  <button class="nav-cta" onclick="document.getElementById('waitlist').focus()">Join Waitlist</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🌿 By Avocuddle AI</div>
+  <h1>Your pet misses you.<br><em>Now they can tell you.</em></h1>
+  <p class="hero-sub">Pawsona turns your real pet's data into a digital companion that talks to you throughout the day — in their voice, based on what they're actually doing.</p>
+  <div class="hero-form">
+    <input id="waitlist" type="email" placeholder="your@email.com" />
+    <button type="submit">Join Waitlist</button>
+  </div>
+  <p class="hero-note">🔒 No spam. We'll reach out when we launch.</p>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="proof-bar">
+  <div class="proof-item">🐶 <div><strong>Dogs & Cats</strong><br>Both supported</div></div>
+  <div class="proof-item">📍 <div><strong>Real-time</strong><br>Live sensor data</div></div>
+  <div class="proof-item">🤖 <div><strong>AI-powered</strong><br>Unique to your pet</div></div>
+  <div class="proof-item">❤️ <div><strong>Always on</strong><br>Even when you're not</div></div>
+</div>
+
+<!-- STORY -->
+<section class="story">
+  <h2>You love your pet.<br>But you can't always be there.</h2>
+  <p>You leave for work. They stay home. And for the next 8 hours, you wonder — <strong>are they okay? Are they lonely? Did they get into the trash again?</strong></p>
+  <p>Smart collars today give you step counts and GPS pins. <strong>Cold data for a warm relationship.</strong></p>
+  <p>Pawsona is different. We built the emotional layer that was always missing — a digital presence for your pet that keeps the connection alive, all day long.</p>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="how-inner">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Three steps to your cyber pet</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Wear the Collar</h3>
+        <p>Pawsona's smart collar tracks movement, heart rate, sleep, location, and temperature — 24/7. Lightweight, water-resistant, lasts 7 days on a charge.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Train Your Pet's AI</h3>
+        <p>Tell us about your pet — their quirks, their favorite things, how they act when excited. Our AI builds a unique digital personality that gets more accurate every day.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Stay Connected</h3>
+        <p>Open the app anytime to find your pet's cyber self waiting for you. Daily journals, real-time updates, and a chat interface that keeps you close — even from the office.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="section-label">Features</p>
+  <h2 class="section-title">Everything you need to<br>never feel far away</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">💬</span>
+      <h3>Your Pet's Voice</h3>
+      <p>AI translates real sensor data into personality-driven messages. Every notification feels like it came from them.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📔</span>
+      <h3>Daily Journal</h3>
+      <p>Every day, Pawsona writes your pet's story. What they did, how they felt, what made them excited. Their day, told their way.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">❤️</span>
+      <h3>Health Monitoring</h3>
+      <p>Real-time heart rate, activity, sleep quality, and temperature. Know your pet is healthy without being there to check.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📍</span>
+      <h3>Live Location</h3>
+      <p>Always know where they are. GPS tracking with history, safe zone alerts, and escape notifications.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🧠</span>
+      <h3>Gets Smarter Over Time</h3>
+      <p>The more you use Pawsona, the more accurate your pet's digital self becomes. Your pet's AI is uniquely theirs.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">👨‍👩‍👧</span>
+      <h3>Share With Family</h3>
+      <p>The whole family stays connected. Multiple users, one pet. Everyone gets updates, everyone stays close.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO MESSAGES -->
+<section class="demo">
+  <div class="demo-inner">
+    <p class="section-label">Real examples</p>
+    <h2 class="section-title">What your pet might say today</h2>
+    <div class="demo-messages">
+      <div class="msg">
+        <div class="msg-avatar">🐕</div>
+        <div class="msg-body">
+          <div class="msg-name">MOCHI · GOLDEN RETRIEVER</div>
+          <div class="msg-text">Someone rang the doorbell and I absolutely LOST IT. Heart rate: briefly through the roof. I'm fine now but just so you know, I handled the situation. You're welcome. 🐾</div>
+          <div class="msg-time">10:42 AM · Activity spike detected</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-avatar">🐱</div>
+        <div class="msg-body">
+          <div class="msg-name">LUNA · BRITISH SHORTHAIR</div>
+          <div class="msg-text">This is my fourth nap of the day and I regret nothing. Sleep quality: exceptional. Steps taken: nine. Life is perfect and I am at peace. Come home soon though.</div>
+          <div class="msg-time">2:15 PM · Deep sleep detected</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-avatar">🐶</div>
+        <div class="msg-body">
+          <div class="msg-name">BISCUIT · CORGI MIX</div>
+          <div class="msg-text">I heard the word "walk" from somewhere on the street and now I've been standing at the door for 20 minutes. I'm not moving. This is a protest. Also I love you.</div>
+          <div class="msg-time">4:58 PM · Stationary near entrance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Be first to meet<br>your pet's other self.</h2>
+  <p>Pawsona launches later this year. Join the waitlist for early access and founding member pricing.</p>
+  <div class="cta-form">
+    <input type="email" placeholder="your@email.com" />
+    <button>Get Early Access</button>
+  </div>
+  <p style="font-size:13px;color:var(--gray)">🐾 Join 10,000+ pet parents on the waitlist</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Pawsona</strong> by Avocuddle AI &nbsp;·&nbsp; © 2026 Avocuddle AI, Inc. &nbsp;·&nbsp; <a href="#" style="color:inherit">Privacy</a> &nbsp;·&nbsp; <a href="#" style="color:inherit">Terms</a></p>
+</footer>
+
+</body>
+</html>

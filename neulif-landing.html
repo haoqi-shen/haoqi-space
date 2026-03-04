@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEULIF — Lightweight AI-Generated Text Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #ffffff;
+      --bg2:       #f7f8fc;
+      --bg3:       #eef2ff;
+      --fg:        #111827;
+      --fg2:       #4b5563;
+      --fg3:       #9ca3af;
+      --border:    #e5e7eb;
+      --accent:    #4f46e5;
+      --accent2:   #7c3aed;
+      --green:     #059669;
+      --font:      'Inter', system-ui, sans-serif;
+      --mono:      'JetBrains Mono', monospace;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:var(--font); background:var(--bg); color:var(--fg); -webkit-font-smoothing:antialiased; line-height:1.6; }
+
+    /* NAV */
+    nav {
+      position:sticky; top:0; z-index:100;
+      background:rgba(255,255,255,0.92); backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      height:56px; display:flex; align-items:center; justify-content:space-between;
+      padding:0 32px;
+    }
+    .nav-brand { font-size:16px; font-weight:800; color:var(--fg); letter-spacing:-0.4px; }
+    .nav-brand span { color:var(--accent); }
+    .nav-links { display:flex; gap:8px; }
+    .nav-link {
+      font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;
+      text-decoration:none; transition:all 0.15s;
+      color:var(--fg2); border:1px solid var(--border);
+    }
+    .nav-link:hover { background:var(--bg2); color:var(--fg); }
+    .nav-link.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .nav-link.primary:hover { opacity:0.88; }
+    .nav-back { font-size:13px; color:var(--fg3); text-decoration:none; transition:color 0.15s; margin-right:16px; }
+    .nav-back:hover { color:var(--fg); }
+
+    /* HERO */
+    .hero { max-width:860px; margin:0 auto; padding:72px 32px 56px; text-align:center; }
+    .venue-badge {
+      display:inline-flex; align-items:center; gap:7px;
+      background:var(--bg3); border:1px solid rgba(79,70,229,0.2);
+      color:var(--accent); font-size:12px; font-weight:700;
+      padding:5px 14px; border-radius:100px; margin-bottom:28px; letter-spacing:0.03em;
+    }
+    .venue-dot { width:6px; height:6px; background:var(--accent); border-radius:50%; }
+    .hero-title {
+      font-size:clamp(24px,4vw,38px); font-weight:800;
+      letter-spacing:-1px; line-height:1.15; color:var(--fg); margin-bottom:12px;
+    }
+    .hero-subtitle {
+      font-size:clamp(15px,2vw,19px); font-weight:400;
+      color:var(--fg2); margin-bottom:36px; line-height:1.5;
+    }
+
+    /* AUTHORS */
+    .authors { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-bottom:10px; }
+    .author { font-size:14px; color:var(--fg2); font-weight:500; }
+    .author a { color:var(--accent); text-decoration:none; }
+    .author a:hover { text-decoration:underline; }
+    .author-sep { color:var(--fg3); }
+    .affil {
+      font-size:13px; color:var(--fg3); margin-bottom:32px;
+      display:flex; align-items:center; justify-content:center; gap:6px;
+    }
+    .affil-badge {
+      background:var(--bg2); border:1px solid var(--border);
+      padding:3px 10px; border-radius:6px; font-size:12px; font-weight:600; color:var(--fg2);
+    }
+
+    /* BUTTONS */
+    .btn-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:0; }
+    .btn {
+      display:inline-flex; align-items:center; gap:7px;
+      font-size:14px; font-weight:600; padding:10px 20px; border-radius:8px;
+      text-decoration:none; transition:all 0.15s; border:1.5px solid transparent;
+    }
+    .btn-filled { background:var(--fg); color:#fff; }
+    .btn-filled:hover { opacity:0.85; }
+    .btn-outline { background:var(--bg); color:var(--fg); border-color:var(--border); }
+    .btn-outline:hover { background:var(--bg2); }
+    .btn-icon { font-size:15px; line-height:1; }
+
+    /* DIVIDER */
+    .divider { border:none; border-top:1px solid var(--border); margin:0; }
+
+    /* SECTIONS */
+    .section { max-width:860px; margin:0 auto; padding:56px 32px; }
+    .section-label {
+      font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--accent); margin-bottom:16px;
+    }
+    .section-title { font-size:24px; font-weight:800; letter-spacing:-0.5px; margin-bottom:16px; }
+
+    /* ABSTRACT */
+    .abstract-box {
+      background:var(--bg2); border:1px solid var(--border); border-radius:12px;
+      padding:28px 32px; font-size:15px; color:var(--fg2); line-height:1.8;
+    }
+    .abstract-box strong { color:var(--fg); font-weight:600; }
+
+    /* METRICS */
+    .metrics-strip {
+      background:var(--bg); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    }
+    .metrics-inner {
+      max-width:860px; margin:0 auto; padding:0 32px;
+      display:grid; grid-template-columns:repeat(5,1fr);
+    }
+    .metric {
+      padding:28px 16px; text-align:center; border-right:1px solid var(--border);
+    }
+    .metric:last-child { border-right:none; }
+    .metric-val { font-size:28px; font-weight:800; color:var(--accent); letter-spacing:-1px; line-height:1; margin-bottom:6px; }
+    .metric-val.green { color:var(--green); }
+    .metric-label { font-size:11px; font-weight:600; color:var(--fg3); letter-spacing:0.06em; text-transform:uppercase; line-height:1.4; }
+
+    /* PIPELINE */
+    .pipeline {
+      display:flex; align-items:center; gap:0; overflow-x:auto;
+      padding:8px 0; margin:24px 0;
+    }
+    .pipe-box {
+      flex-shrink:0; background:var(--bg2); border:1.5px solid var(--border);
+      border-radius:10px; padding:16px 18px; text-align:center; min-width:130px;
+    }
+    .pipe-box.accent-box { background:var(--bg3); border-color:rgba(79,70,229,0.25); }
+    .pipe-icon { font-size:22px; margin-bottom:6px; line-height:1; }
+    .pipe-title { font-size:12px; font-weight:700; color:var(--fg); }
+    .pipe-sub { font-size:10px; color:var(--fg3); margin-top:2px; }
+    .pipe-arrow {
+      flex-shrink:0; font-size:18px; color:var(--fg3); padding:0 10px;
+    }
+    .pipe-split {
+      flex-shrink:0; display:flex; flex-direction:column; gap:8px; min-width:130px;
+    }
+    .pipe-split-box {
+      background:var(--bg2); border:1.5px solid var(--border); border-radius:10px;
+      padding:10px 14px; text-align:center;
+    }
+    .pipe-split-box.cnn { background:#eef2ff; border-color:rgba(79,70,229,0.2); }
+    .pipe-split-box.rf  { background:#f0fdf4; border-color:rgba(5,150,105,0.2); }
+    .pipe-split-title { font-size:11px; font-weight:700; color:var(--fg); }
+    .pipe-split-sub { font-size:10px; color:var(--fg3); }
+
+    /* FEATURES GRID */
+    .feature-cats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:24px; }
+    .feat-card {
+      background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:16px 18px;
+    }
+    .feat-icon { font-size:20px; margin-bottom:8px; }
+    .feat-title { font-size:13px; font-weight:700; color:var(--fg); margin-bottom:4px; }
+    .feat-desc { font-size:12px; color:var(--fg2); line-height:1.5; }
+    .feat-examples { margin-top:8px; display:flex; flex-wrap:wrap; gap:4px; }
+    .feat-tag { font-size:10px; font-weight:600; background:var(--border); color:var(--fg3); padding:2px 7px; border-radius:4px; font-family:var(--mono); }
+
+    /* ARCHITECTURE */
+    .arch-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:20px; }
+    .arch-table th {
+      background:var(--bg2); padding:10px 14px; text-align:left;
+      font-size:11px; font-weight:700; color:var(--fg3); letter-spacing:0.06em; text-transform:uppercase;
+      border-bottom:2px solid var(--border);
+    }
+    .arch-table td { padding:10px 14px; border-bottom:1px solid var(--border); color:var(--fg2); font-family:var(--mono); font-size:12px; }
+    .arch-table tr:last-child td { border-bottom:none; }
+    .arch-table tr:hover td { background:var(--bg2); }
+    .arch-table td:first-child { font-family:var(--font); font-weight:600; color:var(--fg); }
+    .layer-badge {
+      display:inline-block; font-size:10px; font-weight:700; padding:2px 7px;
+      border-radius:4px; font-family:var(--font);
+    }
+    .lb-conv { background:#dbeafe; color:#1e40af; }
+    .lb-norm { background:#fef3c7; color:#92400e; }
+    .lb-dense { background:#f3e8ff; color:#6d28d9; }
+    .lb-out { background:#d1fae5; color:#065f46; }
+
+    /* RESULTS TABLE */
+    .results-table { width:100%; border-collapse:collapse; font-size:13.5px; margin-top:20px; }
+    .results-table th {
+      background:var(--bg2); padding:11px 16px; text-align:left;
+      font-size:11px; font-weight:700; color:var(--fg3); letter-spacing:0.06em; text-transform:uppercase;
+      border-bottom:2px solid var(--border);
+    }
+    .results-table td { padding:11px 16px; border-bottom:1px solid var(--border); }
+    .results-table tr.ours td { background:var(--bg3); font-weight:600; color:var(--fg); }
+    .results-table tr.ours td:first-child::after { content:' ★'; color:var(--accent); font-size:11px; }
+    .results-table tr:last-child td { border-bottom:none; }
+    .badge-ours { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; background:var(--accent); color:#fff; padding:2px 7px; border-radius:4px; margin-left:6px; }
+    .td-num { font-family:var(--mono); font-size:13px; }
+    .td-best { color:var(--accent); font-weight:700; }
+    .td-muted { color:var(--fg3); }
+    .model-tag { font-size:10px; font-weight:600; padding:2px 6px; border-radius:4px; margin-left:4px; vertical-align:middle; }
+    .mt-light { background:#f0fdf4; color:#065f46; }
+    .mt-heavy { background:#fef3c7; color:#92400e; }
+
+    /* BIBTEX */
+    .bibtex-wrap {
+      background:#1e1e2e; border-radius:12px; overflow:hidden; margin-top:20px;
+    }
+    .bibtex-header {
+      background:#2a2a3e; padding:10px 18px; display:flex; align-items:center; justify-content:space-between;
+    }
+    .bibtex-lang { font-size:12px; font-weight:600; color:#9ca3af; font-family:var(--mono); }
+    .copy-btn {
+      font-size:12px; font-weight:600; color:#9ca3af; background:transparent; border:1px solid #3a3a5c;
+      padding:4px 12px; border-radius:5px; cursor:pointer; font-family:var(--font); transition:all 0.15s;
+    }
+    .copy-btn:hover { background:#3a3a5c; color:#fff; }
+    .bibtex-code {
+      padding:20px 22px; font-family:var(--mono); font-size:12.5px; line-height:1.8;
+      color:#cdd6f4; white-space:pre; overflow-x:auto;
+    }
+    .bib-key { color:#cba6f7; }
+    .bib-field { color:#89b4fa; }
+    .bib-val { color:#a6e3a1; }
+    .bib-punc { color:#9ca3af; }
+
+    /* FOOTER */
+    footer {
+      border-top:1px solid var(--border); padding:28px 32px;
+      max-width:860px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .footer-left { font-size:13px; color:var(--fg3); line-height:1.6; }
+    .footer-left a { color:var(--accent); text-decoration:none; }
+    .footer-back { font-size:13px; color:var(--fg3); text-decoration:none; transition:color 0.15s; }
+    .footer-back:hover { color:var(--fg); }
+
+    @media (max-width:700px) {
+      nav { padding:0 16px; }
+      .hero { padding:48px 20px 40px; }
+      .section { padding:40px 20px; }
+      .metrics-inner { grid-template-columns:repeat(3,1fr); }
+      .metric:nth-child(3) { border-right:none; }
+      .metric:nth-child(4) { border-top:1px solid var(--border); }
+      .feature-cats { grid-template-columns:1fr 1fr; }
+      .pipeline { flex-wrap:nowrap; }
+      footer { flex-direction:column; gap:12px; text-align:center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div style="display:flex;align-items:center;gap:0">
+    <a href="index.html" class="nav-back">← Portfolio</a>
+    <span class="nav-brand">NEU<span>LIF</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="https://arxiv.org" target="_blank" class="nav-link">📄 Paper</a>
+    <a href="https://github.com" target="_blank" class="nav-link">⌥ Code</a>
+    <a href="https://www.kaggle.com" target="_blank" class="nav-link">🗃 Dataset</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="venue-badge">
+    <div class="venue-dot"></div>
+    JAIR 2025 · Submitted
+  </div>
+  <h1 class="hero-title">
+    A Lightweight Approach to Detection<br>of AI-Generated Texts
+  </h1>
+  <p class="hero-subtitle">
+    Using Stylometric Features with 1D Convolutional Neural Network and Random Forest
+  </p>
+
+  <div class="authors">
+    <span class="author">Sergey K. Aityan</span><span class="author-sep">,</span>
+    <span class="author">William Claster</span><span class="author-sep">,</span>
+    <span class="author">Karthik Sai Emani</span><span class="author-sep">,</span>
+    <span class="author">Sohni Rais</span><span class="author-sep">,</span>
+    <span class="author">Thy Tran</span>
+  </div>
+  <div class="affil">
+    <span class="affil-badge">Northeastern University</span>
+  </div>
+
+  <div class="btn-row">
+    <a href="#" class="btn btn-filled"><span class="btn-icon">📄</span> Read Paper</a>
+    <a href="#" class="btn btn-outline"><span class="btn-icon">⌥</span> GitHub</a>
+    <a href="#abstract" class="btn btn-outline"><span class="btn-icon">↓</span> Abstract</a>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- METRICS -->
+<div class="metrics-strip">
+  <div class="metrics-inner">
+    <div class="metric">
+      <div class="metric-val">97%</div>
+      <div class="metric-label">CNN Accuracy</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">99.5%</div>
+      <div class="metric-label">CNN ROC-AUC</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">95%</div>
+      <div class="metric-label">RF Accuracy</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val green">&lt;100ms</div>
+      <div class="metric-label">Inference on CPU</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val green">25MB</div>
+      <div class="metric-label">Model Size (CNN)</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ABSTRACT -->
+<div class="section" id="abstract">
+  <div class="section-label">Abstract</div>
+  <div class="abstract-box">
+    A growing number of AI-generated texts raise serious concerns. Detection of such texts has become an important task for many research groups. Most existing approaches rely on fine-tuning large transformer models or building ensembles, which are <strong>computationally expensive and often provide limited generalization across domains</strong>.
+    <br><br>
+    We develop a <strong>lightweight approach to AI-generated text detection</strong> that does not require extensive computational power. A text is first decomposed into stylometric and readability features, which are used for classification by a compact <strong>1D Convolutional Neural Network (CNN)</strong> and a <strong>Random Forest (RF)</strong>.
+    <br><br>
+    Evaluated on the Kaggle AI-vs-Human corpus, our models achieve <strong>97% accuracy (F1 ≈ 0.95)</strong> for the CNN and <strong>95% accuracy (F1 ≈ 0.94)</strong> for the Random Forest, with ROC-AUC scores of <strong>99.5% and 95%</strong> respectively. The CNN (~25 MB) and RF (~10.6 MB) are orders of magnitude smaller than transformer-based ensembles and run efficiently on <strong>standard CPU devices</strong>. We show that simplicity, when guided by structural insights, can rival complexity in AI-generated content detection.
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- PIPELINE -->
+<div class="section" id="method" style="background:var(--bg2); max-width:100%; padding:56px 0;">
+  <div style="max-width:860px; margin:0 auto; padding:0 32px;">
+    <div class="section-label">Method</div>
+    <div class="section-title">The NEULIF Pipeline</div>
+    <p style="font-size:15px; color:var(--fg2); margin-bottom:28px;">
+      Rather than processing raw token sequences through heavy transformer layers, NEULIF converts each text
+      into a fixed 68-dimensional feature vector — then feeds it into a lightweight CNN or Random Forest.
+      This sidesteps the computational cost of sequence models while preserving rich linguistic signal.
+    </p>
+
+    <div class="pipeline">
+      <div class="pipe-box">
+        <div class="pipe-icon">📝</div>
+        <div class="pipe-title">Raw Text</div>
+        <div class="pipe-sub">Variable length input</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-box accent-box">
+        <div class="pipe-icon">🔬</div>
+        <div class="pipe-title">Feature Extraction</div>
+        <div class="pipe-sub">spaCy + TextDescriptives</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-box">
+        <div class="pipe-icon">📊</div>
+        <div class="pipe-title">68-dim Vector</div>
+        <div class="pipe-sub">Fixed-size linguistic profile</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-split">
+        <div class="pipe-split-box cnn">
+          <div class="pipe-split-title">1D CNN</div>
+          <div class="pipe-split-sub">25MB · 97% acc</div>
+        </div>
+        <div class="pipe-split-box rf">
+          <div class="pipe-split-title">Random Forest</div>
+          <div class="pipe-split-sub">10.6MB · 95% acc</div>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-box accent-box">
+        <div class="pipe-icon">🤖</div>
+        <div class="pipe-title">AI / Human</div>
+        <div class="pipe-sub">Binary label + probability</div>
+      </div>
+    </div>
+
+    <!-- FEATURE CATEGORIES -->
+    <div style="margin-top:40px;">
+      <div style="font-size:13px; font-weight:700; color:var(--fg); margin-bottom:16px; letter-spacing:-0.2px;">68 Stylometric Feature Categories</div>
+      <div class="feature-cats">
+        <div class="feat-card">
+          <div class="feat-icon">📏</div>
+          <div class="feat-title">Descriptive Statistics</div>
+          <div class="feat-desc">Token counts, sentence lengths, unique token ratios and distributional measures.</div>
+          <div class="feat-examples">
+            <span class="feat-tag">token_count</span>
+            <span class="feat-tag">sent_length_mean</span>
+          </div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📖</div>
+          <div class="feat-title">Readability Indices</div>
+          <div class="feat-desc">Metrics assessing comprehension ease: Flesch Reading Ease, Flesch-Kincaid, ARI.</div>
+          <div class="feat-examples">
+            <span class="feat-tag">flesch_reading_ease</span>
+            <span class="feat-tag">flesch_kincaid</span>
+          </div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🌳</div>
+          <div class="feat-title">Syntactic Features</div>
+          <div class="feat-desc">Dependency distances, POS-tag proportions (nouns, verbs, adj), parse tree depth.</div>
+          <div class="feat-examples">
+            <span class="feat-tag">dep_dist_mean</span>
+            <span class="feat-tag">pos_noun_ratio</span>
+          </div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔤</div>
+          <div class="feat-title">Lexical Diversity</div>
+          <div class="feat-desc">Type-token ratio, token entropy, vocabulary variation and stylistic richness.</div>
+          <div class="feat-examples">
+            <span class="feat-tag">type_token_ratio</span>
+            <span class="feat-tag">entropy</span>
+          </div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔗</div>
+          <div class="feat-title">Cohesion Metrics</div>
+          <div class="feat-desc">Connective counts, co-reference chains, indicators of text coherence and discourse.</div>
+          <div class="feat-examples">
+            <span class="feat-tag">n_connectives</span>
+            <span class="feat-tag">coref_chains</span>
+          </div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">⚙️</div>
+          <div class="feat-title">Complexity Heuristics</div>
+          <div class="feat-desc">Clause ratios, sentence variation, punctuation density, spelling error rates.</div>
+          <div class="feat-examples">
+            <span class="feat-tag">punct_density</span>
+            <span class="feat-tag">clause_ratio</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section" id="architecture">
+  <div class="section-label">Architecture</div>
+  <div class="section-title">1D CNN Architecture</div>
+  <p style="font-size:15px; color:var(--fg2); margin-bottom:4px;">
+    Total trainable parameters: <strong>2,205,185</strong> — orders of magnitude fewer than BERT (110M) or RoBERTa (125M).
+    Input is a 68-dim stylometric feature vector, not raw token sequences.
+  </p>
+
+  <table class="arch-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Type</th>
+        <th>Output Shape</th>
+        <th>Parameters</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Input</td>
+        <td><span class="layer-badge" style="background:#f0fdf4;color:#065f46">Input</span></td>
+        <td>(None, 68, 1)</td>
+        <td>0</td>
+        <td>68-dim linguistic feature vector</td>
+      </tr>
+      <tr>
+        <td>Conv1D</td>
+        <td><span class="layer-badge lb-conv">Conv</span></td>
+        <td>(None, 66, 128)</td>
+        <td>512</td>
+        <td>128 filters, kernel=3, ReLU</td>
+      </tr>
+      <tr>
+        <td>BatchNorm</td>
+        <td><span class="layer-badge lb-norm">Norm</span></td>
+        <td>(None, 66, 128)</td>
+        <td>512</td>
+        <td>Stabilizes training convergence</td>
+      </tr>
+      <tr>
+        <td>Flatten</td>
+        <td><span class="layer-badge" style="background:#f1f5f9;color:#475569">Reshape</span></td>
+        <td>(None, 8448)</td>
+        <td>0</td>
+        <td>Converts to 1D for dense layers</td>
+      </tr>
+      <tr>
+        <td>Dense 1</td>
+        <td><span class="layer-badge lb-dense">Dense</span></td>
+        <td>(None, 256)</td>
+        <td>2,162,944</td>
+        <td>ReLU · Dropout 0.4</td>
+      </tr>
+      <tr>
+        <td>Dense 2</td>
+        <td><span class="layer-badge lb-dense">Dense</span></td>
+        <td>(None, 128)</td>
+        <td>32,896</td>
+        <td>ReLU · Dropout 0.3</td>
+      </tr>
+      <tr>
+        <td>Dense 3</td>
+        <td><span class="layer-badge lb-dense">Dense</span></td>
+        <td>(None, 64)</td>
+        <td>8,256</td>
+        <td>ReLU · Dropout 0.2</td>
+      </tr>
+      <tr>
+        <td>Output</td>
+        <td><span class="layer-badge lb-out">Sigmoid</span></td>
+        <td>(None, 1)</td>
+        <td>65</td>
+        <td>P(AI-generated) ∈ [0, 1]</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="divider" />
+
+<!-- RESULTS -->
+<div class="section" style="background:var(--bg2); max-width:100%; padding:56px 0;">
+  <div style="max-width:860px; margin:0 auto; padding:0 32px;">
+    <div class="section-label">Results</div>
+    <div class="section-title">Comparison with Prior Work</div>
+    <p style="font-size:15px; color:var(--fg2); margin-bottom:4px;">
+      NEULIF matches or exceeds heavyweight transformer ensembles — at a fraction of the model size and compute cost.
+      Evaluated on the Kaggle AI-vs-Human corpus (1,997 held-out test samples).
+    </p>
+
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Accuracy</th>
+          <th>F1</th>
+          <th>ROC-AUC</th>
+          <th>Model Size</th>
+          <th>Hardware</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="ours">
+          <td>NEULIF CNN <span class="badge-ours">Ours</span></td>
+          <td class="td-num td-best">97%</td>
+          <td class="td-num td-best">0.95</td>
+          <td class="td-num td-best">99.5%</td>
+          <td class="td-num">~25 MB <span class="model-tag mt-light">Lightweight</span></td>
+          <td>CPU</td>
+        </tr>
+        <tr class="ours">
+          <td>NEULIF RF <span class="badge-ours">Ours</span></td>
+          <td class="td-num td-best">95%</td>
+          <td class="td-num">0.94</td>
+          <td class="td-num">95.0%</td>
+          <td class="td-num">~10.6 MB <span class="model-tag mt-light">Lightweight</span></td>
+          <td>CPU</td>
+        </tr>
+        <tr>
+          <td>BERT-base <span class="model-tag mt-heavy">Transformer</span></td>
+          <td class="td-num">~95%</td>
+          <td class="td-num">~0.93</td>
+          <td class="td-muted">—</td>
+          <td class="td-num">~440 MB</td>
+          <td>GPU</td>
+        </tr>
+        <tr>
+          <td>RoBERTa <span class="model-tag mt-heavy">Transformer</span></td>
+          <td class="td-num">~93%</td>
+          <td class="td-num">~0.92</td>
+          <td class="td-muted">—</td>
+          <td class="td-num">~480 MB</td>
+          <td>GPU</td>
+        </tr>
+        <tr>
+          <td>Ghostbuster <span class="model-tag mt-heavy">Ensemble</span></td>
+          <td class="td-num">~91%</td>
+          <td class="td-num">~0.90</td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">Large</td>
+          <td>GPU</td>
+        </tr>
+        <tr>
+          <td>Stylometry RF (Opara 2024)</td>
+          <td class="td-num">~98%</td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td class="td-num">Small</td>
+          <td>CPU</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:var(--fg3);margin-top:12px;">
+      Transformer baselines sourced from Antoun et al. 2023, Guo et al. 2024, Kuznetsov et al. 2024. Direct cross-dataset comparison requires caution.
+    </p>
+  </div>
+</div>
+
+<!-- CITATION -->
+<div class="section" id="citation">
+  <div class="section-label">Citation</div>
+  <div class="section-title">BibTeX</div>
+  <p style="font-size:15px; color:var(--fg2); margin-bottom:0;">If you use NEULIF in your research, please cite:</p>
+
+  <div class="bibtex-wrap">
+    <div class="bibtex-header">
+      <span class="bibtex-lang">bibtex</span>
+      <button class="copy-btn" onclick="copyBib(this)">Copy</button>
+    </div>
+    <div class="bibtex-code" id="bib-code"><span class="bib-punc">@article{</span><span class="bib-key">aityan2025neulif</span><span class="bib-punc">,</span>
+  <span class="bib-field">title</span>     <span class="bib-punc">= {</span><span class="bib-val">A Lightweight Approach to Detection of AI-Generated Texts
+             Using Stylometric Features with 1D Convolutional Neural
+             Network and Random Forest</span><span class="bib-punc">},</span>
+  <span class="bib-field">author</span>    <span class="bib-punc">= {</span><span class="bib-val">Aityan, Sergey K. and Claster, William and Emani, Karthik Sai
+             and Rais, Sohni and Tran, Thy</span><span class="bib-punc">},</span>
+  <span class="bib-field">journal</span>   <span class="bib-punc">= {</span><span class="bib-val">Journal of Artificial Intelligence Research</span><span class="bib-punc">},</span>
+  <span class="bib-field">volume</span>    <span class="bib-punc">= {</span><span class="bib-val">0</span><span class="bib-punc">},</span>
+  <span class="bib-field">article</span>   <span class="bib-punc">= {</span><span class="bib-val">6</span><span class="bib-punc">},</span>
+  <span class="bib-field">year</span>      <span class="bib-punc">= {</span><span class="bib-val">2025</span><span class="bib-punc">},</span>
+  <span class="bib-field">doi</span>       <span class="bib-punc">= {</span><span class="bib-val">10.1613/jair.1.xxxxx</span><span class="bib-punc">},</span>
+  <span class="bib-field">note</span>      <span class="bib-punc">= {</span><span class="bib-val">Submitted</span><span class="bib-punc">}</span>
+<span class="bib-punc">}</span></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">
+    Northeastern University · 2025 ·
+    Published in <a href="#">Journal of Artificial Intelligence Research</a>
+  </div>
+  <a href="index.html" class="footer-back">← Back to portfolio</a>
+</footer>
+
+<script>
+  function copyBib(btn) {
+    const raw = `@article{aityan2025neulif,
+  title     = {A Lightweight Approach to Detection of AI-Generated Texts Using Stylometric Features with 1D Convolutional Neural Network and Random Forest},
+  author    = {Aityan, Sergey K. and Claster, William and Emani, Karthik Sai and Rais, Sohni and Tran, Thy},
+  journal   = {Journal of Artificial Intelligence Research},
+  volume    = {0},
+  article   = {6},
+  year      = {2025},
+  doi       = {10.1613/jair.1.xxxxx},
+  note      = {Submitted}
+}`;
+    navigator.clipboard.writeText(raw).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+
+</body>
+</html>

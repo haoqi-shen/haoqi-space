@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feed2 — Remember what matters</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07070e;
+      --surface: #0f0f1a;
+      --border: rgba(255,255,255,0.08);
+      --fg: #f0f0ff;
+      --fg2: rgba(240,240,255,0.55);
+      --fg3: rgba(240,240,255,0.3);
+      --amber: #f59e0b;
+      --amber2: #fcd34d;
+      --orange: #fb923c;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:var(--font); background:var(--bg); color:var(--fg); -webkit-font-smoothing:antialiased; }
+
+    /* NAV */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      height:60px; display:flex; align-items:center; justify-content:space-between;
+      padding:0 40px;
+      background:rgba(7,7,14,0.85); backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-logo { font-size:18px; font-weight:800; letter-spacing:-0.5px; text-decoration:none; color:var(--fg); }
+    .nav-logo span { color:var(--amber); }
+    .nav-right { display:flex; gap:16px; align-items:center; }
+    .nav-back { font-size:13px; color:var(--fg2); text-decoration:none; transition:color 0.15s; }
+    .nav-back:hover { color:var(--fg); }
+    .btn-waitlist {
+      background:var(--amber); color:#000; font-size:13px; font-weight:700;
+      padding:8px 18px; border-radius:8px; text-decoration:none; transition:opacity 0.15s;
+    }
+    .btn-waitlist:hover { opacity:0.85; }
+
+    /* HERO */
+    .hero {
+      min-height:100vh; display:flex; align-items:center;
+      padding:100px 40px 80px; max-width:1160px; margin:0 auto; gap:72px;
+    }
+    .hero-left { flex:1; min-width:0; }
+    .hero-chip {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.25);
+      color:var(--amber2); font-size:12px; font-weight:600;
+      padding:5px 14px; border-radius:100px; margin-bottom:32px; letter-spacing:0.04em;
+    }
+    .hero-chip::before {
+      content:''; width:6px; height:6px; background:var(--amber);
+      border-radius:50%; animation:blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero h1 {
+      font-size:clamp(36px,5vw,62px); font-weight:900;
+      letter-spacing:-2px; line-height:1.06; margin-bottom:24px;
+    }
+    .hero h1 em {
+      font-style:normal;
+      background:linear-gradient(135deg,var(--amber),var(--orange));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .hero-sub {
+      font-size:17px; color:var(--fg2); line-height:1.75; max-width:460px; margin-bottom:40px;
+    }
+    .hero-sub strong { color:var(--fg); font-weight:600; }
+    .hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn-primary {
+      background:var(--amber); color:#000; font-size:14px; font-weight:700;
+      padding:12px 24px; border-radius:10px; text-decoration:none;
+      transition:opacity 0.15s; display:inline-flex; align-items:center; gap:6px;
+    }
+    .btn-primary:hover { opacity:0.85; }
+    .btn-ghost {
+      background:transparent; color:var(--fg2); font-size:14px; font-weight:500;
+      padding:12px 24px; border-radius:10px; text-decoration:none;
+      border:1px solid var(--border); transition:all 0.15s;
+    }
+    .btn-ghost:hover { color:var(--fg); border-color:rgba(255,255,255,0.2); }
+
+    /* HERO RIGHT */
+    .hero-right { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:20px; }
+
+    /* PHONE */
+    .phone-wrap { position:relative; }
+    .phone-glow {
+      position:absolute; inset:-50px;
+      background:radial-gradient(ellipse at center,rgba(245,158,11,0.18) 0%,transparent 70%);
+      pointer-events:none; animation:glowPulse 4s ease-in-out infinite;
+    }
+    @keyframes glowPulse { 0%,100%{opacity:0.8} 50%{opacity:1} }
+    .phone {
+      width:272px; height:564px;
+      background:#181818; border-radius:46px; padding:4px;
+      box-shadow:0 0 0 1px rgba(255,255,255,0.13), 0 40px 80px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.05);
+      position:relative; z-index:1;
+    }
+    .phone-screen {
+      width:100%; height:100%; background:#fafafa;
+      border-radius:42px; overflow:hidden; position:relative;
+    }
+    .phone-island {
+      position:absolute; top:12px; left:50%; transform:translateX(-50%);
+      width:96px; height:28px; background:#181818; border-radius:20px; z-index:50;
+    }
+
+    /* APP SCREENS */
+    .app-screen {
+      position:absolute; inset:0; background:#fafafa;
+      opacity:0; transition:opacity 0.45s ease; pointer-events:none;
+      display:flex; flex-direction:column;
+    }
+    .app-screen.active { opacity:1; pointer-events:auto; }
+
+    .app-status {
+      height:50px; padding:14px 20px 0;
+      display:flex; justify-content:space-between; align-items:center;
+      font-size:11px; font-weight:700; color:#111; flex-shrink:0;
+    }
+    .app-nav {
+      padding:6px 16px 10px; display:flex; align-items:center;
+      justify-content:space-between; flex-shrink:0;
+    }
+    .app-nav-title { font-size:17px; font-weight:800; color:#0f0f1a; letter-spacing:-0.4px; }
+    .app-nav-title span { color:#f59e0b; }
+    .app-nav-icon {
+      width:28px; height:28px; background:#f0f0f5; border-radius:50%;
+      display:flex; align-items:center; justify-content:center; font-size:13px;
+    }
+
+    /* SCREEN 1 — FEED */
+    .feed-list {
+      flex:1; overflow:hidden; padding:0 12px; display:flex; flex-direction:column; gap:9px;
+    }
+    .feed-card {
+      background:#fff; border-radius:14px; padding:11px; border:1px solid #ececf0;
+    }
+    .feed-card.dimmed { opacity:0.38; }
+    .feed-card-header { display:flex; align-items:center; gap:7px; margin-bottom:7px; }
+    .feed-avatar {
+      width:26px; height:26px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;
+    }
+    .feed-username { font-size:11px; font-weight:700; color:#0f0f1a; }
+    .feed-time { font-size:10px; color:#9ca3af; margin-left:auto; }
+    .feed-text { font-size:11.5px; color:#374151; line-height:1.55; margin-bottom:9px; }
+    .feed-text strong { color:#0f0f1a; }
+    .feed-actions { display:flex; gap:6px; align-items:center; }
+    .feed-action { font-size:10px; color:#9ca3af; display:flex; align-items:center; gap:3px; }
+    .feed-save-btn {
+      margin-left:auto; background:#fef3c7; color:#92400e;
+      font-size:10px; font-weight:700; padding:4px 10px;
+      border-radius:6px; border:1px solid #fde68a;
+      cursor:pointer; display:flex; align-items:center; gap:3px;
+      transition:all 0.2s;
+    }
+    .feed-save-btn.tapping {
+      background:#f59e0b; color:#fff; border-color:#f59e0b; transform:scale(0.94);
+    }
+
+    /* SCREEN 2 — PROCESSING */
+    .processing-body {
+      flex:1; display:flex; flex-direction:column; align-items:center;
+      justify-content:center; padding:16px 20px; gap:18px;
+    }
+    .proc-orb {
+      width:60px; height:60px; border-radius:50%;
+      background:linear-gradient(135deg,#f59e0b,#fb923c);
+      display:flex; align-items:center; justify-content:center;
+      font-size:26px; animation:orbPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes orbPulse {
+      0%,100%{transform:scale(1); box-shadow:0 0 0 0 rgba(245,158,11,0.35);}
+      50%{transform:scale(1.06); box-shadow:0 0 0 12px rgba(245,158,11,0);}
+    }
+    .proc-title { font-size:14px; font-weight:800; color:#0f0f1a; text-align:center; }
+    .proc-sub { font-size:11px; color:#9ca3af; margin-top:3px; text-align:center; }
+    .proc-steps { width:100%; display:flex; flex-direction:column; gap:7px; }
+    .proc-step {
+      display:flex; align-items:center; gap:9px;
+      padding:8px 11px; background:#f5f5fa; border-radius:10px;
+      font-size:11px; color:#9ca3af; transition:all 0.3s;
+    }
+    .proc-step.done { color:#059669; background:#f0fdf4; }
+    .proc-dot {
+      width:16px; height:16px; border-radius:50%; background:#e5e7eb;
+      display:flex; align-items:center; justify-content:center;
+      font-size:9px; flex-shrink:0; transition:all 0.3s;
+    }
+    .proc-step.done .proc-dot { background:#d1fae5; color:#059669; }
+
+    /* SCREEN 3 — LIBRARY */
+    .lib-body { flex:1; padding:0 12px 12px; display:flex; flex-direction:column; gap:9px; overflow:hidden; }
+    .lib-card {
+      background:#fff; border-radius:16px; padding:14px; border:1px solid #ececf0;
+    }
+    .lib-type {
+      display:inline-flex; align-items:center; gap:5px;
+      background:#fef3c7; color:#92400e; font-size:10px; font-weight:700;
+      padding:3px 9px; border-radius:100px; margin-bottom:9px;
+    }
+    .lib-title { font-size:15px; font-weight:800; color:#0f0f1a; margin-bottom:2px; letter-spacing:-0.3px; }
+    .lib-author { font-size:11px; color:#9ca3af; margin-bottom:9px; }
+    .lib-quote {
+      font-size:11px; color:#374151; line-height:1.6;
+      background:#f9f9fb; border-left:2px solid #f59e0b;
+      padding:7px 10px; border-radius:0 8px 8px 0; margin-bottom:9px; font-style:italic;
+    }
+    .lib-tags { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:11px; }
+    .lib-tag { font-size:9px; font-weight:600; background:#f0f0f5; color:#6b7280; padding:3px 8px; border-radius:4px; }
+    .lib-action {
+      background:#0f0f1a; color:#fff; font-size:11px; font-weight:700;
+      padding:8px 13px; border-radius:8px; display:inline-flex; align-items:center; gap:5px;
+    }
+    .lib-mini {
+      background:#fff; border-radius:12px; padding:9px 11px;
+      border:1px solid #ececf0; display:flex; align-items:center; gap:9px;
+    }
+    .lib-mini-emoji { font-size:17px; flex-shrink:0; }
+    .lib-mini-info { flex:1; min-width:0; }
+    .lib-mini-title { font-size:11px; font-weight:700; color:#0f0f1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .lib-mini-meta { font-size:10px; color:#9ca3af; margin-top:1px; }
+    .lib-mini-age { font-size:10px; font-weight:600; color:#d1d5db; flex-shrink:0; }
+
+    /* SCREEN 4 — REMINDER */
+    .remind-body { flex:1; padding:0 12px; display:flex; flex-direction:column; gap:9px; overflow:hidden; }
+    .remind-banner {
+      background:linear-gradient(135deg,#fffbeb,#fef3c7);
+      border:1px solid #fde68a; border-radius:14px; padding:13px;
+    }
+    .remind-top { display:flex; align-items:center; gap:7px; margin-bottom:8px; }
+    .remind-icon { font-size:17px; }
+    .remind-from { font-size:10px; font-weight:700; color:#92400e; }
+    .remind-ago { font-size:10px; color:#b45309; margin-left:auto; }
+    .remind-title { font-size:13px; font-weight:800; color:#0f0f1a; margin-bottom:4px; }
+    .remind-desc { font-size:11px; color:#6b7280; line-height:1.5; margin-bottom:10px; }
+    .remind-btns { display:flex; gap:6px; }
+    .remind-open { background:#f59e0b; color:#fff; font-size:10px; font-weight:700; padding:6px 13px; border-radius:6px; }
+    .remind-snooze { background:#fff; color:#6b7280; font-size:10px; font-weight:600; padding:6px 11px; border-radius:6px; border:1px solid #e5e7eb; }
+    .waiting-label { font-size:10px; font-weight:700; color:#9ca3af; letter-spacing:0.08em; text-transform:uppercase; }
+    .waiting-list { display:flex; flex-direction:column; gap:6px; }
+    .waiting-item {
+      background:#fff; border:1px solid #ececf0; border-radius:10px;
+      padding:8px 11px; display:flex; align-items:center; gap:8px;
+    }
+    .waiting-emoji { font-size:14px; }
+    .waiting-name { font-size:11px; font-weight:600; color:#374151; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .waiting-age { font-size:10px; color:#d1d5db; font-weight:500; flex-shrink:0; }
+
+    /* TAB BAR */
+    .app-tabbar {
+      height:58px; border-top:1px solid #f0f0f5;
+      display:flex; flex-shrink:0; background:#fff;
+    }
+    .app-tab {
+      flex:1; display:flex; flex-direction:column; align-items:center;
+      justify-content:center; gap:2px; font-size:9.5px; color:#9ca3af; font-weight:500;
+    }
+    .app-tab.active { color:#f59e0b; }
+    .app-tab-icon { font-size:17px; line-height:1; }
+
+    /* DEMO DOTS */
+    .demo-dots { display:flex; gap:6px; justify-content:center; }
+    .demo-dot {
+      width:6px; height:6px; border-radius:50%;
+      background:rgba(255,255,255,0.18); cursor:pointer; transition:all 0.3s;
+    }
+    .demo-dot.active { width:20px; border-radius:3px; background:var(--amber); }
+    .demo-label { font-size:11px; color:var(--fg3); text-align:center; letter-spacing:0.05em; text-transform:uppercase; }
+
+    /* PAGE SECTIONS */
+    .section { max-width:1100px; margin:0 auto; padding:96px 40px; }
+    .section-label { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); margin-bottom:24px; }
+    .section-title { font-size:clamp(28px,4vw,48px); font-weight:900; letter-spacing:-1.5px; line-height:1.1; margin-bottom:20px; }
+    .section-sub { font-size:17px; color:var(--fg2); line-height:1.7; max-width:560px; }
+
+    /* GRAVEYARD */
+    .graveyard { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:52px; }
+    .grave-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:24px; display:flex; flex-direction:column; gap:12px;
+    }
+    .grave-emoji { font-size:30px; }
+    .grave-title { font-size:15px; font-weight:700; }
+    .grave-desc { font-size:13px; color:var(--fg2); line-height:1.55; flex:1; }
+    .grave-age { font-size:11px; font-weight:600; color:var(--fg3); margin-top:auto; }
+
+    /* HOW IT WORKS */
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:52px; }
+    .step { display:flex; flex-direction:column; gap:14px; }
+    .step-num {
+      width:34px; height:34px; border-radius:9px;
+      background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.25);
+      display:flex; align-items:center; justify-content:center;
+      font-size:14px; font-weight:800; color:var(--amber);
+    }
+    .step-title { font-size:16px; font-weight:700; }
+    .step-desc { font-size:14px; color:var(--fg2); line-height:1.65; }
+
+    /* CTA */
+    .cta-section { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .cta-inner { max-width:580px; margin:0 auto; padding:96px 40px; text-align:center; }
+    .cta-title { font-size:clamp(28px,4vw,44px); font-weight:900; letter-spacing:-1.5px; margin-bottom:16px; }
+    .cta-sub { font-size:16px; color:var(--fg2); margin-bottom:40px; line-height:1.65; }
+    .waitlist-form { display:flex; gap:10px; max-width:400px; margin:0 auto; }
+    .waitlist-input {
+      flex:1; background:rgba(255,255,255,0.06); border:1px solid var(--border);
+      border-radius:10px; padding:12px 16px; font-size:14px; color:var(--fg);
+      font-family:var(--font); outline:none; transition:border-color 0.15s;
+    }
+    .waitlist-input::placeholder { color:var(--fg3); }
+    .waitlist-input:focus { border-color:rgba(245,158,11,0.4); }
+    .waitlist-btn {
+      background:var(--amber); color:#000; font-size:14px; font-weight:700;
+      padding:12px 20px; border-radius:10px; border:none; cursor:pointer;
+      font-family:var(--font); transition:opacity 0.15s; white-space:nowrap;
+    }
+    .waitlist-btn:hover { opacity:0.85; }
+    .waitlist-confirm { margin-top:16px; font-size:13px; color:var(--amber); display:none; }
+
+    /* FOOTER */
+    footer {
+      padding:28px 40px; border-top:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      max-width:1100px; margin:0 auto;
+    }
+    .footer-logo { font-size:15px; font-weight:800; color:var(--fg); text-decoration:none; }
+    .footer-logo span { color:var(--amber); }
+    .footer-copy { font-size:13px; color:var(--fg3); }
+    .footer-back { font-size:13px; color:var(--fg3); text-decoration:none; transition:color 0.15s; }
+    .footer-back:hover { color:var(--fg); }
+
+    @media (max-width:900px) {
+      .hero { flex-direction:column; padding:100px 24px 60px; align-items:flex-start; gap:48px; }
+      .hero-right { align-self:center; }
+      .graveyard { grid-template-columns:1fr; }
+      .steps { grid-template-columns:1fr; }
+      .section { padding:72px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Feed<span>2</span></a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">← Portfolio</a>
+    <a href="#waitlist" class="btn-waitlist">Join waitlist</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-chip">In development · 2025</div>
+    <h1>Stop saving.<br><em>Start remembering.</em></h1>
+    <p class="hero-sub">
+      That book you never read. The essay that changed how you think.
+      The film still sitting in your watchlist.
+      <strong>Feed2 captures what matters from your feeds, structures it,
+      and reminds you — before it's forgotten forever.</strong>
+    </p>
+    <div class="hero-actions">
+      <a href="#waitlist" class="btn-primary">Get early access →</a>
+      <a href="#how" class="btn-ghost">See how it works</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="phone-wrap">
+      <div class="phone-glow"></div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-island"></div>
+
+          <!-- SCREEN 0: FEED -->
+          <div class="app-screen active" id="screen-0">
+            <div class="app-status"><span>9:41</span><span>●●● 100%</span></div>
+            <div class="app-nav">
+              <span class="app-nav-title">Feed<span>2</span></span>
+              <div class="app-nav-icon">⚙</div>
+            </div>
+            <div class="feed-list">
+              <div class="feed-card dimmed">
+                <div class="feed-card-header">
+                  <div class="feed-avatar" style="background:#e0f2fe">🧑</div>
+                  <span class="feed-username">@techdaily</span>
+                  <span class="feed-time">4m</span>
+                </div>
+                <div class="feed-text">Thread on productivity systems that actually work in 2025...</div>
+                <div class="feed-actions">
+                  <span class="feed-action">❤️ 82</span>
+                  <span class="feed-action">💬 14</span>
+                </div>
+              </div>
+              <div class="feed-card">
+                <div class="feed-card-header">
+                  <div class="feed-avatar" style="background:#fef3c7">📖</div>
+                  <span class="feed-username">@bookthread</span>
+                  <span class="feed-time">11m</span>
+                </div>
+                <div class="feed-text">
+                  Just finished <strong>"Deep Work"</strong> by Cal Newport.
+                  The ability to focus without distraction is becoming rare — and
+                  therefore more valuable. If you do knowledge work, this changes how you
+                  think about your time.
+                </div>
+                <div class="feed-actions">
+                  <span class="feed-action">❤️ 341</span>
+                  <span class="feed-action">💬 56</span>
+                  <button class="feed-save-btn" id="save-btn">✦ Save</button>
+                </div>
+              </div>
+              <div class="feed-card dimmed">
+                <div class="feed-card-header">
+                  <div class="feed-avatar" style="background:#f3e8ff">🎬</div>
+                  <span class="feed-username">@filmcritic</span>
+                  <span class="feed-time">1h</span>
+                </div>
+                <div class="feed-text">10 films that redefine narrative structure...</div>
+              </div>
+            </div>
+            <div class="app-tabbar">
+              <div class="app-tab active"><div class="app-tab-icon">⚡</div>Feed</div>
+              <div class="app-tab"><div class="app-tab-icon">📚</div>Library</div>
+              <div class="app-tab"><div class="app-tab-icon">🔔</div>Remind</div>
+              <div class="app-tab"><div class="app-tab-icon">👤</div>Me</div>
+            </div>
+          </div>
+
+          <!-- SCREEN 1: PROCESSING -->
+          <div class="app-screen" id="screen-1">
+            <div class="app-status"><span>9:41</span><span>●●● 100%</span></div>
+            <div class="app-nav">
+              <span class="app-nav-title">Feed<span>2</span></span>
+              <div class="app-nav-icon">⚙</div>
+            </div>
+            <div class="processing-body">
+              <div class="proc-orb">✦</div>
+              <div>
+                <div class="proc-title">Structuring your save...</div>
+                <div class="proc-sub">AI is reading between the lines</div>
+              </div>
+              <div class="proc-steps">
+                <div class="proc-step" id="ps0"><div class="proc-dot" id="pd0">→</div>Identified: Book recommendation</div>
+                <div class="proc-step" id="ps1"><div class="proc-dot" id="pd1">→</div>Extracted title, author, context</div>
+                <div class="proc-step" id="ps2"><div class="proc-dot" id="pd2">→</div>Pulled key quote</div>
+                <div class="proc-step" id="ps3"><div class="proc-dot" id="pd3">→</div>Tagged: #focus #productivity</div>
+              </div>
+            </div>
+            <div class="app-tabbar">
+              <div class="app-tab"><div class="app-tab-icon">⚡</div>Feed</div>
+              <div class="app-tab active"><div class="app-tab-icon">📚</div>Library</div>
+              <div class="app-tab"><div class="app-tab-icon">🔔</div>Remind</div>
+              <div class="app-tab"><div class="app-tab-icon">👤</div>Me</div>
+            </div>
+          </div>
+
+          <!-- SCREEN 2: LIBRARY -->
+          <div class="app-screen" id="screen-2">
+            <div class="app-status"><span>9:41</span><span>●●● 100%</span></div>
+            <div class="app-nav">
+              <span class="app-nav-title">My Library</span>
+              <div class="app-nav-icon">🔍</div>
+            </div>
+            <div class="lib-body">
+              <div class="lib-card">
+                <div class="lib-type">📚 Book</div>
+                <div class="lib-title">Deep Work</div>
+                <div class="lib-author">Cal Newport · Saved just now</div>
+                <div class="lib-quote">
+                  "The ability to focus without distraction is becoming rare —
+                  and therefore more valuable."
+                </div>
+                <div class="lib-tags">
+                  <span class="lib-tag">#focus</span>
+                  <span class="lib-tag">#productivity</span>
+                  <span class="lib-tag">#knowledge-work</span>
+                </div>
+                <div class="lib-action">⏰ Set reminder</div>
+              </div>
+              <div class="lib-mini">
+                <div class="lib-mini-emoji">🎬</div>
+                <div class="lib-mini-info">
+                  <div class="lib-mini-title">Everything Everywhere All at Once</div>
+                  <div class="lib-mini-meta">Film · Saved 3 weeks ago</div>
+                </div>
+                <div class="lib-mini-age">3w</div>
+              </div>
+              <div class="lib-mini">
+                <div class="lib-mini-emoji">📄</div>
+                <div class="lib-mini-info">
+                  <div class="lib-mini-title">Do Things That Don't Scale</div>
+                  <div class="lib-mini-meta">Essay · Saved 2 months ago</div>
+                </div>
+                <div class="lib-mini-age">2m</div>
+              </div>
+            </div>
+            <div class="app-tabbar">
+              <div class="app-tab"><div class="app-tab-icon">⚡</div>Feed</div>
+              <div class="app-tab active"><div class="app-tab-icon">📚</div>Library</div>
+              <div class="app-tab"><div class="app-tab-icon">🔔</div>Remind</div>
+              <div class="app-tab"><div class="app-tab-icon">👤</div>Me</div>
+            </div>
+          </div>
+
+          <!-- SCREEN 3: REMINDER -->
+          <div class="app-screen" id="screen-3">
+            <div class="app-status"><span>9:41</span><span>●●● 100%</span></div>
+            <div class="app-nav">
+              <span class="app-nav-title">Reminders</span>
+              <div class="app-nav-icon">✓</div>
+            </div>
+            <div class="remind-body">
+              <div class="remind-banner">
+                <div class="remind-top">
+                  <span class="remind-icon">🔔</span>
+                  <span class="remind-from">Feed2 · Reminder</span>
+                  <span class="remind-ago">14 days ago</span>
+                </div>
+                <div class="remind-title">📚 Deep Work</div>
+                <div class="remind-desc">You saved this because you wanted to understand deep focus. Still on your list?</div>
+                <div class="remind-btns">
+                  <div class="remind-open">Open →</div>
+                  <div class="remind-snooze">Snooze 1w</div>
+                </div>
+              </div>
+              <div class="waiting-label">Also waiting for you</div>
+              <div class="waiting-list">
+                <div class="waiting-item">
+                  <span class="waiting-emoji">🎬</span>
+                  <span class="waiting-name">Everything Everywhere All at Once</span>
+                  <span class="waiting-age">3w</span>
+                </div>
+                <div class="waiting-item">
+                  <span class="waiting-emoji">📄</span>
+                  <span class="waiting-name">Do Things That Don't Scale</span>
+                  <span class="waiting-age">2m</span>
+                </div>
+                <div class="waiting-item">
+                  <span class="waiting-emoji">🎵</span>
+                  <span class="waiting-name">Daft Punk — Discovery (full album)</span>
+                  <span class="waiting-age">4m</span>
+                </div>
+              </div>
+            </div>
+            <div class="app-tabbar">
+              <div class="app-tab"><div class="app-tab-icon">⚡</div>Feed</div>
+              <div class="app-tab"><div class="app-tab-icon">📚</div>Library</div>
+              <div class="app-tab active"><div class="app-tab-icon">🔔</div>Remind</div>
+              <div class="app-tab"><div class="app-tab-icon">👤</div>Me</div>
+            </div>
+          </div>
+
+        </div><!-- /phone-screen -->
+      </div><!-- /phone -->
+    </div><!-- /phone-wrap -->
+
+    <div class="demo-dots">
+      <div class="demo-dot active" data-i="0"></div>
+      <div class="demo-dot" data-i="1"></div>
+      <div class="demo-dot" data-i="2"></div>
+      <div class="demo-dot" data-i="3"></div>
+    </div>
+    <div class="demo-label" id="demo-label">Browsing your feed</div>
+  </div><!-- /hero-right -->
+</div><!-- /hero -->
+
+<!-- PROBLEM -->
+<div style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="section">
+    <div class="section-label">The problem</div>
+    <div class="section-title">Your saved list<br>is a graveyard.</div>
+    <p class="section-sub">Every platform gives you a Save button. None of them care if you ever come back. The result: a growing pile of good intentions and forgotten gems.</p>
+    <div class="graveyard">
+      <div class="grave-card">
+        <div class="grave-emoji">📚</div>
+        <div class="grave-title">That book recommendation</div>
+        <div class="grave-desc">Someone's thread convinced you it would change your life. It's still in your likes, unread.</div>
+        <div class="grave-age">⏳ Waiting 6 months</div>
+      </div>
+      <div class="grave-card">
+        <div class="grave-emoji">🎬</div>
+        <div class="grave-title">The film you "must watch"</div>
+        <div class="grave-desc">Your watchlist has 47 films. You've watched zero of them since adding them.</div>
+        <div class="grave-age">⏳ Waiting 3 months</div>
+      </div>
+      <div class="grave-card">
+        <div class="grave-emoji">📄</div>
+        <div class="grave-title">The essay that resonated</div>
+        <div class="grave-desc">You bookmarked it because it said something you'd felt but never found words for.</div>
+        <div class="grave-age">⏳ Waiting 1 year</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div id="how">
+  <div class="section">
+    <div class="section-label">How it works</div>
+    <div class="section-title">Three steps.<br>One less excuse.</div>
+    <p class="section-sub">Feed2 works quietly in the background, turning passive saves into an active second memory.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Capture from any feed</div>
+        <div class="step-desc">Save anything — a tweet, a link, a title mentioned in passing. Feed2 catches it all, regardless of platform.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Structure automatically</div>
+        <div class="step-desc">AI identifies what you saved — book, film, article, idea — and builds a clean, searchable card with context and key quotes.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Get reminded at the right time</div>
+        <div class="step-desc">Feed2 surfaces your saved items when you're likely to act on them. Not immediately. Not never. At the right moment.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section" id="waitlist">
+  <div class="cta-inner">
+    <div class="section-label" style="text-align:center">Early access</div>
+    <div class="cta-title">Be first to remember.</div>
+    <p class="cta-sub">Join the waitlist. We're building Feed2 in public and will onboard our earliest users personally.</p>
+    <form class="waitlist-form" id="wl-form">
+      <input class="waitlist-input" type="email" placeholder="your@email.com" required />
+      <button class="waitlist-btn" type="submit">Join →</button>
+    </form>
+    <div class="waitlist-confirm" id="wl-confirm">✓ You're on the list. We'll be in touch.</div>
+  </div>
+</div>
+
+<footer>
+  <a href="#" class="footer-logo">Feed<span>2</span></a>
+  <span class="footer-copy">A second memory for your feeds.</span>
+  <a href="index.html" class="footer-back">← Back to portfolio</a>
+</footer>
+
+<script>
+  /* ── Phone demo ── */
+  const SCREENS = 4;
+  const INTERVAL = 3800;
+  const LABELS = [
+    'Browsing your feed',
+    'Structuring your save…',
+    'Saved to your library',
+    'Time to remember'
+  ];
+
+  let cur = 0;
+  let ticker = null;
+  let saveTimer = null;
+
+  const screens = Array.from(document.querySelectorAll('.app-screen'));
+  const dots    = Array.from(document.querySelectorAll('.demo-dot'));
+  const labelEl = document.getElementById('demo-label');
+  const saveBtn = document.getElementById('save-btn');
+
+  function activate(n) {
+    screens[cur].classList.remove('active');
+    dots[cur].classList.remove('active');
+    cur = ((n % SCREENS) + SCREENS) % SCREENS;
+    screens[cur].classList.add('active');
+    dots[cur].classList.add('active');
+    labelEl.textContent = LABELS[cur];
+
+    if (cur === 1) animateSteps();
+  }
+
+  function animateSteps() {
+    for (let i = 0; i < 4; i++) {
+      const step = document.getElementById('ps' + i);
+      const dot  = document.getElementById('pd' + i);
+      step.classList.remove('done');
+      dot.textContent = '→';
+    }
+    for (let i = 0; i < 4; i++) {
+      (function(idx) {
+        setTimeout(() => {
+          const step = document.getElementById('ps' + idx);
+          const dot  = document.getElementById('pd' + idx);
+          step.classList.add('done');
+          dot.textContent = '✓';
+        }, 350 + idx * 380);
+      })(i);
+    }
+  }
+
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    if (cur === 0) {
+      saveTimer = setTimeout(() => {
+        saveBtn.classList.add('tapping');
+        setTimeout(() => saveBtn.classList.remove('tapping'), 380);
+      }, INTERVAL - 900);
+    }
+  }
+
+  function tick() {
+    clearTimeout(ticker);
+    scheduleSave();
+    ticker = setTimeout(() => { activate(cur + 1); tick(); }, INTERVAL);
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      clearTimeout(ticker);
+      clearTimeout(saveTimer);
+      activate(parseInt(dot.dataset.i));
+      tick();
+    });
+  });
+
+  tick();
+
+  /* ── Waitlist form ── */
+  document.getElementById('wl-form').addEventListener('submit', e => {
+    e.preventDefault();
+    document.getElementById('wl-confirm').style.display = 'block';
+    e.target.reset();
+  });
+</script>
+
+</body>
+</html>
