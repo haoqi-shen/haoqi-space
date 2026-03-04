@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Haoqi Shen — Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --bg2: #f4f4f5;
+      --fg: #09090b;
+      --fg2: #52525b;
+      --fg3: #a1a1aa;
+      --border: #e4e4e7;
+      --accent: #18181b;
+      --green: #16a34a;
+      --blue: #2563eb;
+      --radius: 12px;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(250,250,250,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+    }
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--fg2);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-cta {
+      background: var(--fg);
+      color: #fff !important;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      transition: opacity 0.15s !important;
+    }
+    .nav-cta:hover { opacity: 0.85; color: #fff !important; }
+
+    /* SECTIONS */
+    section { padding: 96px 0; }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 32px; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg3);
+      margin-bottom: 40px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 60px;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 64px;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #dcfce7;
+      color: var(--green);
+      border: 1px solid #bbf7d0;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 900;
+      letter-spacing: -2.5px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      color: var(--fg);
+    }
+    .hero-tagline {
+      font-size: 18px;
+      color: var(--fg2);
+      font-weight: 400;
+      max-width: 440px;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+    .hero-tagline strong { color: var(--fg); font-weight: 600; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--fg);
+      color: #fff;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--fg);
+      border: 1.5px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--bg2); }
+    .hero-photo {
+      width: 180px;
+      height: 180px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 3px solid var(--border);
+      background: var(--bg2);
+      flex-shrink: 0;
+      position: relative;
+    }
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    }
+    .hero-companies {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-companies-label {
+      font-size: 12px;
+      color: var(--fg3);
+      font-weight: 500;
+    }
+    .company-tag {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--fg2);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+
+    /* ABOUT */
+    .about-text {
+      font-size: 20px;
+      line-height: 1.7;
+      color: var(--fg2);
+      max-width: 720px;
+    }
+    .about-text strong { color: var(--fg); font-weight: 600; }
+    .about-text em { font-style: normal; color: var(--fg); }
+
+    /* EXPERIENCE */
+    .exp-list { display: flex; flex-direction: column; gap: 0; }
+    .exp-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .exp-item:first-child { padding-top: 0; }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-meta { }
+    .exp-period {
+      font-size: 12px;
+      color: var(--fg3);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .exp-company {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 2px;
+    }
+    .exp-dept {
+      font-size: 12px;
+      color: var(--fg3);
+    }
+    .exp-content { }
+    .exp-role {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--fg);
+    }
+    .exp-highlights {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .exp-highlights li {
+      font-size: 14px;
+      color: var(--fg2);
+      line-height: 1.6;
+      padding-left: 16px;
+      position: relative;
+    }
+    .exp-highlights li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--fg3);
+      font-size: 12px;
+      top: 2px;
+    }
+    .exp-highlights li strong { color: var(--fg); font-weight: 600; }
+    .exp-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .tag-eng { background: #dbeafe; color: #1d4ed8; }
+    .tag-pm { background: #fef3c7; color: #92400e; }
+    .tag-data { background: #f3e8ff; color: #7e22ce; }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .project-card {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card:hover {
+      border-color: #a1a1aa;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.07);
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.02), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .project-card:hover::before { opacity: 1; }
+    .project-emoji { font-size: 28px; }
+    .project-name { font-size: 16px; font-weight: 700; }
+    .project-desc { font-size: 13px; color: var(--fg2); line-height: 1.5; flex: 1; }
+    .project-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+    .project-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .project-tag {
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg2);
+      color: var(--fg3);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .project-link {
+      font-size: 12px;
+      color: var(--fg3);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .project-card.featured {
+      border-color: #a3e635;
+      background: linear-gradient(135deg, #f7ffe0, var(--bg));
+    }
+    .project-card.featured .project-tag-featured {
+      background: #ecfccb;
+      color: #3f6212;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* EDUCATION */
+    .edu-list { display: flex; flex-direction: column; gap: 0; }
+    .edu-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .edu-item:last-child { border-bottom: none; }
+    .edu-period { font-size: 12px; color: var(--fg3); font-weight: 500; }
+    .edu-school { font-size: 15px; font-weight: 700; color: var(--fg); }
+    .edu-degree { font-size: 14px; color: var(--fg2); margin-top: 4px; }
+    .edu-gpa {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      background: #dcfce7;
+      padding: 2px 10px;
+      border-radius: 100px;
+      margin-top: 8px;
+    }
+
+    /* STACK */
+    .stack-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .stack-item {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--fg2);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .stack-item:hover {
+      background: var(--fg);
+      color: #fff;
+      border-color: var(--fg);
+    }
+
+    /* CONTACT */
+    .contact-section {
+      background: var(--fg);
+      color: #fff;
+      border-radius: 24px;
+      padding: 64px;
+      text-align: center;
+    }
+    .contact-section h2 {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    .contact-section p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 32px;
+    }
+    .contact-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .contact-link-primary {
+      background: #fff;
+      color: var(--fg);
+    }
+    .contact-link-primary:hover { opacity: 0.9; }
+    .contact-link-secondary {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .contact-link-secondary:hover { background: rgba(255,255,255,0.15); }
+
+    /* FOOTER */
+    footer {
+      padding: 32px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--fg3);
+      border-top: 1px solid var(--border);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .container { padding: 0 20px; }
+      section { padding: 64px 0; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-photo { width: 100px; height: 100px; border-radius: 16px; }
+      .exp-item { grid-template-columns: 1fr; gap: 8px; }
+      .edu-item { grid-template-columns: 1fr; gap: 8px; }
+      .contact-section { padding: 40px 24px; border-radius: 16px; }
+    }
+
+    /* ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Haoqi Shen</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact" class="nav-cta">Say hi →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">Available · SF Bay Area</div>
+        <h1>Builder.<br>Product.<br>Engineer.</h1>
+        <p class="hero-tagline">
+          I build things at the intersection of <strong>AI and product</strong>.
+          From training RL systems at <strong>Amazon AGI Lab</strong> to shipping
+          products trusted by 1B+ users — I close the gap between vision and execution.
+        </p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">See my work →</a>
+          <a href="mailto:haoqi.shen@hotmail.com" class="btn btn-secondary">Get in touch</a>
+          <a href="https://linkedin.com/in/haoqishen" target="_blank" class="btn btn-secondary">LinkedIn ↗</a>
+        </div>
+        <div class="hero-companies">
+          <span class="hero-companies-label">Previously at</span>
+          <span class="company-tag">Amazon</span>
+          <span class="company-tag">PingAn</span>
+          <span class="company-tag">Tencent</span>
+          <span class="company-tag">ByteDance</span>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <!-- Replace src with your LinkedIn photo URL -->
+        <div class="hero-photo-placeholder">🙂</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-label">About</p>
+    <p class="about-text fade-in">
+      I'm a technical product manager and builder with a bias for <strong>shipping</strong>.
+      I've spent my career at the edge where research meets reality —
+      building AI infrastructure at Amazon, deploying computer vision at scale at PingAn,
+      and running product at Tencent and ByteDance.
+      Right now I'm <em>building Pawsona</em>, an AI-powered cyber pet companion,
+      from zero. I believe the best PMs can also write the code.
+    </p>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <p class="section-label">Experience</p>
+    <div class="exp-list">
+
+      <div class="exp-item fade-in">
+        <div class="exp-meta">
+          <div class="exp-period">May – Aug 2024</div>
+          <div class="exp-company">Amazon</div>
+          <div class="exp-dept">SF AGI Lab</div>
+        </div>
+        <div class="exp-content">
+          <span class="exp-tag tag-eng">Software Engineer</span>
+          <div class="exp-role">Building RL infrastructure for Nova Act</div>
+          <ul class="exp-highlights">
+            <li>Architected RL training + evaluation infra, translating research workflows into production-ready preview systems</li>
+            <li>Engineered <strong>(S,A,R) extraction pipeline</strong> via WebSocket traces → raised Sample Conversion Rate <strong>+35%</strong></li>
+            <li>Built sandboxed eval framework for model failure pattern classification → reduced MTTD <strong>60%</strong></li>
+            <li>Streamlined CI/CD + AMI via AWS CDK → zero drift, Lead Time cut <strong>85%</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item fade-in">
+        <div class="exp-meta">
+          <div class="exp-period">May 2021 – Aug 2023</div>
+          <div class="exp-company">PingAn Fintech</div>
+          <div class="exp-dept">Computer Vision</div>
+        </div>
+        <div class="exp-content">
+          <span class="exp-tag tag-pm">Technical PM</span>
+          <div class="exp-role">Multi-modal AI platform for eKYC & anti-fraud</div>
+          <ul class="exp-highlights">
+            <li>Delivered platform supporting <strong>1B+ annual API calls</strong> globally</li>
+            <li>Adversarial data strategy → SOTA <strong>99.8% TAR</strong> for digital onboarding</li>
+            <li>Gaze-Intent Coercion Detection → <strong>95% fraud recall</strong> via stress-signal scoring</li>
+            <li>Modular AIaaS platform with closed-loop data flywheels → custom deployment <strong>70% faster</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item fade-in">
+        <div class="exp-meta">
+          <div class="exp-period">May – Aug 2021</div>
+          <div class="exp-company">Tencent</div>
+          <div class="exp-dept">Ads</div>
+        </div>
+        <div class="exp-content">
+          <span class="exp-tag tag-pm">Product Manager</span>
+          <div class="exp-role">Video Ads Dynamic Creative Optimization</div>
+          <ul class="exp-highlights">
+            <li>DCO engine iteration → <strong>28% consumption penetration</strong> at 5% marginal cost</li>
+            <li>"Auto-Reconstruction" → aligned AIGC assets, boosted DCO Adoption <strong>+40%</strong></li>
+            <li>Smart focal-point alignment → <strong>VTR +15%</strong> in non-native placements</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item fade-in">
+        <div class="exp-meta">
+          <div class="exp-period">Jan – Apr 2021</div>
+          <div class="exp-company">ByteDance</div>
+          <div class="exp-dept">TikTok Monetization</div>
+        </div>
+        <div class="exp-content">
+          <span class="exp-tag tag-data">Data Scientist</span>
+          <div class="exp-role">Product Analytics & Growth</div>
+          <ul class="exp-highlights">
+            <li>"Native Resonance" model → <strong>10x content volume</strong> for 1,000+ Key Accounts</li>
+            <li>YoY budget growth <strong>+500%</strong>, positioning TikTok as primary marketing channel</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-label">Projects</p>
+    <div class="projects-grid">
+
+      <a href="#" class="project-card featured fade-in">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="project-emoji">🐾</div>
+          <span class="project-tag-featured">Building now</span>
+        </div>
+        <div class="project-name">Pawsona</div>
+        <div class="project-desc">AI-powered cyber pet companion. Smart collar + LLM = your real pet's digital soul, talking to you all day. Pre-seed stage.</div>
+        <div class="project-footer">
+          <div class="project-tags">
+            <span class="project-tag">React</span>
+            <span class="project-tag">LLM</span>
+            <span class="project-tag">IoT</span>
+          </div>
+          <span class="project-link">WIP →</span>
+        </div>
+      </a>
+
+      <a href="#" class="project-card fade-in">
+        <div class="project-emoji">🔧</div>
+        <div class="project-name">Project 2</div>
+        <div class="project-desc">Your React side project goes here. Add a description that shows what it does and why you built it.</div>
+        <div class="project-footer">
+          <div class="project-tags">
+            <span class="project-tag">React</span>
+            <span class="project-tag">TypeScript</span>
+          </div>
+          <span class="project-link">View →</span>
+        </div>
+      </a>
+
+      <a href="#" class="project-card fade-in">
+        <div class="project-emoji">⚡</div>
+        <div class="project-name">Project 3</div>
+        <div class="project-desc">Add your side projects here. Each card links to a live demo or GitHub repo.</div>
+        <div class="project-footer">
+          <div class="project-tags">
+            <span class="project-tag">Python</span>
+            <span class="project-tag">Flask</span>
+          </div>
+          <span class="project-link">GitHub →</span>
+        </div>
+      </a>
+
+      <a href="#" class="project-card fade-in">
+        <div class="project-emoji">🧠</div>
+        <div class="project-name">Project 4</div>
+        <div class="project-desc">Another project. Keep descriptions short — one sentence is enough. The link does the rest.</div>
+        <div class="project-footer">
+          <div class="project-tags">
+            <span class="project-tag">ML</span>
+            <span class="project-tag">PyTorch</span>
+          </div>
+          <span class="project-link">Demo →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="container">
+    <p class="section-label">Education</p>
+    <div class="edu-list">
+      <div class="edu-item fade-in">
+        <div>
+          <div class="edu-period">Conferred Dec 2025</div>
+        </div>
+        <div>
+          <div class="edu-school">Northeastern University</div>
+          <div class="edu-degree">MS, Information Systems · Oakland, CA</div>
+          <div class="edu-gpa">⭐ GPA 3.87 / 4.0</div>
+        </div>
+      </div>
+      <div class="edu-item fade-in">
+        <div>
+          <div class="edu-period">Conferred Sep 2022</div>
+        </div>
+        <div>
+          <div class="edu-school">Johns Hopkins University</div>
+          <div class="edu-degree">MS, Education Technology · Baltimore, MD</div>
+          <div class="edu-gpa">⭐ GPA 3.98 / 4.0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section style="padding: 64px 0; background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-label">Tech Stack</p>
+    <div class="stack-grid">
+      <span class="stack-item">Python</span>
+      <span class="stack-item">React</span>
+      <span class="stack-item">TypeScript</span>
+      <span class="stack-item">Flask</span>
+      <span class="stack-item">PostgreSQL</span>
+      <span class="stack-item">PyTorch</span>
+      <span class="stack-item">MLOps</span>
+      <span class="stack-item">Prompt Engineering</span>
+      <span class="stack-item">Vector DBs</span>
+      <span class="stack-item">AWS CDK</span>
+      <span class="stack-item">LLMs</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-section fade-in">
+      <h2>Let's build something.</h2>
+      <p>Open to product, engineering, and founding roles. STEM OPT through 2029.</p>
+      <div class="contact-links">
+        <a href="mailto:haoqi.shen@hotmail.com" class="contact-link contact-link-primary">haoqi.shen@hotmail.com</a>
+        <a href="https://linkedin.com/in/haoqishen" target="_blank" class="contact-link contact-link-secondary">LinkedIn ↗</a>
+        <a href="https://github.com" target="_blank" class="contact-link contact-link-secondary">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Haoqi Shen · Built with care · SF Bay Area © 2026</p>
+</footer>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
