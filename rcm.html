@@ -94,7 +94,16 @@
     font-size: 4.5rem; font-weight: 800; color: var(--blue-600);
     line-height: 1.05; letter-spacing: -.04em;
   }
+  .landing-left .landing-title {
+    display: inline-block;
+    transform-origin: left center;
+    will-change: transform, opacity, filter;
+    animation: title-breathe 6.2s ease-in-out infinite;
+  }
   .landing-left h1 span { display: block; color: var(--blue-900); }
+  .landing-left .landing-title span {
+    animation: title-ink 6.2s ease-in-out infinite;
+  }
   .landing-right h2 {
     font-size: 2rem; font-weight: 700; color: var(--gray-900);
     line-height: 1.25; letter-spacing: -.02em; margin-bottom: 12px;
@@ -121,6 +130,30 @@
   @keyframes bounce {
     0%,100%{ transform: translateX(-50%) translateY(0); }
     50%{ transform: translateX(-50%) translateY(8px); }
+  }
+  @keyframes title-breathe {
+    0%, 100% {
+      transform: scale(1);
+      opacity: .88;
+      filter: saturate(.95) brightness(.97);
+      text-shadow: 0 0 0 rgba(37, 99, 235, 0);
+    }
+    50% {
+      transform: scale(1.03);
+      opacity: 1;
+      filter: saturate(1.06) brightness(1.03);
+      text-shadow: 0 10px 28px rgba(37, 99, 235, .14);
+    }
+  }
+  @keyframes title-ink {
+    0%, 100% {
+      color: var(--blue-900);
+      opacity: .9;
+    }
+    50% {
+      color: #09162f;
+      opacity: 1;
+    }
   }
 
   /* ───── SLIDE HEADER ───── */
@@ -580,6 +613,68 @@
   #appendix {
     min-height: auto; padding: 80px 60px 60px;
     background: var(--gray-50);
+    align-items: flex-start;
+  }
+  .appendix-panel {
+    margin-top: 20px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(15, 29, 61, .06);
+    overflow: hidden;
+  }
+  .appendix-toggle {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 24px;
+    background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(239,246,255,.92));
+  }
+  .appendix-toggle::-webkit-details-marker { display: none; }
+  .appendix-toggle-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .appendix-open-label,
+  .appendix-close-label {
+    font-size: .92rem;
+    font-weight: 700;
+    color: var(--blue-700);
+    letter-spacing: -.01em;
+  }
+  .appendix-close-label { display: none; }
+  .appendix-panel[open] .appendix-open-label { display: none; }
+  .appendix-panel[open] .appendix-close-label { display: inline; }
+  .appendix-toggle-copy small {
+    font-size: .78rem;
+    color: var(--gray-500);
+  }
+  .appendix-toggle-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid var(--blue-200);
+    background: var(--blue-50);
+    color: var(--blue-600);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 400;
+    flex-shrink: 0;
+    transition: transform .24s ease, background .24s ease, color .24s ease;
+  }
+  .appendix-panel[open] .appendix-toggle-icon {
+    transform: rotate(45deg);
+    background: var(--blue-100);
+    color: var(--blue-700);
+  }
+  .appendix-content {
+    padding: 4px 24px 28px;
   }
   .ref-section {
     margin-bottom: 28px;
@@ -627,6 +722,16 @@
     .eng-dual { grid-template-columns: 1fr; }
     .eng-branch-row { grid-template-columns: 1fr; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .landing-left .landing-title,
+    .landing-left .landing-title span,
+    .scroll-hint,
+    .appendix-toggle-icon {
+      animation: none;
+      transition: none;
+    }
+  }
 </style>
 </head>
 <body>
@@ -651,7 +756,7 @@
 <section id="landing">
   <div class="landing-grid">
     <div class="landing-left">
-      <h1>Hello,<span>Youlify.</span></h1>
+      <h1 class="landing-title">Hello,<span>Youlify.</span></h1>
     </div>
     <div class="landing-right">
       <h2>Medical Billing and<br>Revenue Cycle Management</h2>
@@ -682,7 +787,7 @@
       <div class="diagram-title">RCM End-to-End Pipeline</div>
       <div class="rcm-pipeline">
         <div class="rcm-col">
-          <div class="rcm-col-header front">Front-End</div>
+          <div class="rcm-col-header front">Front-End (Patient Access)</div>
           <ul>
             <li>Scheduling &amp; Registration</li>
             <li>Insurance Eligibility Verification</li>
@@ -693,7 +798,7 @@
           <div class="col-footer">Cheapest to fix errors here</div>
         </div>
         <div class="rcm-col">
-          <div class="rcm-col-header mid">Mid-Cycle</div>
+          <div class="rcm-col-header mid">Mid-Cycle (Clinical &amp; Coding)</div>
           <ul>
             <li>Service Delivery</li>
             <li>Clinical Documentation</li>
@@ -704,7 +809,7 @@
           <div class="col-footer">Doc quality decides downstream fate</div>
         </div>
         <div class="rcm-col">
-          <div class="rcm-col-header back">Back-End</div>
+          <div class="rcm-col-header back">Back-End (Revenue Realization)</div>
           <ul>
             <li>Claims Submission</li>
             <li>Denial Management</li>
@@ -1237,70 +1342,81 @@
   <div class="slide-inner">
     <div class="slide-label"><span class="num" style="background:var(--gray-500);">A</span> Appendix</div>
     <h2 class="slide-title">Data Sources &amp; References</h2>
+    <details class="appendix-panel" id="appendix-details">
+      <summary class="appendix-toggle">
+        <div class="appendix-toggle-copy">
+          <span class="appendix-open-label">Show appendix</span>
+          <span class="appendix-close-label">Hide appendix</span>
+          <small>7 source groups across workflow, infrastructure, market, and strategy</small>
+        </div>
+        <span class="appendix-toggle-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="appendix-content">
+        <div class="ref-section">
+          <div class="ref-section-title">Slide 1 &mdash; Revenue Cycle</div>
+          <ul class="ref-list">
+            <li><span class="ref-tag">HFMA</span> <a href="https://www.hfma.org/revenue-cycle/" target="_blank" rel="noopener">HFMA Revenue Cycle Management &mdash; Definition &amp; Resources</a></li>
+            <li><span class="ref-tag">PMC</span> <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11219169/" target="_blank" rel="noopener">Revenue Cycle Management in Healthcare: A Comprehensive Review (PMC, 2024)</a></li>
+          </ul>
+        </div>
 
-    <div class="ref-section">
-      <div class="ref-section-title">Slide 1 &mdash; Revenue Cycle</div>
-      <ul class="ref-list">
-        <li><span class="ref-tag">HFMA</span> <a href="https://www.hfma.org/revenue-cycle/" target="_blank" rel="noopener">HFMA Revenue Cycle Management &mdash; Definition &amp; Resources</a></li>
-        <li><span class="ref-tag">PMC</span> <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11219169/" target="_blank" rel="noopener">Revenue Cycle Management in Healthcare: A Comprehensive Review (PMC, 2024)</a></li>
-      </ul>
-    </div>
+        <div class="ref-section">
+          <div class="ref-section-title">Slide 2 &mdash; Context (EHR / EDI / FHIR)</div>
+          <ul class="ref-list">
+            <li><span class="ref-tag">ONC</span> <a href="https://www.healthit.gov/topic/health-it-and-health-information-exchange-basics/what-electronic-health-record-ehr" target="_blank" rel="noopener">HealthIT.gov &mdash; What Is an Electronic Health Record (EHR)?</a></li>
+            <li><span class="ref-tag">HL7</span> <a href="https://hl7.org/fhir/" target="_blank" rel="noopener">HL7 FHIR (Fast Healthcare Interoperability Resources) &mdash; Official Specification</a></li>
+            <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f" target="_blank" rel="noopener">CMS-0057-F: Interoperability and Prior Authorization Final Rule (Jan 2024)</a></li>
+            <li><span class="ref-tag">X12</span> <a href="https://x12.org/" target="_blank" rel="noopener">X12.org &mdash; HIPAA EDI Transaction Standards</a></li>
+            <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/medicare/coding-billing/electronic-billing-edi-transactions" target="_blank" rel="noopener">CMS Electronic Billing &amp; EDI Transactions &mdash; Adopted Standards</a></li>
+          </ul>
+        </div>
 
-    <div class="ref-section">
-      <div class="ref-section-title">Slide 2 &mdash; Context (EHR / EDI / FHIR)</div>
-      <ul class="ref-list">
-        <li><span class="ref-tag">ONC</span> <a href="https://www.healthit.gov/topic/health-it-and-health-information-exchange-basics/what-electronic-health-record-ehr" target="_blank" rel="noopener">HealthIT.gov &mdash; What Is an Electronic Health Record (EHR)?</a></li>
-        <li><span class="ref-tag">HL7</span> <a href="https://hl7.org/fhir/" target="_blank" rel="noopener">HL7 FHIR (Fast Healthcare Interoperability Resources) &mdash; Official Specification</a></li>
-        <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f" target="_blank" rel="noopener">CMS-0057-F: Interoperability and Prior Authorization Final Rule (Jan 2024)</a></li>
-        <li><span class="ref-tag">X12</span> <a href="https://x12.org/" target="_blank" rel="noopener">X12.org &mdash; HIPAA EDI Transaction Standards</a></li>
-        <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/medicare/coding-billing/electronic-billing-edi-transactions" target="_blank" rel="noopener">CMS Electronic Billing &amp; EDI Transactions &mdash; Adopted Standards</a></li>
-      </ul>
-    </div>
+        <div class="ref-section">
+          <div class="ref-section-title">Slide 3 &mdash; System Complexity (Workflow)</div>
+          <ul class="ref-list">
+            <li><span class="ref-tag">AMA</span> <a href="https://www.ama-assn.org/practice-management/prior-authorization" target="_blank" rel="noopener">AMA Prior Authorization Resources &amp; 2024 Physician Survey</a></li>
+            <li><span class="ref-tag">CAQH</span> <a href="https://www.caqh.org/insights/caqh-index" target="_blank" rel="noopener">CAQH Index &mdash; 2024 Annual Report on Healthcare Administrative Transactions</a></li>
+            <li><span class="ref-tag">AHA</span> <a href="https://www.aha.org/2024-02-28-change-healthcare-cyberattack" target="_blank" rel="noopener">AHA &mdash; 2024 Change Healthcare Cyberattack Impact Report</a></li>
+          </ul>
+        </div>
 
-    <div class="ref-section">
-      <div class="ref-section-title">Slide 3 &mdash; System Complexity (Workflow)</div>
-      <ul class="ref-list">
-        <li><span class="ref-tag">AMA</span> <a href="https://www.ama-assn.org/practice-management/prior-authorization" target="_blank" rel="noopener">AMA Prior Authorization Resources &amp; 2024 Physician Survey</a></li>
-        <li><span class="ref-tag">CAQH</span> <a href="https://www.caqh.org/insights/caqh-index" target="_blank" rel="noopener">CAQH Index &mdash; 2024 Annual Report on Healthcare Administrative Transactions</a></li>
-        <li><span class="ref-tag">AHA</span> <a href="https://www.aha.org/2024-02-28-change-healthcare-cyberattack" target="_blank" rel="noopener">AHA &mdash; 2024 Change Healthcare Cyberattack Impact Report</a></li>
-      </ul>
-    </div>
+        <div class="ref-section">
+          <div class="ref-section-title">Slide 4 &mdash; Evaluation (KPIs &amp; AI)</div>
+          <ul class="ref-list">
+            <li><span class="ref-tag">HFMA</span> <a href="https://www.hfma.org/industry-initiatives/map/" target="_blank" rel="noopener">HFMA MAP Keys &mdash; 29 Revenue Cycle KPIs</a></li>
+            <li><span class="ref-tag">KLAS</span> <a href="https://klasresearch.com/" target="_blank" rel="noopener">KLAS Research &mdash; Autonomous Medical Coding 2025 Report</a></li>
+            <li><span class="ref-tag">AHA</span> <a href="https://www.aha.org/" target="_blank" rel="noopener">AHA &mdash; 3 Ways AI Can Improve Revenue Cycle Management (2024)</a></li>
+          </ul>
+        </div>
 
-    <div class="ref-section">
-      <div class="ref-section-title">Slide 4 &mdash; Evaluation (KPIs &amp; AI)</div>
-      <ul class="ref-list">
-        <li><span class="ref-tag">HFMA</span> <a href="https://www.hfma.org/industry-initiatives/map/" target="_blank" rel="noopener">HFMA MAP Keys &mdash; 29 Revenue Cycle KPIs</a></li>
-        <li><span class="ref-tag">KLAS</span> <a href="https://klasresearch.com/" target="_blank" rel="noopener">KLAS Research &mdash; Autonomous Medical Coding 2025 Report</a></li>
-        <li><span class="ref-tag">AHA</span> <a href="https://www.aha.org/" target="_blank" rel="noopener">AHA &mdash; 3 Ways AI Can Improve Revenue Cycle Management (2024)</a></li>
-      </ul>
-    </div>
+        <div class="ref-section">
+          <div class="ref-section-title">Slide 5 &mdash; Architecture (Compound AI)</div>
+          <ul class="ref-list">
+            <li><span class="ref-tag">NEJM AI</span> <a href="https://ai.nejm.org/" target="_blank" rel="noopener">NEJM AI &mdash; Large Language Models Are Poor Medical Coders (2024)</a></li>
+            <li><span class="ref-tag">arXiv</span> <a href="https://arxiv.org/abs/1802.05695" target="_blank" rel="noopener">CAML: Explainable Prediction of Medical Codes from Clinical Text (Mullenbach et al., 2018)</a></li>
+            <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/medicare/coding-billing/national-correct-coding-initiative-edits" target="_blank" rel="noopener">CMS NCCI &mdash; National Correct Coding Initiative Edits</a></li>
+          </ul>
+        </div>
 
-    <div class="ref-section">
-      <div class="ref-section-title">Slide 5 &mdash; Architecture (Compound AI)</div>
-      <ul class="ref-list">
-        <li><span class="ref-tag">NEJM AI</span> <a href="https://ai.nejm.org/" target="_blank" rel="noopener">NEJM AI &mdash; Large Language Models Are Poor Medical Coders (2024)</a></li>
-        <li><span class="ref-tag">arXiv</span> <a href="https://arxiv.org/abs/1802.05695" target="_blank" rel="noopener">CAML: Explainable Prediction of Medical Codes from Clinical Text (Mullenbach et al., 2018)</a></li>
-        <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/medicare/coding-billing/national-correct-coding-initiative-edits" target="_blank" rel="noopener">CMS NCCI &mdash; National Correct Coding Initiative Edits</a></li>
-      </ul>
-    </div>
+        <div class="ref-section">
+          <div class="ref-section-title">Slide 6 &mdash; Market Landscape</div>
+          <ul class="ref-list">
+            <li><span class="ref-tag">GVR</span> <a href="https://www.grandviewresearch.com/industry-analysis/us-revenue-cycle-management-market" target="_blank" rel="noopener">Grand View Research &mdash; U.S. RCM Market Size ($343.78B, 2024)</a></li>
+            <li><span class="ref-tag">SEC</span> <a href="https://www.sec.gov/cgi-bin/browse-edgar?company=waystar&CIK=&type=S-1&dateb=&owner=include&count=10&search_text=&action=getcompany" target="_blank" rel="noopener">Waystar IPO Prospectus (SEC EDGAR, S-1 Filing, June 2024)</a></li>
+            <li><span class="ref-tag">DOJ</span> <a href="https://www.justice.gov/opa/pr/justice-department-sues-block-unitedhealth-group-s-acquisition-change-healthcare" target="_blank" rel="noopener">DOJ &mdash; Lawsuit to Block UnitedHealth / Change Healthcare Acquisition (2022)</a></li>
+          </ul>
+        </div>
 
-    <div class="ref-section">
-      <div class="ref-section-title">Slide 6 &mdash; Market Landscape</div>
-      <ul class="ref-list">
-        <li><span class="ref-tag">GVR</span> <a href="https://www.grandviewresearch.com/industry-analysis/us-revenue-cycle-management-market" target="_blank" rel="noopener">Grand View Research &mdash; U.S. RCM Market Size ($343.78B, 2024)</a></li>
-        <li><span class="ref-tag">SEC</span> <a href="https://www.sec.gov/cgi-bin/browse-edgar?company=waystar&CIK=&type=S-1&dateb=&owner=include&count=10&search_text=&action=getcompany" target="_blank" rel="noopener">Waystar IPO Prospectus (SEC EDGAR, S-1 Filing, June 2024)</a></li>
-        <li><span class="ref-tag">DOJ</span> <a href="https://www.justice.gov/opa/pr/justice-department-sues-block-unitedhealth-group-s-acquisition-change-healthcare" target="_blank" rel="noopener">DOJ &mdash; Lawsuit to Block UnitedHealth / Change Healthcare Acquisition (2022)</a></li>
-      </ul>
-    </div>
-
-    <div class="ref-section">
-      <div class="ref-section-title">Slide 7 &mdash; Strategic Insight</div>
-      <ul class="ref-list">
-        <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/its-time-to-build-healthtech-infrastructure/" target="_blank" rel="noopener">a16z &mdash; It&rsquo;s Time to Build: Healthtech Infrastructure (Jan 2025)</a></li>
-        <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/unbundling-the-bpo-how-ai-will-disrupt-outsourced-work/" target="_blank" rel="noopener">a16z &mdash; Unbundling the BPO (Feb 2025)</a></li>
-        <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/announcement/investing-in-camber/" target="_blank" rel="noopener">a16z &mdash; Investing in Camber: Specialty-Focused RCM</a></li>
-      </ul>
-    </div>
+        <div class="ref-section">
+          <div class="ref-section-title">Slide 7 &mdash; Strategic Insight</div>
+          <ul class="ref-list">
+            <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/its-time-to-build-healthtech-infrastructure/" target="_blank" rel="noopener">a16z &mdash; It&rsquo;s Time to Build: Healthtech Infrastructure (Jan 2025)</a></li>
+            <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/unbundling-the-bpo-how-ai-will-disrupt-outsourced-work/" target="_blank" rel="noopener">a16z &mdash; Unbundling the BPO (Feb 2025)</a></li>
+            <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/announcement/investing-in-camber/" target="_blank" rel="noopener">a16z &mdash; Investing in Camber: Specialty-Focused RCM</a></li>
+          </ul>
+        </div>
+      </div>
+    </details>
 
   </div>
 </section>
@@ -1330,6 +1446,15 @@
     });
   }, { threshold: 0.35 });
   sections.forEach(s => observer.observe(s));
+
+  const appendixDetails = document.getElementById('appendix-details');
+  const openAppendixFromHash = () => {
+    if (appendixDetails && window.location.hash === '#appendix') {
+      appendixDetails.open = true;
+    }
+  };
+  openAppendixFromHash();
+  window.addEventListener('hashchange', openAppendixFromHash);
 </script>
 </body>
 </html>
