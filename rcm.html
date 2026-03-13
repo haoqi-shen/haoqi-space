@@ -1,853 +1,1335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RCM Agentic AI Architecture</title>
-  <meta
-    name="description"
-    content="A product-led architecture page describing how to design an Agentic AI platform for healthcare revenue cycle management."
-  >
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;700&amp;display=swap"
-    rel="stylesheet"
-  >
-  <link rel="stylesheet" href="rcm-styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Billing and Revenue Cycle Management</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue-900: #0f1d3d;
+    --blue-800: #132a5e;
+    --blue-700: #1a3a7a;
+    --blue-600: #1e4d9e;
+    --blue-500: #2563eb;
+    --blue-400: #3b82f6;
+    --blue-300: #60a5fa;
+    --blue-200: #93c5fd;
+    --blue-100: #dbeafe;
+    --blue-50: #eff6ff;
+    --gray-900: #111827;
+    --gray-700: #374151;
+    --gray-600: #4b5563;
+    --gray-500: #6b7280;
+    --gray-400: #9ca3af;
+    --gray-300: #d1d5db;
+    --gray-200: #e5e7eb;
+    --gray-100: #f3f4f6;
+    --gray-50: #f9fafb;
+    --white: #ffffff;
+    --green-500: #22c55e;
+    --green-100: #dcfce7;
+    --amber-500: #f59e0b;
+    --amber-100: #fef3c7;
+    --red-500: #ef4444;
+    --red-100: #fee2e2;
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--gray-900);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ───── NAV ───── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--gray-200);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 56px;
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 1px 8px rgba(0,0,0,.06); }
+  nav .logo { font-weight: 700; font-size: .95rem; color: var(--blue-600); letter-spacing: -.02em; }
+  nav .nav-links { display: flex; gap: 6px; }
+  nav .nav-links a {
+    font-size: .75rem; font-weight: 500; color: var(--gray-500);
+    text-decoration: none; padding: 6px 10px; border-radius: 6px;
+    transition: all .2s;
+  }
+  nav .nav-links a:hover, nav .nav-links a.active { color: var(--blue-600); background: var(--blue-50); }
+
+  /* ───── SECTIONS ───── */
+  section {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 80px 60px;
+    position: relative;
+  }
+  section:nth-child(odd) { background: var(--white); }
+  section:nth-child(even) { background: var(--gray-50); }
+
+  .slide-inner {
+    max-width: 1120px; width: 100%;
+  }
+
+  /* ───── LANDING ───── */
+  #landing {
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .landing-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    max-width: 1120px; width: 100%; align-items: center;
+  }
+  .landing-left h1 {
+    font-size: 4.5rem; font-weight: 800; color: var(--blue-600);
+    line-height: 1.05; letter-spacing: -.04em;
+  }
+  .landing-left h1 span { display: block; color: var(--blue-900); }
+  .landing-right h2 {
+    font-size: 2rem; font-weight: 700; color: var(--gray-900);
+    line-height: 1.25; letter-spacing: -.02em; margin-bottom: 12px;
+  }
+  .landing-right .subtitle {
+    font-size: 1.05rem; color: var(--gray-600); line-height: 1.6;
+    margin-bottom: 40px; font-style: italic;
+  }
+  .landing-right .meta {
+    font-size: .85rem; color: var(--gray-400); line-height: 1.7;
+  }
+  .landing-right .meta strong { color: var(--gray-700); font-weight: 600; }
+  .landing-divider {
+    width: 2px; background: var(--blue-200); align-self: stretch;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px; color: var(--gray-400); font-size: .75rem;
+    animation: bounce 2s infinite;
+  }
+  .scroll-hint svg { width: 20px; height: 20px; }
+  @keyframes bounce {
+    0%,100%{ transform: translateX(-50%) translateY(0); }
+    50%{ transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ───── SLIDE HEADER ───── */
+  .slide-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--blue-500); margin-bottom: 8px;
+  }
+  .slide-label .num {
+    background: var(--blue-500); color: var(--white);
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .65rem;
+  }
+  .slide-title {
+    font-size: 1.75rem; font-weight: 700; color: var(--gray-900);
+    letter-spacing: -.02em; margin-bottom: 24px; line-height: 1.25;
+  }
+
+  /* ───── TAKEAWAY BOX ───── */
+  .takeaway {
+    background: var(--blue-50);
+    border-left: 4px solid var(--blue-500);
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+  }
+  .takeaway-label {
+    font-size: .65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--blue-500); margin-bottom: 6px;
+  }
+  .takeaway p {
+    font-size: .92rem; color: var(--gray-700); line-height: 1.65;
+  }
+  .takeaway ul {
+    margin-top: 10px; padding-left: 18px;
+    font-size: .88rem; color: var(--gray-700); line-height: 1.7;
+  }
+  .takeaway ul li { margin-bottom: 4px; }
+  .takeaway ul li strong { color: var(--gray-900); }
+
+  /* ───── STAT PILLS ───── */
+  .stats-row {
+    display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .stat-pill {
+    display: flex; align-items: baseline; gap: 8px;
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: 10px; padding: 12px 18px;
+    flex: 1; min-width: 200px;
+  }
+  .stat-pill .stat-num {
+    font-size: 1.4rem; font-weight: 800; color: var(--blue-600);
+    letter-spacing: -.02em;
+  }
+  .stat-pill .stat-desc {
+    font-size: .78rem; color: var(--gray-600); line-height: 1.35;
+  }
+
+  /* ───── DIAGRAM COMMON ───── */
+  .diagram-wrapper {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 32px;
+    overflow-x: auto;
+  }
+  section:nth-child(odd) .diagram-wrapper { background: var(--gray-50); }
+  .diagram-title {
+    font-size: .7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--gray-400); margin-bottom: 20px;
+  }
+
+  /* ───── SLIDE 1: THREE COLUMNS ───── */
+  .rcm-pipeline {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
+    position: relative;
+  }
+  .rcm-col {
+    padding: 24px 20px;
+    position: relative;
+  }
+  .rcm-col:not(:last-child) { border-right: 2px solid var(--gray-200); }
+  .rcm-col-header {
+    font-size: .85rem; font-weight: 700; margin-bottom: 6px;
+  }
+  .rcm-col-header.front { color: var(--blue-600); }
+  .rcm-col-header.mid { color: var(--blue-700); }
+  .rcm-col-header.back { color: var(--blue-800); }
+  .rcm-col ul { list-style: none; }
+  .rcm-col ul li {
+    font-size: .82rem; color: var(--gray-700); padding: 5px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .rcm-col ul li:last-child { border-bottom: none; }
+  .rcm-col .col-footer {
+    margin-top: 14px; font-size: .72rem; color: var(--gray-400);
+    font-style: italic;
+  }
+  .rcm-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    color: var(--blue-300); font-size: 1.5rem; font-weight: 300;
+    z-index: 2;
+  }
+
+  /* ───── SLIDE 2: THREE LAYER CARDS ───── */
+  .layer-cards {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;
+  }
+  .layer-card {
+    border-radius: 14px; padding: 24px; position: relative;
+    border: 1px solid var(--gray-200);
+  }
+  .layer-card.clinical { border-top: 4px solid var(--blue-400); }
+  .layer-card.edi { border-top: 4px solid var(--blue-600); }
+  .layer-card.fhir { border-top: 4px solid var(--blue-800); }
+  .layer-card h4 {
+    font-size: .9rem; font-weight: 700; margin-bottom: 4px;
+  }
+  .layer-card .layer-sub {
+    font-size: .72rem; color: var(--gray-400); font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .layer-card ul { list-style: none; }
+  .layer-card ul li {
+    font-size: .8rem; color: var(--gray-600); padding: 4px 0;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .layer-card ul li::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .layer-card.clinical ul li::before { background: var(--blue-400); }
+  .layer-card.edi ul li::before { background: var(--blue-600); }
+  .layer-card.fhir ul li::before { background: var(--blue-800); }
+  .layer-flow {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin-top: 24px;
+  }
+  .layer-flow-box {
+    background: var(--blue-50); border-radius: 8px;
+    padding: 8px 16px; font-size: .75rem; font-weight: 600;
+    color: var(--blue-700);
+  }
+  .layer-flow-arrow { color: var(--blue-300); font-size: 1.2rem; }
+
+  /* ───── SLIDE 3: RAW ENGINEERING DIAGRAMS ───── */
+  .eng-dual {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .eng-panel {
+    background: var(--white); border: 1px solid var(--gray-300);
+    border-radius: 0; padding: 12px 10px; overflow: hidden;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Courier New', monospace;
+  }
+  .eng-title {
+    font-size: .6rem; font-weight: 700; letter-spacing: .06em;
+    color: var(--gray-700); margin-bottom: 1px;
+    border-bottom: 1px solid var(--gray-300); padding-bottom: 3px;
+  }
+  .eng-subtitle {
+    font-size: .5rem; color: var(--gray-400); margin-bottom: 8px;
+  }
+  .eng-flow {
+    display: flex; flex-direction: column; align-items: stretch; gap: 0;
+  }
+  .eng-node {
+    border: 1px solid var(--gray-300); padding: 5px 8px;
+    background: var(--white); border-radius: 0;
+  }
+  .eng-node.eng-ehr { border-color: var(--gray-400); }
+  .eng-node.eng-ch { border-color: var(--gray-400); }
+  .eng-node.eng-payer { border-color: var(--gray-400); }
+  .eng-node.eng-era { border-color: var(--gray-400); }
+  .eng-node.eng-deny { border-color: var(--gray-400); }
+  .eng-node.eng-tech { border-color: var(--gray-400); }
+  .eng-node.eng-clinical { border-color: var(--gray-400); }
+  .eng-node.eng-writeoff { border-color: var(--gray-400); border-style: dashed; }
+  .eng-node.eng-feedback { border-color: var(--gray-400); }
+  .eng-node-h {
+    font-size: .58rem; font-weight: 700; color: var(--gray-800);
+    line-height: 1.25;
+  }
+  .eng-node-d {
+    font-size: .5rem; color: var(--gray-500); margin-top: 1px;
+    line-height: 1.3;
+  }
+  .eng-rule {
+    font-size: .46rem; color: var(--gray-400); margin-top: 1px;
+    line-height: 1.25;
+  }
+  .eng-rule::before { content: '// '; color: var(--gray-300); }
+  .eng-arrow {
+    width: 1px; height: 8px; background: var(--gray-300);
+    margin: 0 auto; position: relative;
+  }
+  .eng-arrow::after {
+    content: ''; position: absolute; bottom: -3px; left: -2px;
+    border-left: 3px solid transparent; border-right: 3px solid transparent;
+    border-top: 4px solid var(--gray-300);
+  }
+  .eng-table {
+    width: 100%; margin-top: 3px; border-collapse: collapse;
+  }
+  .eng-table td {
+    font-size: .46rem; padding: 1px 4px; color: var(--gray-500);
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .eng-table td:first-child {
+    color: var(--gray-600); font-weight: 600; width: 44px;
+  }
+  .eng-branch-h {
+    text-align: center; margin: 3px 0 2px;
+  }
+  .eng-branch-label {
+    font-size: .46rem; font-weight: 700; color: var(--gray-400);
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .eng-branch-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;
+    margin-bottom: 0;
+  }
+  .eng-branch-col {
+    display: flex; flex-direction: column; align-items: stretch; gap: 0;
+  }
+
+  /* U-shape layout for claim lifecycle */
+  .eng-u-shape {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .eng-u-left, .eng-u-right {
+    display: flex; flex-direction: column; align-items: stretch; gap: 0;
+  }
+  .eng-u-right {
+    flex-direction: column-reverse;
+  }
+  .eng-u-right .eng-arrow {
+    transform: rotate(180deg);
+  }
+  .eng-u-connector {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; justify-content: center;
+    height: 16px; position: relative;
+  }
+  .eng-u-connector::before {
+    content: '';
+    position: absolute; bottom: 0; left: 50%;
+    width: calc(50% + 4px); height: 1px;
+    background: var(--gray-300);
+    transform: translateX(-50%);
+  }
+  .eng-u-connector::after {
+    content: '\2192';
+    position: absolute; bottom: -3px; right: calc(25% - 8px);
+    font-size: .6rem; color: var(--gray-400);
+  }
+
+  /* ───── SLIDE 4: KPI TABLE + MAPPING ───── */
+  .kpi-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    border-radius: 12px; padding: 20px 22px;
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+  }
+  section:nth-child(odd) .kpi-card { background: var(--gray-50); }
+  .kpi-card .kpi-category {
+    font-size: .65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--blue-500); margin-bottom: 4px;
+  }
+  .kpi-card .kpi-name {
+    font-size: .95rem; font-weight: 700; color: var(--gray-900);
+    margin-bottom: 6px;
+  }
+  .kpi-card .kpi-bench {
+    font-size: .8rem; color: var(--gray-500);
+  }
+  .kpi-card .kpi-bench strong { color: var(--blue-700); font-weight: 700; }
+
+  .ai-map-grid {
+    display: grid; grid-template-columns: 1fr; gap: 8px;
+  }
+  .ai-map-row {
+    display: grid; grid-template-columns: 1fr 24px 1fr; align-items: center;
+    gap: 0; padding: 10px 16px;
+    border-radius: 10px; background: var(--white);
+    border: 1px solid var(--gray-200);
+  }
+  section:nth-child(odd) .ai-map-row { background: var(--gray-50); }
+  .ai-map-row .ai-name {
+    font-size: .82rem; font-weight: 600; color: var(--gray-800);
+  }
+  .ai-map-row .ai-arrow {
+    text-align: center; color: var(--blue-400); font-weight: 700;
+    font-size: .9rem;
+  }
+  .ai-map-row .ai-kpis {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .kpi-tag {
+    font-size: .7rem; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .kpi-tag.up { background: var(--green-100); color: #15803d; }
+  .kpi-tag.down { background: var(--red-100); color: #b91c1c; }
+
+  /* ───── SLIDE 5: ARCHITECTURE ───── */
+  .arch-stack {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .arch-box {
+    border: 2px solid var(--blue-200); border-radius: 14px;
+    padding: 18px 28px; text-align: center;
+    min-width: 320px; background: var(--white);
+  }
+  section:nth-child(odd) .arch-box { background: var(--gray-50); }
+  .arch-box.ehr { border-color: var(--gray-300); background: var(--gray-100); }
+  .arch-box .arch-label {
+    font-size: .85rem; font-weight: 700; color: var(--gray-900);
+  }
+  .arch-box .arch-sublabel {
+    font-size: .72rem; color: var(--gray-500);
+  }
+  .arch-connector {
+    width: 2px; height: 20px; background: var(--blue-300);
+    position: relative;
+  }
+  .arch-connector::after {
+    content: ''; position: absolute; bottom: -4px; left: -4px;
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 6px solid var(--blue-300);
+  }
+  .arch-connector-label {
+    font-size: .65rem; color: var(--blue-400); font-weight: 500;
+    text-align: center; margin: -2px 0 -4px;
+  }
+  .arch-platform {
+    border: 2px solid var(--blue-400); border-radius: 18px;
+    padding: 28px 24px; width: 100%; max-width: 800px;
+    background: linear-gradient(180deg, var(--blue-50) 0%, var(--white) 100%);
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .arch-platform-title {
+    font-size: .7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--blue-600); margin-bottom: 16px;
+  }
+  .arch-3col {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
+    width: 100%; margin-bottom: 0;
+  }
+  .arch-module {
+    border: 1px solid var(--blue-200); border-radius: 10px;
+    padding: 14px; text-align: center; background: var(--white);
+  }
+  .arch-module .mod-title {
+    font-size: .78rem; font-weight: 700; color: var(--blue-700);
+  }
+  .arch-module .mod-sub {
+    font-size: .68rem; color: var(--gray-500); margin-top: 2px;
+  }
+  .arch-inner-box {
+    border: 1px solid var(--blue-200); border-radius: 10px;
+    padding: 12px 20px; text-align: center; background: var(--white);
+    min-width: 280px;
+  }
+  .arch-inner-box .mod-title { font-size: .78rem; font-weight: 700; color: var(--blue-700); }
+  .arch-inner-box .mod-sub { font-size: .68rem; color: var(--gray-500); margin-top: 2px; }
+  .arch-wide-box {
+    border: 1px solid var(--blue-200); border-radius: 10px;
+    padding: 12px 20px; text-align: center; background: var(--white);
+    width: 100%;
+  }
+  .arch-wide-box .mod-title { font-size: .78rem; font-weight: 700; color: var(--blue-700); }
+  .arch-wide-box .mod-sub { font-size: .68rem; color: var(--gray-500); margin-top: 2px; }
+  .hitl-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--amber-100); color: #92400e;
+    font-size: .65rem; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; margin-left: 6px;
+  }
+
+  /* ───── SLIDE 6: MARKET STACK ───── */
+  .market-stack {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .market-row {
+    display: grid; grid-template-columns: 240px 1fr; gap: 0;
+    border: 1px solid var(--gray-200); border-radius: 12px;
+    overflow: hidden; background: var(--white);
+  }
+  section:nth-child(odd) .market-row { background: var(--gray-50); }
+  .market-row .mr-label {
+    padding: 16px 20px;
+    display: flex; flex-direction: column; justify-content: center;
+    border-right: 3px solid;
+  }
+  .market-row:nth-child(1) .mr-label { border-color: var(--blue-800); background: rgba(15,29,61,.04); }
+  .market-row:nth-child(2) .mr-label { border-color: var(--blue-600); background: rgba(30,77,158,.04); }
+  .market-row:nth-child(3) .mr-label { border-color: var(--blue-500); background: rgba(37,99,235,.04); }
+  .market-row:nth-child(4) .mr-label { border-color: var(--blue-400); background: rgba(59,130,246,.04); }
+  .market-row:nth-child(5) .mr-label { border-color: var(--blue-300); background: rgba(96,165,250,.04); }
+  .mr-label h4 {
+    font-size: .82rem; font-weight: 700; color: var(--gray-900);
+    line-height: 1.3;
+  }
+  .mr-label .mr-moat {
+    font-size: .68rem; color: var(--gray-500); margin-top: 2px;
+  }
+  .market-row .mr-content {
+    padding: 16px 20px; display: flex; flex-direction: column;
+    justify-content: center;
+  }
+  .mr-content .mr-companies {
+    font-size: .82rem; color: var(--gray-700); font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .mr-content .mr-desc {
+    font-size: .75rem; color: var(--gray-500);
+  }
+
+  /* ───── SLIDE 7: MOAT COMPARISON ───── */
+  .moat-table {
+    display: grid; grid-template-columns: 1fr 48px 1fr; gap: 0;
+    align-items: start;
+  }
+  .moat-col {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .moat-col-header {
+    font-size: .75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; padding: 12px 16px;
+    border-radius: 10px; text-align: center;
+    margin-bottom: 4px;
+  }
+  .moat-col-header.weak { background: var(--red-100); color: #b91c1c; }
+  .moat-col-header.strong { background: var(--green-100); color: #15803d; }
+  .moat-item {
+    border: 1px solid var(--gray-200); border-radius: 10px;
+    padding: 14px 18px; font-size: .82rem; color: var(--gray-700);
+    background: var(--white);
+  }
+  section:nth-child(odd) .moat-item { background: var(--gray-50); }
+  .moat-item.weak-item { border-left: 3px solid var(--red-500); }
+  .moat-item.strong-item { border-left: 3px solid var(--green-500); }
+  .moat-arrows {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 10px; padding-top: 48px;
+  }
+  .moat-arrow-icon {
+    font-size: .85rem; color: var(--gray-400);
+    height: 52px; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ───── APPENDIX ───── */
+  #appendix {
+    min-height: auto; padding: 80px 60px 60px;
+    background: var(--gray-50);
+  }
+  .ref-section {
+    margin-bottom: 28px;
+  }
+  .ref-section-title {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--blue-500); margin-bottom: 10px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--gray-200);
+  }
+  .ref-list {
+    list-style: none; display: flex; flex-direction: column; gap: 6px;
+  }
+  .ref-list li {
+    font-size: .8rem; color: var(--gray-600); line-height: 1.5;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .ref-list li:last-child { border-bottom: none; }
+  .ref-list a {
+    color: var(--blue-600); text-decoration: none; font-weight: 500;
+  }
+  .ref-list a:hover { text-decoration: underline; }
+  .ref-tag {
+    display: inline-block; font-size: .62rem; font-weight: 600;
+    padding: 1px 6px; border-radius: 3px; margin-right: 6px;
+    background: var(--blue-100); color: var(--blue-700);
+    vertical-align: middle;
+  }
+
+  /* ───── RESPONSIVE ───── */
+  @media (max-width: 900px) {
+    section { padding: 80px 24px; }
+    .landing-grid { grid-template-columns: 1fr; gap: 40px; }
+    .landing-left h1 { font-size: 3rem; }
+    .rcm-pipeline { grid-template-columns: 1fr; }
+    .rcm-col:not(:last-child) { border-right: none; border-bottom: 2px solid var(--gray-200); }
+    .layer-cards { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: 1fr; }
+    .arch-3col { grid-template-columns: 1fr; }
+    .moat-table { grid-template-columns: 1fr; }
+    .moat-arrows { flex-direction: row; padding-top: 0; }
+    .market-row { grid-template-columns: 1fr; }
+    .market-row .mr-label { border-right: none; border-bottom: 3px solid; }
+    nav .nav-links { display: none; }
+    .eng-dual { grid-template-columns: 1fr; }
+    .eng-branch-row { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
-  <div class="ambient ambient-a" aria-hidden="true"></div>
-  <div class="ambient ambient-b" aria-hidden="true"></div>
 
-  <header class="topbar">
-    <a class="brand" href="#top">
-      <span class="brand-mark">RCM</span>
-      <span class="brand-copy">
-        <strong>Agentic AI Architecture</strong>
-        <small>Product Strategy and System Design</small>
-      </span>
-    </a>
+<!-- NAV -->
+<nav id="navbar">
+  <div class="logo">Revenue Cycle Management Showcase</div>
+  <div class="nav-links">
+    <a href="#landing">Home</a>
+    <a href="#slide1">Revenue Cycle</a>
+    <a href="#slide2">Context</a>
+    <a href="#slide3">Complexity</a>
+    <a href="#slide4">Evaluation</a>
+    <a href="#slide5">Architecture</a>
+    <a href="#slide6">Market</a>
+    <a href="#slide7">Strategy</a>
+    <a href="#appendix">Appendix</a>
+  </div>
+</nav>
 
-    <nav class="topnav" aria-label="Section navigation">
-      <a href="#problem">Problem</a>
-      <a href="#market">Market Read</a>
-      <a href="#model">System Model</a>
-      <a href="#architecture">Architecture</a>
-      <a href="#agents">Agents</a>
-      <a href="#roadmap">Roadmap</a>
-    </nav>
-  </header>
+<!-- ═══════════ LANDING ═══════════ -->
+<section id="landing">
+  <div class="landing-grid">
+    <div class="landing-left">
+      <h1>Hello,<span>Youlify.</span></h1>
+    </div>
+    <div class="landing-right">
+      <h2>Medical Billing and<br>Revenue Cycle Management</h2>
+      <p class="subtitle">A Product Perspective on Workflow, AI Solutions and Strategy</p>
+      <div class="meta">
+        <strong>Haoqi Shen</strong> &nbsp;|&nbsp; Product &amp; AI<br>
+        Youlify PM Interview Presentation<br>
+        Mar 15, 2026
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Scroll
+  </div>
+</section>
 
-  <main id="top" class="page-shell">
-    <section class="hero section">
-      <div class="hero-copy reveal">
-        <p class="eyebrow">Product approach</p>
-        <h1>Design an Agentic AI platform for revenue cycle management.</h1>
-        <p class="hero-lead">
-          Start with operating systems, not with a general chatbot for billing teams. Break the problem into a
-          small number of systems: how work enters the platform, how decisions are made, how actions are
-          executed, and where human review must stay in the loop.
-        </p>
-        <p class="hero-lead">
-          This page is written in a PM style. It explains the problem framing, the system boundaries, the agent model,
-          the standards that constrain the design, and the phased rollout needed to make the product credible in a real
-          provider environment.
-        </p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#architecture">View the architecture</a>
-          <a class="button button-secondary" href="#roadmap">View the delivery plan</a>
+<!-- ═══════════ SLIDE 1 ═══════════ -->
+<section id="slide1">
+  <div class="slide-inner">
+    <div class="slide-label"><span class="num">1</span> Revenue Cycle</div>
+    <h2 class="slide-title">Revenue Cycle Management: From Appointment to Final Payment</h2>
+    <div class="takeaway">
+      <div class="takeaway-label">Key Takeaway</div>
+      <p>HFMA defines RCM as the full journey from a patient's first appointment to the last dollar collected &mdash; spanning clinical, financial, and IT departments. Any handoff failure converts directly into a denial or bad debt. This is why digitization and outsourcing coexist in the same hospital.</p>
+    </div>
+    <div class="diagram-wrapper">
+      <div class="diagram-title">RCM End-to-End Pipeline</div>
+      <div class="rcm-pipeline">
+        <div class="rcm-col">
+          <div class="rcm-col-header front">Front-End</div>
+          <ul>
+            <li>Scheduling &amp; Registration</li>
+            <li>Insurance Eligibility Verification</li>
+            <li>Prior Authorization</li>
+            <li>Price Estimation</li>
+            <li>Financial Counseling</li>
+          </ul>
+          <div class="col-footer">Cheapest to fix errors here</div>
+        </div>
+        <div class="rcm-col">
+          <div class="rcm-col-header mid">Mid-Cycle</div>
+          <ul>
+            <li>Service Delivery</li>
+            <li>Clinical Documentation</li>
+            <li>CPT / ICD-10 Coding</li>
+            <li>Charge Capture</li>
+            <li>837 Claim Generation</li>
+          </ul>
+          <div class="col-footer">Doc quality decides downstream fate</div>
+        </div>
+        <div class="rcm-col">
+          <div class="rcm-col-header back">Back-End</div>
+          <ul>
+            <li>Claims Submission</li>
+            <li>Denial Management</li>
+            <li>Appeals</li>
+            <li>Patient Collections</li>
+            <li>A/R Analysis</li>
+          </ul>
+          <div class="col-footer">Most expensive failures surface here</div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="hero-panel reveal">
-        <div class="metric-grid">
-          <article class="metric-card">
-            <strong>6</strong>
-            <span>specialist agents</span>
-            <small>Focused on pre-service, coding, surveillance, denials, policy, and billing execution.</small>
-          </article>
-          <article class="metric-card">
-            <strong>12</strong>
-            <span>core entities</span>
-            <small>One shared model for patient, coverage, claim, remittance, denial, policy, contract, and work items.</small>
-          </article>
-          <article class="metric-card">
-            <strong>3</strong>
-            <span>autonomy levels</span>
-            <small>Assist, guarded execution, and bounded automation with explicit approval rules.</small>
-          </article>
-          <article class="metric-card">
-            <strong>1</strong>
-            <span>control plane</span>
-            <small>Audit, permissions, evidence, evaluation, versioning, and rollback across all workflows.</small>
-          </article>
-        </div>
-
-        <div class="hero-thesis">
-          <div class="mini-label">Product Thesis</div>
-          <h2>Build a governed revenue operating system, not a loose collection of AI demos.</h2>
-          <p>
-            Use a simple operating principle: API and EDI first, operator automation second, human oversight always visible.
-            If the platform cannot explain why it acted, what rule it used, and who approved the outcome, it is not ready
-            for enterprise RCM.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="problem" class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Problem Decomposition</p>
-        <h2>Define the product problem in four layers before designing agents.</h2>
-        <p>
-          This keeps the roadmap grounded. It prevents the product from becoming a vague promise of automation without a
-          clear understanding of where value is created and where risk is introduced.
-        </p>
-      </div>
-
-      <div class="signal-grid">
-        <article class="signal-card reveal">
-          <div class="signal-meta">
-            <span class="signal-tag">Layer 1</span>
-            <span>Business outcome</span>
-          </div>
-          <h3>Where does the money leak?</h3>
-          <p>
-            The business problem is not "billing is manual." The business problem is that cash leaks at predictable points:
-            eligibility issues, missing authorization, weak documentation, coding variance, claim rejections, underpayments,
-            and delayed appeal handling.
-          </p>
-        </article>
-
-        <article class="signal-card reveal">
-          <div class="signal-meta">
-            <span class="signal-tag">Layer 2</span>
-            <span>Operating workflow</span>
-          </div>
-          <h3>Which team owns the issue today?</h3>
-          <p>
-            Each leakage point maps to an operating team: front office, coding, billing, denial management, or payer follow-up.
-            The product needs to improve those workflows before it tries to replace them.
-          </p>
-        </article>
-
-        <article class="signal-card reveal">
-          <div class="signal-meta">
-            <span class="signal-tag">Layer 3</span>
-            <span>Decision system</span>
-          </div>
-          <h3>What drives the decision?</h3>
-          <p>
-            The platform must know whether the decision is driven by policy text, payer behavior, contract terms, coding rules,
-            prior history, or a hard compliance boundary. That distinction determines which part should be model-based and which
-            part must stay deterministic.
-          </p>
-        </article>
-
-        <article class="signal-card reveal">
-          <div class="signal-meta">
-            <span class="signal-tag">Layer 4</span>
-            <span>Intervention model</span>
-          </div>
-          <h3>What should the product actually do?</h3>
-          <p>
-            Once the source of value and risk is clear, the product can choose the right intervention: surface insight, create a task,
-            draft the next action, execute a bounded action, or escalate to a reviewer. That is the real product design decision.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="market" class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Market Read</p>
-        <h2>The useful lesson from products like Youlify and AiRCM is not their copywriting. It is what they reveal about system priorities.</h2>
-        <p>
-          I read the market as a signal of what matters operationally: centralized work management, human-supervised automation,
-          payer visibility, and deep integration with existing systems.
-        </p>
-      </div>
-
-      <div class="signal-grid">
-        <article class="signal-card reveal">
-          <div class="signal-meta">
-            <span class="signal-tag">Youlify</span>
-            <a href="https://www.youlify.ai/" target="_blank" rel="noreferrer">official site</a>
-          </div>
-          <h3>Signal: command center plus AI plus experts</h3>
-          <p>
-            Youlify emphasizes a command center, AI agents, bulk action workflows, and expert oversight. That tells me the
-            product needs a work orchestration layer, not just a user-facing assistant.
-          </p>
+<!-- ═══════════ SLIDE 2 ═══════════ -->
+<section id="slide2">
+  <div class="slide-inner">
+    <div class="slide-label"><span class="num">2</span> Context</div>
+    <h2 class="slide-title">Where RCM Lives: EHR, EDI Standards, and the FHIR API Layer</h2>
+    <div class="takeaway">
+      <div class="takeaway-label">Key Takeaway</div>
+      <p>Every dollar in RCM flows through three data layers. Understanding them explains why data quality, integration cost, and compliance are structural constraints &mdash; not optional technical details.</p>
+      <ul>
+        <li><strong>EHR</strong> &mdash; the clinical system of record (Epic, Oracle, etc.)</li>
+        <li><strong>X12 EDI</strong> &mdash; the HIPAA-mandated transaction pipe (270/271, 278, 837, 835)</li>
+        <li><strong>FHIR R4</strong> &mdash; the emerging API standard, with CMS-0057-F mandating Prior Auth APIs by Jan 2027</li>
+      </ul>
+    </div>
+    <div class="diagram-wrapper">
+      <div class="diagram-title">Three-Layer Data Architecture</div>
+      <div class="layer-cards">
+        <div class="layer-card clinical">
+          <h4>Clinical Layer</h4>
+          <div class="layer-sub">System of Record</div>
           <ul>
-            <li>Product implication: one place to prioritize work across multiple RCM domains.</li>
-            <li>Architecture implication: one shared claim timeline, queue model, and evidence trail.</li>
-            <li>Design response: make the command center the operating core, not only a reporting surface.</li>
+            <li>EHR (Epic, Oracle, etc.)</li>
+            <li>Diagnoses / Medications / Procedures</li>
+            <li>ICD-10 / CPT Coding</li>
           </ul>
-        </article>
-
-        <article class="signal-card reveal">
-          <div class="signal-meta">
-            <span class="signal-tag">AiRCM</span>
-            <a href="https://nexxgenaircm.com/" target="_blank" rel="noreferrer">NexxGen AIRCM</a>
-          </div>
-          <h3>Signal: integrations, rules, remit handling, denial replay</h3>
-          <p>
-            AiRCM-style products usually stress bidirectional EHR integration, remit automation, denial replay, and rules engines.
-            That tells me the moat is in the system of action, not only in the user experience.
-          </p>
-          <ul>
-            <li>Product implication: teams want action, not just recommendations.</li>
-            <li>Architecture implication: the platform needs a canonical claim graph, not prompt-only context assembly.</li>
-            <li>Design response: treat policies, contracts, remits, and denials as versioned operational assets.</li>
-          </ul>
-        </article>
-
-        <article class="signal-card reveal">
-          <div class="signal-meta">
-            <span class="signal-tag">Conclusion</span>
-            <span>Product stance</span>
-          </div>
-          <h3>The hard part is control and accountability</h3>
-          <p>
-            The market already shows there is demand for AI in RCM. The real challenge is deciding when the platform may act,
-            what evidence it must show, which rules it must honor, and how a manager can audit or reverse the outcome.
-          </p>
-          <ul>
-            <li>Use LLMs for interpretation, extraction, reasoning, and drafting.</li>
-            <li>Use deterministic workflow for actions, permissions, thresholds, and review routing.</li>
-            <li>Make expert oversight a designed product tier, not a fallback after failure.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section id="model" class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">System Model</p>
-        <h2>Split the platform into three systems: record, intelligence, and action.</h2>
-        <p>
-          This is the cleanest way to keep the product understandable. It also gives engineering a stable decomposition for
-          integrations, data modeling, and workflow execution.
-        </p>
-      </div>
-
-      <div class="triad-grid">
-        <article class="triad-card reveal">
-          <div class="triad-index">01</div>
-          <h3>System of Record</h3>
-          <p>
-            The platform should not pretend to replace the EHR, the practice management system, the clearinghouse, or the
-            payer portal. Those remain the sources of truth for many operational facts.
-          </p>
-          <div class="chip-row">
-            <span>EHR / EMR</span>
-            <span>Practice Management</span>
-            <span>Clearinghouse</span>
-            <span>Payer Portals</span>
-            <span>Document Repositories</span>
-          </div>
-        </article>
-
-        <article class="triad-card reveal">
-          <div class="triad-index">02</div>
-          <h3>System of Intelligence</h3>
-          <p>
-            This layer normalizes claim facts, policy text, contract logic, remittance signals, and denial patterns into one
-            shared reasoning surface for both people and models.
-          </p>
-          <div class="chip-row">
-            <span>Canonical Graph</span>
-            <span>Policy Store</span>
-            <span>Contract Memory</span>
-            <span>Search and Retrieval</span>
-            <span>Evaluation Warehouse</span>
-          </div>
-        </article>
-
-        <article class="triad-card reveal">
-          <div class="triad-index">03</div>
-          <h3>System of Action</h3>
-          <p>
-            This is where tasks are routed, approvals are enforced, actions are logged, and the platform moves work forward
-            instead of only describing it.
-          </p>
-          <div class="chip-row">
-            <span>Agents</span>
-            <span>Workflow Engine</span>
-            <span>Approval Gates</span>
-            <span>Bulk Actions</span>
-            <span>Exception Queues</span>
-          </div>
-        </article>
-      </div>
-
-      <div class="event-band reveal">
-        <div class="event-band-head">
-          <strong>Agents should run on events, not casual prompts.</strong>
-          <span>The platform should activate because business state changed, not because someone typed a general request.</span>
         </div>
-        <div class="event-chips">
-          <span>patient scheduled</span>
-          <span>eligibility failed</span>
-          <span>auth missing</span>
-          <span>note signed</span>
-          <span>claim scrub reject</span>
-          <span>277CA reject</span>
-          <span>835 received</span>
-          <span>CARC spike detected</span>
-          <span>payer policy updated</span>
+        <div class="layer-card edi">
+          <h4>Admin / EDI Layer</h4>
+          <div class="layer-sub">HIPAA Transaction Pipe</div>
+          <ul>
+            <li>X12 270/271 &mdash; Eligibility</li>
+            <li>X12 278 &mdash; Prior Auth</li>
+            <li>X12 837 &mdash; Claims Submit</li>
+            <li>X12 835 &mdash; Remittance</li>
+            <li>X12 277 &mdash; Claim Status</li>
+          </ul>
+        </div>
+        <div class="layer-card fhir">
+          <h4>Emerging API Layer</h4>
+          <div class="layer-sub">FHIR R4 Standard</div>
+          <ul>
+            <li>FHIR R4 APIs</li>
+            <li>CMS-0057-F Compliance</li>
+            <li>Prior Auth API</li>
+            <li>Provider Access API</li>
+            <li>Payer-to-Payer API</li>
+          </ul>
         </div>
       </div>
-    </section>
-
-    <section id="architecture" class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Architecture</p>
-        <h2>Build the product as a layered operating model, not as one large autonomous agent.</h2>
-        <p>
-          This keeps the system legible. It also lets the business adopt more automation over time without losing control of
-          approval paths, evidence requirements, or audit history.
-        </p>
+      <div class="layer-flow">
+        <div class="layer-flow-box">EHR</div>
+        <div class="layer-flow-arrow">&rarr;</div>
+        <div class="layer-flow-box">Clearinghouse</div>
+        <div class="layer-flow-arrow">&rarr;</div>
+        <div class="layer-flow-box">Payer (EDI)</div>
+        <div class="layer-flow-arrow">&rarr;</div>
+        <div class="layer-flow-box">FHIR APIs</div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="architecture-layout">
-        <div class="stack">
-          <article class="layer-card reveal">
-            <div class="layer-order">Layer 01</div>
-            <h3>Work Surfaces</h3>
-            <p>
-              Different users need different views of the same operating truth: billers, coders, denial specialists, RCM managers,
-              finance leaders, and outsourced service teams.
-            </p>
-            <div class="chip-row">
-              <span>Operations cockpit</span>
-              <span>Coder review</span>
-              <span>Denial desk</span>
-              <span>Manager dashboard</span>
+<!-- ═══════════ SLIDE 3 ═══════════ -->
+<section id="slide3">
+  <div class="slide-inner">
+    <div class="slide-label"><span class="num">3</span> System Complexity</div>
+    <h2 class="slide-title">Why RCM Is Hard: The Real Workflow Complexity</h2>
+    <div class="takeaway">
+      <div class="takeaway-label">Key Takeaway</div>
+      <p>A single claim touches dozens of systems, standards, and decision gates before a dollar is collected. The two workflows below &mdash; claim lifecycle and denial resolution &mdash; show why automation requires deep domain modeling, not just a general-purpose AI layer.</p>
+    </div>
+    <div class="diagram-wrapper" style="padding:20px;">
+      <div class="eng-dual">
+        <!-- LEFT: CLAIM LIFECYCLE -->
+        <div class="eng-panel">
+          <div class="eng-title">CLAIM LIFECYCLE</div>
+          <div class="eng-subtitle">From clinical encounter to cash posting</div>
+          <div class="eng-u-shape">
+            <!-- LEFT COLUMN: steps 1-5 (top to bottom) -->
+            <div class="eng-u-left">
+              <div class="eng-node eng-ehr">
+                <div class="eng-node-h">Clinical Encounter</div>
+                <div class="eng-node-d">EHR System (Epic / Oracle / athena)</div>
+              </div>
+              <div class="eng-arrow"></div>
+              <div class="eng-node">
+                <div class="eng-node-h">Documentation Capture</div>
+                <div class="eng-node-d">Progress notes, H&amp;P, discharge summary</div>
+                <div class="eng-rule">Must support medical necessity per LCD/NCD</div>
+              </div>
+              <div class="eng-arrow"></div>
+              <div class="eng-node">
+                <div class="eng-node-h">Medical Coding</div>
+                <div class="eng-node-d">ICD-10-CM (~72K) + CPT (~10K)</div>
+                <div class="eng-rule">NCCI edits &middot; Excludes1/2 &middot; MUE</div>
+              </div>
+              <div class="eng-arrow"></div>
+              <div class="eng-node">
+                <div class="eng-node-h">Charge Capture</div>
+                <div class="eng-node-d">CPT &rarr; Fee Schedule &rarr; Charge lines</div>
+                <div class="eng-rule">Modifier 25/59/XE/XS validation</div>
+              </div>
+              <div class="eng-arrow"></div>
+              <div class="eng-node">
+                <div class="eng-node-h">Prior Auth Check</div>
+                <div class="eng-node-d">X12 278 &rarr; payer criteria match</div>
+                <div class="eng-rule">FHIR PA API by Jan 2027</div>
+              </div>
             </div>
-          </article>
-
-          <article class="layer-card reveal">
-            <div class="layer-order">Layer 02</div>
-            <h3>Command Center and Workflow Orchestration</h3>
-            <p>
-              Put a single orchestration layer in the middle of the product. It owns prioritization, task decomposition,
-              SLA routing, escalation, and reviewer assignment across all RCM functions.
-            </p>
-            <div class="chip-row">
-              <span>Event router</span>
-              <span>Task graph</span>
-              <span>SLA queue</span>
-              <span>Escalation policy</span>
+            <!-- RIGHT COLUMN: steps 6-10 (bottom to top, reversed) -->
+            <div class="eng-u-right">
+              <div class="eng-node">
+                <div class="eng-node-h">Patient Billing</div>
+                <div class="eng-node-d">Statement &middot; Payment plan &middot; Collections</div>
+                <div class="eng-rule">No Surprises Act &middot; Good Faith Estimate</div>
+              </div>
+              <div class="eng-arrow"></div>
+              <div class="eng-node eng-era">
+                <div class="eng-node-h">835 ERA / Payment</div>
+                <div class="eng-node-d">CARC/RARC &middot; Allowed amt &middot; Patient resp.</div>
+                <div class="eng-rule">Auto-post &middot; Variance detect &middot; Ledger</div>
+              </div>
+              <div class="eng-arrow"></div>
+              <div class="eng-node eng-payer">
+                <div class="eng-node-h">Payer Adjudication</div>
+                <div class="eng-node-d">277CA &rarr; 14&ndash;30 day processing</div>
+                <div class="eng-rule">Med policy &middot; Contract rate &middot; Benefit</div>
+              </div>
+              <div class="eng-arrow"></div>
+              <div class="eng-node eng-ch">
+                <div class="eng-node-h">Clearinghouse Scrub</div>
+                <div class="eng-node-d">Format validation &middot; Payer edits</div>
+                <div class="eng-rule">999 ACK &middot; TA1 Interchange ACK</div>
+              </div>
+              <div class="eng-arrow"></div>
+              <div class="eng-node">
+                <div class="eng-node-h">Claim Assembly (837P/I)</div>
+                <div class="eng-node-d">CMS-1500 / UB-04 field schema</div>
+                <div class="eng-rule">Loop 2300/2400 &middot; Dx pointer &middot; POS</div>
+              </div>
             </div>
-          </article>
-
-          <article class="layer-card reveal">
-            <div class="layer-order">Layer 03</div>
-            <h3>Specialist Agent Runtime</h3>
-            <p>
-              Each agent should have a narrow charter, a fixed tool set, and a structured output. No agent should own the full
-              claim lifecycle by itself.
-            </p>
-            <div class="chip-row">
-              <span>Pre-service</span>
-              <span>Coding</span>
-              <span>Payer surveillance</span>
-              <span>Denials</span>
-              <span>Policy</span>
-              <span>Billing operations</span>
-            </div>
-          </article>
-
-          <article class="layer-card reveal">
-            <div class="layer-order">Layer 04</div>
-            <h3>Knowledge and Decision Services</h3>
-            <p>
-              This layer combines retrieval, policy parsing, contract normalization, rules, variance detection, and document
-              intelligence. It is the reasoning infrastructure behind the agents.
-            </p>
-            <div class="chip-row">
-              <span>RAG</span>
-              <span>Rules engine</span>
-              <span>Variance detection</span>
-              <span>Document AI</span>
-              <span>Prompt routing</span>
-            </div>
-          </article>
-
-          <article class="layer-card reveal">
-            <div class="layer-order">Layer 05</div>
-            <h3>Data Plane and Integrations</h3>
-            <p>
-              The data plane must absorb real-world complexity: HL7, FHIR, X12, PDFs, fax, paper EOBs, portal workflows, and
-              staff notes. The platform cannot assume clean APIs everywhere.
-            </p>
-            <div class="chip-row">
-              <span>HL7 / APIs</span>
-              <span>X12 parsers</span>
-              <span>OCR and operators</span>
-              <span>Event store</span>
-              <span>Entity graph</span>
-            </div>
-          </article>
-
-          <article class="layer-card reveal">
-            <div class="layer-order">Layer 06</div>
-            <h3>Trust and Control Plane</h3>
-            <p>
-              This is what makes the system deployable. It covers permissions, audit, evidence, PHI boundaries, model versions,
-              policy snapshots, evaluation, and rollback.
-            </p>
-            <div class="chip-row">
-              <span>RBAC</span>
-              <span>Audit log</span>
-              <span>PHI scopes</span>
-              <span>Model registry</span>
-              <span>Online and offline evals</span>
-            </div>
-          </article>
+          </div>
         </div>
 
-        <aside class="control-rail reveal">
-          <div class="mini-label">Operating principles</div>
-          <h3>Keep these operating rules explicit from day one.</h3>
-          <ul class="control-list">
-            <li><strong>Tool permissions:</strong> each agent gets the minimum action surface it needs.</li>
-            <li><strong>Evidence contracts:</strong> recommendations must carry source, version, effective date, and confidence.</li>
-            <li><strong>Human gates:</strong> coding release, major appeals, and sensitive collections stay approval-based.</li>
-            <li><strong>Replayability:</strong> every decision should be traceable by claim, payer, agent, and model version.</li>
-            <li><strong>Evaluation:</strong> release through shadow mode, canary mode, and bounded automation.</li>
-            <li><strong>PHI hygiene:</strong> retrieval scope, retention, and redaction should be configurable.</li>
-          </ul>
-        </aside>
-      </div>
-    </section>
-
-    <section id="agents" class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Agent Design</p>
-        <h2>Define every agent by trigger, inputs, tools, outputs, and review gates.</h2>
-        <p>
-          Use this as the product specification for engineering. It keeps scope clear and makes the system testable.
-        </p>
-      </div>
-
-      <div class="agent-grid">
-        <article class="agent-card reveal">
-          <div class="agent-top">
-            <span class="agent-id">A1</span>
-            <h3>Pre-Service Collection Agent</h3>
+        <!-- RIGHT: DENIAL RESOLUTION -->
+        <div class="eng-panel">
+          <div class="eng-title">DENIAL RESOLUTION</div>
+          <div class="eng-subtitle">From denial receipt to final disposition</div>
+          <div class="eng-flow">
+            <div class="eng-node eng-deny">
+              <div class="eng-node-h">835 Denial Received</div>
+              <div class="eng-node-d">CARC code + RARC code + Remark</div>
+              <div class="eng-rule">CO (Contractual) &middot; PR (Patient) &middot; OA (Other)</div>
+            </div>
+            <div class="eng-arrow"></div>
+            <div class="eng-node">
+              <div class="eng-node-h">Denial Classification</div>
+              <div class="eng-node-d">Map CARC/RARC to root cause category</div>
+              <table class="eng-table">
+                <tr><td>CO-4</td><td>Modifier required</td></tr>
+                <tr><td>CO-16</td><td>Missing information</td></tr>
+                <tr><td>CO-50</td><td>Not medically necessary</td></tr>
+                <tr><td>CO-197</td><td>Prior auth missing</td></tr>
+                <tr><td>PR-1</td><td>Deductible</td></tr>
+                <tr><td>CO-29</td><td>Timely filing limit</td></tr>
+              </table>
+            </div>
+            <div class="eng-arrow"></div>
+            <div class="eng-branch-h">
+              <div class="eng-branch-label">Route by Category</div>
+            </div>
+            <div class="eng-branch-row">
+              <div class="eng-branch-col">
+                <div class="eng-node eng-tech">
+                  <div class="eng-node-h">Technical Fix</div>
+                  <div class="eng-node-d">Resubmit with correction</div>
+                  <div class="eng-rule">Wrong modifier &middot; Missing field &middot; Duplicate</div>
+                </div>
+                <div class="eng-arrow"></div>
+                <div class="eng-node">
+                  <div class="eng-node-h">Corrected 837</div>
+                  <div class="eng-node-d">Freq. code 7 (replacement) or 8 (void)</div>
+                </div>
+              </div>
+              <div class="eng-branch-col">
+                <div class="eng-node eng-clinical">
+                  <div class="eng-node-h">Clinical Appeal</div>
+                  <div class="eng-node-d">Medical necessity / coverage dispute</div>
+                  <div class="eng-rule">LCD/NCD reference &middot; Peer-reviewed lit.</div>
+                </div>
+                <div class="eng-arrow"></div>
+                <div class="eng-node">
+                  <div class="eng-node-h">Appeal Letter</div>
+                  <div class="eng-node-d">Structured: Header + Evidence + Citations</div>
+                  <div class="eng-rule">Payer-specific deadlines (60&ndash;180 days)</div>
+                </div>
+              </div>
+              <div class="eng-branch-col">
+                <div class="eng-node eng-writeoff">
+                  <div class="eng-node-h">Write-off</div>
+                  <div class="eng-node-d">Non-recoverable &middot; Timely filing &middot; Dup</div>
+                  <div class="eng-rule">Approval threshold &middot; Bad debt transfer</div>
+                </div>
+              </div>
+            </div>
+            <div class="eng-arrow"></div>
+            <div class="eng-node">
+              <div class="eng-node-h">Payer Response (2nd Adjudication)</div>
+              <div class="eng-node-d">Overturn &rarr; 835 payment &middot; Uphold &rarr; Level 2 appeal / External review</div>
+              <div class="eng-rule">60&ndash;90 day turnaround &middot; State-specific escalation rules</div>
+            </div>
+            <div class="eng-arrow"></div>
+            <div class="eng-node eng-feedback">
+              <div class="eng-node-h">Feedback Loop</div>
+              <div class="eng-node-d">Denial pattern &rarr; Coding alert &middot; PA rule update &middot; Model retrain</div>
+              <div class="eng-rule">835 &rarr; 837 linkage &middot; Payer behavior drift detection</div>
+            </div>
           </div>
-          <p>
-            Moves revenue upstream by checking coverage, estimating patient responsibility, and driving the right outreach path
-            before the date of service.
-          </p>
-          <dl>
-            <div><dt>Trigger</dt><dd>appointment scheduled, benefits changed, authorization missing</dd></div>
-            <div><dt>Inputs</dt><dd>270/271, benefits detail, charge context, patient history</dd></div>
-            <div><dt>Outputs</dt><dd>estimate, collection plan, counseling queue, payment plan options</dd></div>
-            <div><dt>Human Gate</dt><dd>high balances, hardship, sensitive exceptions</dd></div>
-          </dl>
-        </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <article class="agent-card reveal">
-          <div class="agent-top">
-            <span class="agent-id">A2</span>
-            <h3>Documentation and Coding Agent</h3>
+<!-- ═══════════ SLIDE 4 ═══════════ -->
+<section id="slide4">
+  <div class="slide-inner">
+    <div class="slide-label"><span class="num">4</span> KPIs &amp; AI</div>
+    <h2 class="slide-title">Evaluation System: Industry KPIs Meet AI Intervention Points</h2>
+    <div class="takeaway">
+      <div class="takeaway-label">Key Takeaway</div>
+      <p>CFOs and revenue cycle directors buy improvements to KPIs, not AI models. Any AI-native RCM product must demonstrate measurable impact on the metrics below &mdash; otherwise it won&rsquo;t close enterprise deals.</p>
+    </div>
+
+    <div class="diagram-wrapper" style="margin-bottom: 24px;">
+      <div class="diagram-title">Core KPI Framework</div>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-category">Net Collection Rate</div>
+          <div class="kpi-name">Net Collections / Net Collectable Revenue</div>
+          <div class="kpi-bench">Target: <strong>&ge; 95%</strong></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-category">Cash Flow Efficiency</div>
+          <div class="kpi-name">Days in Accounts Receivable</div>
+          <div class="kpi-bench">Healthy: <strong>30&ndash;40 days</strong> &nbsp;|&nbsp; &gt;50 = alarm</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-category">Claim Quality</div>
+          <div class="kpi-name">Clean Claim Rate (first-pass)</div>
+          <div class="kpi-bench">Target: <strong>90&ndash;95%</strong>, top performers: <strong>98%</strong></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-category">Risk Control</div>
+          <div class="kpi-name">Initial Denial Rate (volume &amp; dollars)</div>
+          <div class="kpi-bench">Varies by payer mix; <strong>trending up</strong> for Medicare Advantage</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diagram-wrapper">
+      <div class="diagram-title">AI Intervention &rarr; KPI Impact</div>
+      <div class="ai-map-grid">
+        <div class="ai-map-row">
+          <span class="ai-name">Auto Eligibility Verification</span>
+          <span class="ai-arrow">&rarr;</span>
+          <div class="ai-kpis">
+            <span class="kpi-tag up">Clean Claim Rate &uarr;</span>
+            <span class="kpi-tag down">Days in AR &darr;</span>
           </div>
-          <p>
-            Connects documentation quality with coding readiness, missing evidence detection, and cleaner claim creation.
-          </p>
-          <dl>
-            <div><dt>Trigger</dt><dd>note signed, charge lag detected, claim draft created</dd></div>
-            <div><dt>Inputs</dt><dd>clinical notes, ICD-10, HCPCS or CPT, NCCI edits, payer rules</dd></div>
-            <div><dt>Outputs</dt><dd>code suggestions, rationale, missing documentation tasks</dd></div>
-            <div><dt>Human Gate</dt><dd>final governed coding review</dd></div>
-          </dl>
-        </article>
-
-        <article class="agent-card reveal">
-          <div class="agent-top">
-            <span class="agent-id">A3</span>
-            <h3>Payer Surveillance Agent</h3>
+        </div>
+        <div class="ai-map-row">
+          <span class="ai-name">Prior Auth Prediction / Automation</span>
+          <span class="ai-arrow">&rarr;</span>
+          <div class="ai-kpis">
+            <span class="kpi-tag down">Days in AR &darr;</span>
+            <span class="kpi-tag down">Denial Rate &darr;</span>
           </div>
-          <p>
-            Watches payer behavior over time and detects drift early, before the team is looking at a large denial pile.
-          </p>
-          <dl>
-            <div><dt>Trigger</dt><dd>835 received, denial cluster detected, policy bulletin updated</dd></div>
-            <div><dt>Inputs</dt><dd>835, CARC or RARC, contract terms, payer policies</dd></div>
-            <div><dt>Outputs</dt><dd>watchlists, risk alerts, bulk correction opportunities</dd></div>
-            <div><dt>Human Gate</dt><dd>contract interpretation and payer negotiation</dd></div>
-          </dl>
-        </article>
-
-        <article class="agent-card reveal">
-          <div class="agent-top">
-            <span class="agent-id">A4</span>
-            <h3>Denial Management Agent</h3>
+        </div>
+        <div class="ai-map-row">
+          <span class="ai-name">Intelligent Coding Review</span>
+          <span class="ai-arrow">&rarr;</span>
+          <div class="ai-kpis">
+            <span class="kpi-tag up">Clean Claim Rate &uarr;</span>
+            <span class="kpi-tag down">Charge Lag &darr;</span>
           </div>
-          <p>
-            Turns a denial from a one-off task into a closed loop that explains root cause, drafts the next action, and feeds
-            prevention back upstream.
-          </p>
-          <dl>
-            <div><dt>Trigger</dt><dd>277 or 835 denial, appeal due date, underpayment variance</dd></div>
-            <div><dt>Inputs</dt><dd>claim timeline, remittance codes, chart, policy text, history</dd></div>
-            <div><dt>Outputs</dt><dd>appeal packet, corrected claim task, prevention insight</dd></div>
-            <div><dt>Human Gate</dt><dd>high-dollar appeals and medical necessity disputes</dd></div>
-          </dl>
-        </article>
-
-        <article class="agent-card reveal">
-          <div class="agent-top">
-            <span class="agent-id">A5</span>
-            <h3>Payer Policy Agent</h3>
+        </div>
+        <div class="ai-map-row">
+          <span class="ai-name">Denial Classification + Routing</span>
+          <span class="ai-arrow">&rarr;</span>
+          <div class="ai-kpis">
+            <span class="kpi-tag down">Denial Rate &darr;</span>
+            <span class="kpi-tag down">Cost to Collect &darr;</span>
           </div>
-          <p>
-            Converts policy documents and guide changes into operational rules, affected worklists, and specific billing actions.
-          </p>
-          <dl>
-            <div><dt>Trigger</dt><dd>policy update, companion guide revision, denial pattern shift</dd></div>
-            <div><dt>Inputs</dt><dd>payer PDFs, CMS coverage documents, guide deltas, claim outcomes</dd></div>
-            <div><dt>Outputs</dt><dd>structured policy graph, ruleset changes, targeted queues</dd></div>
-            <div><dt>Human Gate</dt><dd>policy validation before production release</dd></div>
-          </dl>
-        </article>
-
-        <article class="agent-card reveal">
-          <div class="agent-top">
-            <span class="agent-id">A6</span>
-            <h3>Billing Service Agent and Expert Team</h3>
+        </div>
+        <div class="ai-map-row">
+          <span class="ai-name">Auto Appeal Generation</span>
+          <span class="ai-arrow">&rarr;</span>
+          <div class="ai-kpis">
+            <span class="kpi-tag up">Net Collection Rate &uarr;</span>
+            <span class="kpi-tag down">Bad Debt &darr;</span>
           </div>
-          <p>
-            If the company also offers managed billing services, the AI layer and the human execution layer should live inside
-            the same operating surface, not in two disconnected systems.
-          </p>
-          <dl>
-            <div><dt>Trigger</dt><dd>backlog growth, aged exceptions, SLA risk, posting mismatch</dd></div>
-            <div><dt>Inputs</dt><dd>all upstream artifacts plus staffing capacity and service rules</dd></div>
-            <div><dt>Outputs</dt><dd>assignment routing, QA sampling, client visibility, service metrics</dd></div>
-            <div><dt>Human Gate</dt><dd>always present as the supervisory tier</dd></div>
-          </dl>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Shared Data Model</p>
-        <h2>Standardize the core entity model before scaling agent behavior.</h2>
-        <p>
-          This is a PM decision as much as an engineering decision. Without a shared operating model, each feature becomes
-          another silo and the platform loses coherence.
-        </p>
-      </div>
-
-      <div class="entity-grid">
-        <article class="entity-card reveal"><strong>Patient</strong><span>identity, demographics, financial profile</span></article>
-        <article class="entity-card reveal"><strong>Coverage</strong><span>plan, benefits, eligibility snapshots, COB</span></article>
-        <article class="entity-card reveal"><strong>Encounter</strong><span>appointment, visit, site, provider, specialty</span></article>
-        <article class="entity-card reveal"><strong>Authorization</strong><span>status, reference, evidence, expiration</span></article>
-        <article class="entity-card reveal"><strong>Claim</strong><span>header, payer, status, timeline, ownership</span></article>
-        <article class="entity-card reveal"><strong>Claim Line</strong><span>codes, modifiers, diagnoses, units, charge</span></article>
-        <article class="entity-card reveal"><strong>Remittance</strong><span>835, payment, adjustments, posting result</span></article>
-        <article class="entity-card reveal"><strong>Denial</strong><span>reason codes, root cause, appeal status, aging</span></article>
-        <article class="entity-card reveal"><strong>Policy</strong><span>coverage logic, attachment rules, medical necessity</span></article>
-        <article class="entity-card reveal"><strong>Contract</strong><span>fee schedule, carve-outs, expected reimbursement</span></article>
-        <article class="entity-card reveal"><strong>Balance</strong><span>payer balance, patient balance, plan, write-off</span></article>
-        <article class="entity-card reveal"><strong>Work Item</strong><span>owner, SLA, evidence, action history, resolution</span></article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Execution Playbooks</p>
-        <h2>Prove the platform with three closed-loop workflows before promising end-to-end autonomy.</h2>
-      </div>
-
-      <div class="workflow-list">
-        <details class="workflow-card reveal" open>
-          <summary>Playbook 01 · Pre-Service Collection and Authorization</summary>
-          <div class="workflow-body">
-            <ol>
-              <li>An appointment event enters the platform with patient, coverage, procedure, and site-of-service context.</li>
-              <li>The pre-service agent runs eligibility and benefit checks using 270 or 271 and payer APIs where available.</li>
-              <li>If authorization is needed, the system checks policy requirements and prior authorization rules.</li>
-              <li>If supporting information is missing, the product creates a checklist task for staff instead of free-form model behavior.</li>
-              <li>The system estimates patient responsibility and recommends the right collection path.</li>
-              <li>Sensitive balances and special financial cases move to a human queue with the evidence already assembled.</li>
-            </ol>
+        </div>
+        <div class="ai-map-row">
+          <span class="ai-name">Patient Financial Counseling AI</span>
+          <span class="ai-arrow">&rarr;</span>
+          <div class="ai-kpis">
+            <span class="kpi-tag down">Bad Debt &darr;</span>
           </div>
-        </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <details class="workflow-card reveal">
-          <summary>Playbook 02 · Documentation, Coding, Claim Creation, and Scrub</summary>
-          <div class="workflow-body">
-            <ol>
-              <li>When the note is signed, document intelligence extracts diagnoses, procedure candidates, and missing evidence.</li>
-              <li>The coding agent compares the extracted facts against code sets, edits, specialty playbooks, and payer rules.</li>
-              <li>The output is structured: code suggestions, rationale, and a list of documentation tasks.</li>
-              <li>The claim builder creates a draft claim and runs payer-specific rule packs before clearinghouse submission.</li>
-              <li>Complex cases move into governed coding review before release.</li>
-              <li>After submission, 277CA and downstream status are tracked so rejections feed prevention logic upstream.</li>
-            </ol>
+<!-- ═══════════ SLIDE 5 ═══════════ -->
+<section id="slide5">
+  <div class="slide-inner">
+    <div class="slide-label"><span class="num">5</span> Architecture</div>
+    <h2 class="slide-title">AI-native RCM: Five Specialized Systems Working Together</h2>
+    <div class="takeaway">
+      <div class="takeaway-label">Key Takeaway</div>
+      <p>The right architecture is not one large model &mdash; it is five purpose-built systems collaborating through a shared feedback loop:</p>
+      <ul>
+        <li><strong>PA Agent</strong> &mdash; tool-calling + RAG criteria matching</li>
+        <li><strong>Coding Engine</strong> &mdash; encoder + rule constraints + LLM reasoning, confidence-gated</li>
+        <li><strong>Denial Scorer</strong> &mdash; payer-specific GBM + SHAP, millisecond inference</li>
+        <li><strong>Appeal Generator</strong> &mdash; RAG + structured generation, mandatory human review</li>
+        <li><strong>835 Feedback Pipeline</strong> &mdash; continuous learning, payer drift detection</li>
+      </ul>
+    </div>
+    <div class="diagram-wrapper">
+      <div class="diagram-title">Compound AI Architecture</div>
+      <div class="arch-stack">
+        <!-- EHR -->
+        <div class="arch-box ehr">
+          <div class="arch-label">EHR / PM System</div>
+          <div class="arch-sublabel">Epic &middot; Oracle &middot; athenahealth</div>
+        </div>
+        <div class="arch-connector"></div>
+        <div class="arch-connector-label">FHIR R4 API / CDS Hooks</div>
+        <div class="arch-connector"></div>
+
+        <!-- Platform -->
+        <div class="arch-platform">
+          <div class="arch-platform-title">AI-RCM Platform Layer</div>
+
+          <div class="arch-3col">
+            <div class="arch-module">
+              <div class="mod-title">Prior Auth Agent</div>
+              <div class="mod-sub">Tool-calling + RAG</div>
+            </div>
+            <div class="arch-module">
+              <div class="mod-title">Autonomous Coding</div>
+              <div class="mod-sub">Encoder + Rules + LLM</div>
+            </div>
+            <div class="arch-module">
+              <div class="mod-title">Denial Prediction</div>
+              <div class="mod-sub">Payer-specific GBM + SHAP</div>
+            </div>
           </div>
-        </details>
 
-        <details class="workflow-card reveal">
-          <summary>Playbook 03 · Denial Recovery and Payer Surveillance</summary>
-          <div class="workflow-body">
-            <ol>
-              <li>When the 835 arrives, the system parses remittance codes, payment variance, and patient responsibility.</li>
-              <li>The denial agent clusters root cause while the surveillance agent checks whether the issue reflects broader payer drift.</li>
-              <li>Single-claim issues become correction or appeal tasks. Payer-wide issues become bulk action opportunities.</li>
-              <li>The policy agent checks recent policy or guide changes that may explain the variance.</li>
-              <li>Appeals, rebills, and underpayment recovery pass through release gates before execution.</li>
-              <li>The resolution outcome updates prevention logic across coding, documentation, and front-end workflow.</li>
-            </ol>
+          <div class="arch-connector"></div>
+
+          <div class="arch-inner-box">
+            <div class="mod-title">Human Review Queue <span class="hitl-badge">HITL</span></div>
+            <div class="mod-sub">Confidence-based routing</div>
           </div>
-        </details>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-inner-box">
+            <div class="mod-title">Claims Submission</div>
+            <div class="mod-sub">837 &rarr; Clearinghouse + FHIR PA API</div>
+          </div>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-wide-box">
+            <div class="mod-title">835 Feedback Loop</div>
+            <div class="mod-sub">Denial &rarr; Label &rarr; Retrain &rarr; Alert &rarr; Rule Update</div>
+          </div>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-wide-box">
+            <div class="mod-title">Appeal Generation</div>
+            <div class="mod-sub">RAG + Template + Human Review &rarr; Submit</div>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Standards and Constraints</p>
-        <h2>Design the product around industry constraints from the start.</h2>
-        <p>
-          These are not reference notes. They are design inputs that determine the data model, integration model, release process,
-          and credibility of the product in the market.
-        </p>
+<!-- ═══════════ SLIDE 6 ═══════════ -->
+<section id="slide6">
+  <div class="slide-inner">
+    <div class="slide-label"><span class="num">6</span> Market</div>
+    <h2 class="slide-title">Market Ecosystem: Size, Players, and Moats</h2>
+    <div class="takeaway">
+      <div class="takeaway-label">Key Takeaway</div>
+      <p>RCM is a <strong>$344B market</strong> where services account for 67% of spend. Two landmark transactions define the strategic terrain:</p>
+      <ul>
+        <li><strong>R1 RCM&rsquo;s $8.9B take-private</strong> (2024) &mdash; PE sees AI-driven labor substitution as a value creation lever</li>
+        <li><strong>DOJ&rsquo;s antitrust suit against UnitedHealth / Change Healthcare</strong> &mdash; claims data concentration triggers regulatory scrutiny</li>
+      </ul>
+      <p style="margin-top:8px;">Distribution moats (EHR/PM channels) and data moats (claims databases) are real &mdash; but also regulatory sensitive.</p>
+    </div>
+    <div class="diagram-wrapper">
+      <div class="diagram-title">RCM Market Ecosystem</div>
+      <div class="market-stack">
+        <div class="market-row">
+          <div class="mr-label">
+            <h4>Clearinghouses</h4>
+            <span class="mr-moat">Infrastructure / Plumbing</span>
+          </div>
+          <div class="mr-content">
+            <div class="mr-companies">Change Healthcare &middot; Availity &middot; Waystar &middot; Optum</div>
+            <div class="mr-desc">Process all EDI transactions; mandatory pass-through for claims</div>
+          </div>
+        </div>
+        <div class="market-row">
+          <div class="mr-label">
+            <h4>EHR/PM Vendors</h4>
+            <span class="mr-moat">Distribution Moat</span>
+          </div>
+          <div class="mr-content">
+            <div class="mr-companies">Epic &middot; Oracle Cerner &middot; athenahealth &middot; eClinicalWorks</div>
+            <div class="mr-desc">Bundle RCM modules with EHR; dominant channel advantage</div>
+          </div>
+        </div>
+        <div class="market-row">
+          <div class="mr-label">
+            <h4>Pure-Play RCM Software</h4>
+            <span class="mr-moat">Feature Depth</span>
+          </div>
+          <div class="mr-content">
+            <div class="mr-companies">Waystar &middot; Nthrive &middot; Experian Health &middot; Change HC Analytics</div>
+            <div class="mr-desc">Deep payer connectivity, analytics, specialty coverage</div>
+          </div>
+        </div>
+        <div class="market-row">
+          <div class="mr-label">
+            <h4>BPO / Outsourced Services</h4>
+            <span class="mr-moat">Scale + Contract Moat</span>
+          </div>
+          <div class="mr-content">
+            <div class="mr-companies">R1 RCM &middot; Parallon &middot; Optum360 &middot; Conifer Health Solutions</div>
+            <div class="mr-desc">High contract value, long-term relationships, AI retrofit targets</div>
+          </div>
+        </div>
+        <div class="market-row">
+          <div class="mr-label">
+            <h4>AI-Native Startups</h4>
+            <span class="mr-moat">Innovation Wedge</span>
+          </div>
+          <div class="mr-content">
+            <div class="mr-companies">Fathom &middot; Nym &middot; CodaMetrix &middot; Cohere Health &middot; Camber &middot; Infinitus</div>
+            <div class="mr-desc">Specialty focus, data flywheel, HITL design</div>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="standards-grid">
-        <article class="standard-card reveal">
-          <h3>X12 and HIPAA Transactions</h3>
-          <p>
-            Eligibility, claim status, prior authorization, claims, and remittance workflows must align with the standard transaction
-            model. The product should treat those transactions as first-class operating objects, not imported files.
-          </p>
-          <div class="note-callout">Design implication: every workflow needs a transaction view, an acknowledgement path, and an exception path.</div>
-        </article>
-
-        <article class="standard-card reveal">
-          <h3>CAQH CORE and Payer Variance</h3>
-          <p>
-            Supporting the transaction standard is not enough. Payers still vary through operating rules and companion guides. The
-            platform needs an adapter model that can preserve those differences cleanly.
-          </p>
-          <div class="note-callout">Design implication: standard transactions and payer-specific rules need to be versioned together.</div>
-        </article>
-
-        <article class="standard-card reveal">
-          <h3>FHIR and Prior Authorization APIs</h3>
-          <p>
-            The CMS interoperability and prior authorization direction means the product cannot stop at X12. As of March 13, 2026,
-            parts of the operational requirements are already in effect and the broader API requirements are approaching the 2027 deadline.
-          </p>
-          <div class="note-callout">Design implication: one canonical model should support both transaction and API-based execution.</div>
-        </article>
-
-        <article class="standard-card reveal">
-          <h3>Code Sets and Effective Dates</h3>
-          <p>
-            ICD-10, HCPCS, NCCI, LCD, and NCD rules all change over time. Recommendations must be date-aware or they become brittle
-            the moment a rule set changes.
-          </p>
-          <div class="note-callout">Design implication: every decision should store service date, policy date, and rule version.</div>
-        </article>
-
-        <article class="standard-card reveal">
-          <h3>HIPAA Security and Audit Controls</h3>
-          <p>
-            Permissions, unique identity, auditability, integrity, and transmission security are not infrastructure details. They
-            determine whether an AI-assisted action can be trusted and reviewed later.
-          </p>
-          <div class="note-callout">Design implication: audit is a visible product feature, not a hidden back-office concern.</div>
-        </article>
-
-        <article class="standard-card reveal">
-          <h3>Licensed Content Boundaries</h3>
-          <p>
-            Some code systems and mappings live behind licensing boundaries. The knowledge layer needs to respect that reality instead
-            of treating all rule sources as generic training data.
-          </p>
-          <div class="note-callout">Design implication: build a license-aware knowledge plane with entitlement checks.</div>
-        </article>
+<!-- ═══════════ SLIDE 7 ═══════════ -->
+<section id="slide7">
+  <div class="slide-inner">
+    <div class="slide-label"><span class="num">7</span> Strategy</div>
+    <h2 class="slide-title">VC/PE Thesis, Failure Modes, and Defensibility</h2>
+    <div class="takeaway">
+      <div class="takeaway-label">Key Takeaway</div>
+      <p>The real moat is not the model &mdash; it is the combination of three things:</p>
+      <ul>
+        <li><strong>Workflow control node</strong> &mdash; own a high-frequency step that&rsquo;s hard to replace (PA, coding review, denial routing)</li>
+        <li><strong>Specialty data flywheel</strong> &mdash; accumulate claims data in a narrow vertical (e.g., Camber: 93% first-pass collection rate vs. industry 60&ndash;80%)</li>
+        <li><strong>Outcome-based pricing</strong> &mdash; sell on collection rate improvement, not per-seat</li>
+      </ul>
+      <p style="margin-top:8px;">The startup killer: over-indexing on tech without solving distribution &mdash; or building a services operation that never transitions to software margins.</p>
+    </div>
+    <div class="diagram-wrapper">
+      <div class="diagram-title">Weak vs. Strong Moats</div>
+      <div class="moat-table">
+        <div class="moat-col">
+          <div class="moat-col-header weak">Weak Moat (Not Durable)</div>
+          <div class="moat-item weak-item">AI model accuracy</div>
+          <div class="moat-item weak-item">Broad feature coverage</div>
+          <div class="moat-item weak-item">Brand / marketing</div>
+          <div class="moat-item weak-item">Early customer success stories</div>
+          <div class="moat-item weak-item">Generic LLM access</div>
+        </div>
+        <div class="moat-arrows">
+          <div class="moat-arrow-icon">&harr;</div>
+          <div class="moat-arrow-icon">&harr;</div>
+          <div class="moat-arrow-icon">&harr;</div>
+          <div class="moat-arrow-icon">&harr;</div>
+          <div class="moat-arrow-icon">&harr;</div>
+        </div>
+        <div class="moat-col">
+          <div class="moat-col-header strong">Strong Moat (Durable)</div>
+          <div class="moat-item strong-item">Specialty data flywheel (claims DB)</div>
+          <div class="moat-item strong-item">Workflow control node</div>
+          <div class="moat-item strong-item">EHR/PM channel embedding</div>
+          <div class="moat-item strong-item">Contract lock-in + switching costs</div>
+          <div class="moat-item strong-item">Domain-specific data + audit trail</div>
+        </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Autonomy Boundaries</p>
-        <h2>State clearly what the product can automate and what must remain governed.</h2>
-      </div>
+<!-- ═══════════ APPENDIX ═══════════ -->
+<section id="appendix">
+  <div class="slide-inner">
+    <div class="slide-label"><span class="num" style="background:var(--gray-500);">A</span> Appendix</div>
+    <h2 class="slide-title">Data Sources &amp; References</h2>
 
-      <div class="table-shell reveal">
-        <table class="autonomy-table">
-          <thead>
-            <tr>
-              <th>Action</th>
-              <th>Assist</th>
-              <th>Guarded Execute</th>
-              <th>Human Required</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Eligibility and claim status checks</td>
-              <td>Summarize results and explain exceptions</td>
-              <td>Run checks automatically</td>
-              <td>Only access exceptions</td>
-            </tr>
-            <tr>
-              <td>Code and modifier suggestions</td>
-              <td>Draft rationale and missing documentation prompts</td>
-              <td>Low-risk governed scopes only</td>
-              <td>Final coding release</td>
-            </tr>
-            <tr>
-              <td>Claim corrections and rebills</td>
-              <td>Prepare corrected claim package</td>
-              <td>Bulk low-risk corrections</td>
-              <td>Complex or high-dollar claims</td>
-            </tr>
-            <tr>
-              <td>Appeal drafting</td>
-              <td>Build packet and evidence list</td>
-              <td>Auto-submit only under explicit policy and thresholds</td>
-              <td>Medical necessity and high-risk cases</td>
-            </tr>
-            <tr>
-              <td>ERA and EOB posting</td>
-              <td>Flag mismatch and explain adjustments</td>
-              <td>Touchless posting for clean matches</td>
-              <td>Variance or ambiguity</td>
-            </tr>
-            <tr>
-              <td>Patient collections outreach</td>
-              <td>Generate scripts and estimate explanations</td>
-              <td>Standard reminders and payment-plan nudges</td>
-              <td>Hardship and sensitive cases</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+    <div class="ref-section">
+      <div class="ref-section-title">Slide 1 &mdash; Revenue Cycle</div>
+      <ul class="ref-list">
+        <li><span class="ref-tag">HFMA</span> <a href="https://www.hfma.org/revenue-cycle/" target="_blank" rel="noopener">HFMA Revenue Cycle Management &mdash; Definition &amp; Resources</a></li>
+        <li><span class="ref-tag">PMC</span> <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11219169/" target="_blank" rel="noopener">Revenue Cycle Management in Healthcare: A Comprehensive Review (PMC, 2024)</a></li>
+      </ul>
+    </div>
 
-    <section id="roadmap" class="section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Delivery Roadmap</p>
-        <h2>Ship the platform in three phases.</h2>
-        <p>
-          Large provider organizations usually accept AI through a progression: better visibility first, then assisted execution,
-          then bounded automation. The roadmap should follow that reality.
-        </p>
-      </div>
+    <div class="ref-section">
+      <div class="ref-section-title">Slide 2 &mdash; Context (EHR / EDI / FHIR)</div>
+      <ul class="ref-list">
+        <li><span class="ref-tag">ONC</span> <a href="https://www.healthit.gov/topic/health-it-and-health-information-exchange-basics/what-electronic-health-record-ehr" target="_blank" rel="noopener">HealthIT.gov &mdash; What Is an Electronic Health Record (EHR)?</a></li>
+        <li><span class="ref-tag">HL7</span> <a href="https://hl7.org/fhir/" target="_blank" rel="noopener">HL7 FHIR (Fast Healthcare Interoperability Resources) &mdash; Official Specification</a></li>
+        <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f" target="_blank" rel="noopener">CMS-0057-F: Interoperability and Prior Authorization Final Rule (Jan 2024)</a></li>
+        <li><span class="ref-tag">X12</span> <a href="https://x12.org/" target="_blank" rel="noopener">X12.org &mdash; HIPAA EDI Transaction Standards</a></li>
+        <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/medicare/coding-billing/electronic-billing-edi-transactions" target="_blank" rel="noopener">CMS Electronic Billing &amp; EDI Transactions &mdash; Adopted Standards</a></li>
+      </ul>
+    </div>
 
-      <div class="roadmap-grid">
-        <article class="roadmap-card reveal">
-          <div class="roadmap-phase">Phase 1</div>
-          <h3>Visibility and Structured Assist</h3>
-          <p>
-            Start with the command center, claim timeline, policy graph, denial clustering, and payer surveillance. The first goal is
-            better operational visibility and faster root-cause analysis.
-          </p>
-          <ul>
-            <li>Core deliverables: queue model, policy ingestion, claim graph, surveillance views.</li>
-            <li>Primary outcome: make the work legible and measurable.</li>
-          </ul>
-        </article>
+    <div class="ref-section">
+      <div class="ref-section-title">Slide 3 &mdash; System Complexity (Workflow)</div>
+      <ul class="ref-list">
+        <li><span class="ref-tag">AMA</span> <a href="https://www.ama-assn.org/practice-management/prior-authorization" target="_blank" rel="noopener">AMA Prior Authorization Resources &amp; 2024 Physician Survey</a></li>
+        <li><span class="ref-tag">CAQH</span> <a href="https://www.caqh.org/insights/caqh-index" target="_blank" rel="noopener">CAQH Index &mdash; 2024 Annual Report on Healthcare Administrative Transactions</a></li>
+        <li><span class="ref-tag">AHA</span> <a href="https://www.aha.org/2024-02-28-change-healthcare-cyberattack" target="_blank" rel="noopener">AHA &mdash; 2024 Change Healthcare Cyberattack Impact Report</a></li>
+      </ul>
+    </div>
 
-        <article class="roadmap-card reveal">
-          <div class="roadmap-phase">Phase 2</div>
-          <h3>Guarded Workflow Execution</h3>
-          <p>
-            Add approval gates, coding assist, pre-service collection workflows, low-risk rebill paths, and touchless posting where
-            reconciliation is clean.
-          </p>
-          <ul>
-            <li>Core deliverables: bulk actions, reviewer routing, exception queues, rule-bound execution.</li>
-            <li>Primary outcome: measurable productivity and cleaner downstream operations.</li>
-          </ul>
-        </article>
+    <div class="ref-section">
+      <div class="ref-section-title">Slide 4 &mdash; Evaluation (KPIs &amp; AI)</div>
+      <ul class="ref-list">
+        <li><span class="ref-tag">HFMA</span> <a href="https://www.hfma.org/industry-initiatives/map/" target="_blank" rel="noopener">HFMA MAP Keys &mdash; 29 Revenue Cycle KPIs</a></li>
+        <li><span class="ref-tag">KLAS</span> <a href="https://klasresearch.com/" target="_blank" rel="noopener">KLAS Research &mdash; Autonomous Medical Coding 2025 Report</a></li>
+        <li><span class="ref-tag">AHA</span> <a href="https://www.aha.org/" target="_blank" rel="noopener">AHA &mdash; 3 Ways AI Can Improve Revenue Cycle Management (2024)</a></li>
+      </ul>
+    </div>
 
-        <article class="roadmap-card reveal">
-          <div class="roadmap-phase">Phase 3</div>
-          <h3>Bounded Automation and Optimization</h3>
-          <p>
-            Only after the control plane is mature would I allow bounded auto mode for defined low-risk workflows, with continuous
-            evaluation and clear rollback paths.
-          </p>
-          <ul>
-            <li>Core deliverables: automation policies, adaptive payer playbooks, online evaluation.</li>
-            <li>Primary outcome: higher throughput without losing governance.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
+    <div class="ref-section">
+      <div class="ref-section-title">Slide 5 &mdash; Architecture (Compound AI)</div>
+      <ul class="ref-list">
+        <li><span class="ref-tag">NEJM AI</span> <a href="https://ai.nejm.org/" target="_blank" rel="noopener">NEJM AI &mdash; Large Language Models Are Poor Medical Coders (2024)</a></li>
+        <li><span class="ref-tag">arXiv</span> <a href="https://arxiv.org/abs/1802.05695" target="_blank" rel="noopener">CAML: Explainable Prediction of Medical Codes from Clinical Text (Mullenbach et al., 2018)</a></li>
+        <li><span class="ref-tag">CMS</span> <a href="https://www.cms.gov/medicare/coding-billing/national-correct-coding-initiative-edits" target="_blank" rel="noopener">CMS NCCI &mdash; National Correct Coding Initiative Edits</a></li>
+      </ul>
+    </div>
 
-    <section class="section sources-section">
-      <div class="section-head reveal">
-        <p class="section-kicker">Reference Backbone</p>
-        <h2>The page is grounded in public market signals and official standards.</h2>
-      </div>
+    <div class="ref-section">
+      <div class="ref-section-title">Slide 6 &mdash; Market Landscape</div>
+      <ul class="ref-list">
+        <li><span class="ref-tag">GVR</span> <a href="https://www.grandviewresearch.com/industry-analysis/us-revenue-cycle-management-market" target="_blank" rel="noopener">Grand View Research &mdash; U.S. RCM Market Size ($343.78B, 2024)</a></li>
+        <li><span class="ref-tag">SEC</span> <a href="https://www.sec.gov/cgi-bin/browse-edgar?company=waystar&CIK=&type=S-1&dateb=&owner=include&count=10&search_text=&action=getcompany" target="_blank" rel="noopener">Waystar IPO Prospectus (SEC EDGAR, S-1 Filing, June 2024)</a></li>
+        <li><span class="ref-tag">DOJ</span> <a href="https://www.justice.gov/opa/pr/justice-department-sues-block-unitedhealth-group-s-acquisition-change-healthcare" target="_blank" rel="noopener">DOJ &mdash; Lawsuit to Block UnitedHealth / Change Healthcare Acquisition (2022)</a></li>
+      </ul>
+    </div>
 
-      <div class="sources-grid">
-        <article class="source-card reveal">
-          <h3>Market</h3>
-          <ul>
-            <li><a href="https://www.youlify.ai/" target="_blank" rel="noreferrer">Youlify home</a></li>
-            <li><a href="https://www.youlify.ai/solutions/rcm-platform" target="_blank" rel="noreferrer">Youlify RCM Platform</a></li>
-            <li><a href="https://www.youlify.ai/who-we-serve/hospitals-healthcare-systems" target="_blank" rel="noreferrer">Youlify hospitals and health systems</a></li>
-            <li><a href="https://nexxgenaircm.com/" target="_blank" rel="noreferrer">NexxGen AIRCM</a></li>
-          </ul>
-        </article>
+    <div class="ref-section">
+      <div class="ref-section-title">Slide 7 &mdash; Strategic Insight</div>
+      <ul class="ref-list">
+        <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/its-time-to-build-healthtech-infrastructure/" target="_blank" rel="noopener">a16z &mdash; It&rsquo;s Time to Build: Healthtech Infrastructure (Jan 2025)</a></li>
+        <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/unbundling-the-bpo-how-ai-will-disrupt-outsourced-work/" target="_blank" rel="noopener">a16z &mdash; Unbundling the BPO (Feb 2025)</a></li>
+        <li><span class="ref-tag">a16z</span> <a href="https://a16z.com/announcement/investing-in-camber/" target="_blank" rel="noopener">a16z &mdash; Investing in Camber: Specialty-Focused RCM</a></li>
+      </ul>
+    </div>
 
-        <article class="source-card reveal">
-          <h3>Administrative Standards</h3>
-          <ul>
-            <li><a href="https://www.cms.gov/priorities/key-initiatives/burden-reduction/administrative-simplification/transactions" target="_blank" rel="noreferrer">CMS transaction overview</a></li>
-            <li><a href="https://www.caqh.org/core/operating-rules" target="_blank" rel="noreferrer">CAQH CORE operating rules</a></li>
-            <li><a href="https://www.cms.gov/Medicare/Billing/ElectronicBillingEDITrans/CompanionGuides.html" target="_blank" rel="noreferrer">CMS companion guides</a></li>
-          </ul>
-        </article>
+  </div>
+</section>
 
-        <article class="source-card reveal">
-          <h3>FHIR and Prior Authorization</h3>
-          <ul>
-            <li><a href="https://www.cms.gov/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f" target="_blank" rel="noreferrer">CMS final rule CMS-0057-F</a></li>
-            <li><a href="https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f" target="_blank" rel="noreferrer">CMS fact sheet</a></li>
-            <li><a href="https://www.hl7.org/fhir/us/davinci-pas/" target="_blank" rel="noreferrer">HL7 Da Vinci PAS</a></li>
-            <li><a href="https://www.hl7.org/fhir/claim.html" target="_blank" rel="noreferrer">HL7 Claim</a></li>
-            <li><a href="https://www.hl7.org/fhir/explanationofbenefit.html" target="_blank" rel="noreferrer">HL7 ExplanationOfBenefit</a></li>
-          </ul>
-        </article>
+<!-- ───── FOOTER ───── -->
+<footer style="text-align:center; padding:40px 24px; background:var(--gray-900); color:var(--gray-400); font-size:.78rem;">
+  Haoqi Shen &middot; Product &amp; AI &middot; Youlify PM Interview Presentation &middot; Mar 15, 2026
+</footer>
 
-        <article class="source-card reveal">
-          <h3>Coding, Coverage, and Security</h3>
-          <ul>
-            <li><a href="https://www.cms.gov/medicare/coding-billing/national-correct-coding-initiative-ncci-edits/medicare-ncci-policy-manual" target="_blank" rel="noreferrer">CMS NCCI manual</a></li>
-            <li><a href="https://www.cms.gov/medicare/coding-billing/healthcare-common-procedure-system" target="_blank" rel="noreferrer">CMS HCPCS</a></li>
-            <li><a href="https://www.cms.gov/medicare/coding-billing/icd-10-codes" target="_blank" rel="noreferrer">CMS ICD-10</a></li>
-            <li><a href="https://www.cms.gov/medicare-coverage-database/" target="_blank" rel="noreferrer">CMS Medicare Coverage Database</a></li>
-            <li><a href="https://www.law.cornell.edu/cfr/text/45/164.312" target="_blank" rel="noreferrer">45 CFR 164.312</a></li>
-            <li><a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noreferrer">NIST AI RMF</a></li>
-          </ul>
-        </article>
-      </div>
-    </section>
-  </main>
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
 
-  <footer class="page-footer">
-    <p>
-      A long-form product and architecture page for a governed RCM AI platform.
-    </p>
-  </footer>
-
-  <script src="rcm-script.js" defer></script>
+  // Active nav link
+  const sections = document.querySelectorAll('section');
+  const links = document.querySelectorAll('nav .nav-links a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(s => observer.observe(s));
+</script>
 </body>
 </html>
