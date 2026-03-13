@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RCM Agentic AI Architecture</title>
+  <meta
+    name="description"
+    content="A product-led architecture page describing how to design an Agentic AI platform for healthcare revenue cycle management."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;700&amp;display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="rcm-styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top">
+      <span class="brand-mark">RCM</span>
+      <span class="brand-copy">
+        <strong>Agentic AI Architecture</strong>
+        <small>Product Strategy and System Design</small>
+      </span>
+    </a>
+
+    <nav class="topnav" aria-label="Section navigation">
+      <a href="#problem">Problem</a>
+      <a href="#market">Market Read</a>
+      <a href="#model">System Model</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#agents">Agents</a>
+      <a href="#roadmap">Roadmap</a>
+    </nav>
+  </header>
+
+  <main id="top" class="page-shell">
+    <section class="hero section">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">Product approach</p>
+        <h1>Design an Agentic AI platform for revenue cycle management.</h1>
+        <p class="hero-lead">
+          Start with operating systems, not with a general chatbot for billing teams. Break the problem into a
+          small number of systems: how work enters the platform, how decisions are made, how actions are
+          executed, and where human review must stay in the loop.
+        </p>
+        <p class="hero-lead">
+          This page is written in a PM style. It explains the problem framing, the system boundaries, the agent model,
+          the standards that constrain the design, and the phased rollout needed to make the product credible in a real
+          provider environment.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#architecture">View the architecture</a>
+          <a class="button button-secondary" href="#roadmap">View the delivery plan</a>
+        </div>
+      </div>
+
+      <div class="hero-panel reveal">
+        <div class="metric-grid">
+          <article class="metric-card">
+            <strong>6</strong>
+            <span>specialist agents</span>
+            <small>Focused on pre-service, coding, surveillance, denials, policy, and billing execution.</small>
+          </article>
+          <article class="metric-card">
+            <strong>12</strong>
+            <span>core entities</span>
+            <small>One shared model for patient, coverage, claim, remittance, denial, policy, contract, and work items.</small>
+          </article>
+          <article class="metric-card">
+            <strong>3</strong>
+            <span>autonomy levels</span>
+            <small>Assist, guarded execution, and bounded automation with explicit approval rules.</small>
+          </article>
+          <article class="metric-card">
+            <strong>1</strong>
+            <span>control plane</span>
+            <small>Audit, permissions, evidence, evaluation, versioning, and rollback across all workflows.</small>
+          </article>
+        </div>
+
+        <div class="hero-thesis">
+          <div class="mini-label">Product Thesis</div>
+          <h2>Build a governed revenue operating system, not a loose collection of AI demos.</h2>
+          <p>
+            Use a simple operating principle: API and EDI first, operator automation second, human oversight always visible.
+            If the platform cannot explain why it acted, what rule it used, and who approved the outcome, it is not ready
+            for enterprise RCM.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem" class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Problem Decomposition</p>
+        <h2>Define the product problem in four layers before designing agents.</h2>
+        <p>
+          This keeps the roadmap grounded. It prevents the product from becoming a vague promise of automation without a
+          clear understanding of where value is created and where risk is introduced.
+        </p>
+      </div>
+
+      <div class="signal-grid">
+        <article class="signal-card reveal">
+          <div class="signal-meta">
+            <span class="signal-tag">Layer 1</span>
+            <span>Business outcome</span>
+          </div>
+          <h3>Where does the money leak?</h3>
+          <p>
+            The business problem is not "billing is manual." The business problem is that cash leaks at predictable points:
+            eligibility issues, missing authorization, weak documentation, coding variance, claim rejections, underpayments,
+            and delayed appeal handling.
+          </p>
+        </article>
+
+        <article class="signal-card reveal">
+          <div class="signal-meta">
+            <span class="signal-tag">Layer 2</span>
+            <span>Operating workflow</span>
+          </div>
+          <h3>Which team owns the issue today?</h3>
+          <p>
+            Each leakage point maps to an operating team: front office, coding, billing, denial management, or payer follow-up.
+            The product needs to improve those workflows before it tries to replace them.
+          </p>
+        </article>
+
+        <article class="signal-card reveal">
+          <div class="signal-meta">
+            <span class="signal-tag">Layer 3</span>
+            <span>Decision system</span>
+          </div>
+          <h3>What drives the decision?</h3>
+          <p>
+            The platform must know whether the decision is driven by policy text, payer behavior, contract terms, coding rules,
+            prior history, or a hard compliance boundary. That distinction determines which part should be model-based and which
+            part must stay deterministic.
+          </p>
+        </article>
+
+        <article class="signal-card reveal">
+          <div class="signal-meta">
+            <span class="signal-tag">Layer 4</span>
+            <span>Intervention model</span>
+          </div>
+          <h3>What should the product actually do?</h3>
+          <p>
+            Once the source of value and risk is clear, the product can choose the right intervention: surface insight, create a task,
+            draft the next action, execute a bounded action, or escalate to a reviewer. That is the real product design decision.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="market" class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Market Read</p>
+        <h2>The useful lesson from products like Youlify and AiRCM is not their copywriting. It is what they reveal about system priorities.</h2>
+        <p>
+          I read the market as a signal of what matters operationally: centralized work management, human-supervised automation,
+          payer visibility, and deep integration with existing systems.
+        </p>
+      </div>
+
+      <div class="signal-grid">
+        <article class="signal-card reveal">
+          <div class="signal-meta">
+            <span class="signal-tag">Youlify</span>
+            <a href="https://www.youlify.ai/" target="_blank" rel="noreferrer">official site</a>
+          </div>
+          <h3>Signal: command center plus AI plus experts</h3>
+          <p>
+            Youlify emphasizes a command center, AI agents, bulk action workflows, and expert oversight. That tells me the
+            product needs a work orchestration layer, not just a user-facing assistant.
+          </p>
+          <ul>
+            <li>Product implication: one place to prioritize work across multiple RCM domains.</li>
+            <li>Architecture implication: one shared claim timeline, queue model, and evidence trail.</li>
+            <li>Design response: make the command center the operating core, not only a reporting surface.</li>
+          </ul>
+        </article>
+
+        <article class="signal-card reveal">
+          <div class="signal-meta">
+            <span class="signal-tag">AiRCM</span>
+            <a href="https://nexxgenaircm.com/" target="_blank" rel="noreferrer">NexxGen AIRCM</a>
+          </div>
+          <h3>Signal: integrations, rules, remit handling, denial replay</h3>
+          <p>
+            AiRCM-style products usually stress bidirectional EHR integration, remit automation, denial replay, and rules engines.
+            That tells me the moat is in the system of action, not only in the user experience.
+          </p>
+          <ul>
+            <li>Product implication: teams want action, not just recommendations.</li>
+            <li>Architecture implication: the platform needs a canonical claim graph, not prompt-only context assembly.</li>
+            <li>Design response: treat policies, contracts, remits, and denials as versioned operational assets.</li>
+          </ul>
+        </article>
+
+        <article class="signal-card reveal">
+          <div class="signal-meta">
+            <span class="signal-tag">Conclusion</span>
+            <span>Product stance</span>
+          </div>
+          <h3>The hard part is control and accountability</h3>
+          <p>
+            The market already shows there is demand for AI in RCM. The real challenge is deciding when the platform may act,
+            what evidence it must show, which rules it must honor, and how a manager can audit or reverse the outcome.
+          </p>
+          <ul>
+            <li>Use LLMs for interpretation, extraction, reasoning, and drafting.</li>
+            <li>Use deterministic workflow for actions, permissions, thresholds, and review routing.</li>
+            <li>Make expert oversight a designed product tier, not a fallback after failure.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="model" class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">System Model</p>
+        <h2>Split the platform into three systems: record, intelligence, and action.</h2>
+        <p>
+          This is the cleanest way to keep the product understandable. It also gives engineering a stable decomposition for
+          integrations, data modeling, and workflow execution.
+        </p>
+      </div>
+
+      <div class="triad-grid">
+        <article class="triad-card reveal">
+          <div class="triad-index">01</div>
+          <h3>System of Record</h3>
+          <p>
+            The platform should not pretend to replace the EHR, the practice management system, the clearinghouse, or the
+            payer portal. Those remain the sources of truth for many operational facts.
+          </p>
+          <div class="chip-row">
+            <span>EHR / EMR</span>
+            <span>Practice Management</span>
+            <span>Clearinghouse</span>
+            <span>Payer Portals</span>
+            <span>Document Repositories</span>
+          </div>
+        </article>
+
+        <article class="triad-card reveal">
+          <div class="triad-index">02</div>
+          <h3>System of Intelligence</h3>
+          <p>
+            This layer normalizes claim facts, policy text, contract logic, remittance signals, and denial patterns into one
+            shared reasoning surface for both people and models.
+          </p>
+          <div class="chip-row">
+            <span>Canonical Graph</span>
+            <span>Policy Store</span>
+            <span>Contract Memory</span>
+            <span>Search and Retrieval</span>
+            <span>Evaluation Warehouse</span>
+          </div>
+        </article>
+
+        <article class="triad-card reveal">
+          <div class="triad-index">03</div>
+          <h3>System of Action</h3>
+          <p>
+            This is where tasks are routed, approvals are enforced, actions are logged, and the platform moves work forward
+            instead of only describing it.
+          </p>
+          <div class="chip-row">
+            <span>Agents</span>
+            <span>Workflow Engine</span>
+            <span>Approval Gates</span>
+            <span>Bulk Actions</span>
+            <span>Exception Queues</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="event-band reveal">
+        <div class="event-band-head">
+          <strong>Agents should run on events, not casual prompts.</strong>
+          <span>The platform should activate because business state changed, not because someone typed a general request.</span>
+        </div>
+        <div class="event-chips">
+          <span>patient scheduled</span>
+          <span>eligibility failed</span>
+          <span>auth missing</span>
+          <span>note signed</span>
+          <span>claim scrub reject</span>
+          <span>277CA reject</span>
+          <span>835 received</span>
+          <span>CARC spike detected</span>
+          <span>payer policy updated</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture" class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Architecture</p>
+        <h2>Build the product as a layered operating model, not as one large autonomous agent.</h2>
+        <p>
+          This keeps the system legible. It also lets the business adopt more automation over time without losing control of
+          approval paths, evidence requirements, or audit history.
+        </p>
+      </div>
+
+      <div class="architecture-layout">
+        <div class="stack">
+          <article class="layer-card reveal">
+            <div class="layer-order">Layer 01</div>
+            <h3>Work Surfaces</h3>
+            <p>
+              Different users need different views of the same operating truth: billers, coders, denial specialists, RCM managers,
+              finance leaders, and outsourced service teams.
+            </p>
+            <div class="chip-row">
+              <span>Operations cockpit</span>
+              <span>Coder review</span>
+              <span>Denial desk</span>
+              <span>Manager dashboard</span>
+            </div>
+          </article>
+
+          <article class="layer-card reveal">
+            <div class="layer-order">Layer 02</div>
+            <h3>Command Center and Workflow Orchestration</h3>
+            <p>
+              Put a single orchestration layer in the middle of the product. It owns prioritization, task decomposition,
+              SLA routing, escalation, and reviewer assignment across all RCM functions.
+            </p>
+            <div class="chip-row">
+              <span>Event router</span>
+              <span>Task graph</span>
+              <span>SLA queue</span>
+              <span>Escalation policy</span>
+            </div>
+          </article>
+
+          <article class="layer-card reveal">
+            <div class="layer-order">Layer 03</div>
+            <h3>Specialist Agent Runtime</h3>
+            <p>
+              Each agent should have a narrow charter, a fixed tool set, and a structured output. No agent should own the full
+              claim lifecycle by itself.
+            </p>
+            <div class="chip-row">
+              <span>Pre-service</span>
+              <span>Coding</span>
+              <span>Payer surveillance</span>
+              <span>Denials</span>
+              <span>Policy</span>
+              <span>Billing operations</span>
+            </div>
+          </article>
+
+          <article class="layer-card reveal">
+            <div class="layer-order">Layer 04</div>
+            <h3>Knowledge and Decision Services</h3>
+            <p>
+              This layer combines retrieval, policy parsing, contract normalization, rules, variance detection, and document
+              intelligence. It is the reasoning infrastructure behind the agents.
+            </p>
+            <div class="chip-row">
+              <span>RAG</span>
+              <span>Rules engine</span>
+              <span>Variance detection</span>
+              <span>Document AI</span>
+              <span>Prompt routing</span>
+            </div>
+          </article>
+
+          <article class="layer-card reveal">
+            <div class="layer-order">Layer 05</div>
+            <h3>Data Plane and Integrations</h3>
+            <p>
+              The data plane must absorb real-world complexity: HL7, FHIR, X12, PDFs, fax, paper EOBs, portal workflows, and
+              staff notes. The platform cannot assume clean APIs everywhere.
+            </p>
+            <div class="chip-row">
+              <span>HL7 / APIs</span>
+              <span>X12 parsers</span>
+              <span>OCR and operators</span>
+              <span>Event store</span>
+              <span>Entity graph</span>
+            </div>
+          </article>
+
+          <article class="layer-card reveal">
+            <div class="layer-order">Layer 06</div>
+            <h3>Trust and Control Plane</h3>
+            <p>
+              This is what makes the system deployable. It covers permissions, audit, evidence, PHI boundaries, model versions,
+              policy snapshots, evaluation, and rollback.
+            </p>
+            <div class="chip-row">
+              <span>RBAC</span>
+              <span>Audit log</span>
+              <span>PHI scopes</span>
+              <span>Model registry</span>
+              <span>Online and offline evals</span>
+            </div>
+          </article>
+        </div>
+
+        <aside class="control-rail reveal">
+          <div class="mini-label">Operating principles</div>
+          <h3>Keep these operating rules explicit from day one.</h3>
+          <ul class="control-list">
+            <li><strong>Tool permissions:</strong> each agent gets the minimum action surface it needs.</li>
+            <li><strong>Evidence contracts:</strong> recommendations must carry source, version, effective date, and confidence.</li>
+            <li><strong>Human gates:</strong> coding release, major appeals, and sensitive collections stay approval-based.</li>
+            <li><strong>Replayability:</strong> every decision should be traceable by claim, payer, agent, and model version.</li>
+            <li><strong>Evaluation:</strong> release through shadow mode, canary mode, and bounded automation.</li>
+            <li><strong>PHI hygiene:</strong> retrieval scope, retention, and redaction should be configurable.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section id="agents" class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Agent Design</p>
+        <h2>Define every agent by trigger, inputs, tools, outputs, and review gates.</h2>
+        <p>
+          Use this as the product specification for engineering. It keeps scope clear and makes the system testable.
+        </p>
+      </div>
+
+      <div class="agent-grid">
+        <article class="agent-card reveal">
+          <div class="agent-top">
+            <span class="agent-id">A1</span>
+            <h3>Pre-Service Collection Agent</h3>
+          </div>
+          <p>
+            Moves revenue upstream by checking coverage, estimating patient responsibility, and driving the right outreach path
+            before the date of service.
+          </p>
+          <dl>
+            <div><dt>Trigger</dt><dd>appointment scheduled, benefits changed, authorization missing</dd></div>
+            <div><dt>Inputs</dt><dd>270/271, benefits detail, charge context, patient history</dd></div>
+            <div><dt>Outputs</dt><dd>estimate, collection plan, counseling queue, payment plan options</dd></div>
+            <div><dt>Human Gate</dt><dd>high balances, hardship, sensitive exceptions</dd></div>
+          </dl>
+        </article>
+
+        <article class="agent-card reveal">
+          <div class="agent-top">
+            <span class="agent-id">A2</span>
+            <h3>Documentation and Coding Agent</h3>
+          </div>
+          <p>
+            Connects documentation quality with coding readiness, missing evidence detection, and cleaner claim creation.
+          </p>
+          <dl>
+            <div><dt>Trigger</dt><dd>note signed, charge lag detected, claim draft created</dd></div>
+            <div><dt>Inputs</dt><dd>clinical notes, ICD-10, HCPCS or CPT, NCCI edits, payer rules</dd></div>
+            <div><dt>Outputs</dt><dd>code suggestions, rationale, missing documentation tasks</dd></div>
+            <div><dt>Human Gate</dt><dd>final governed coding review</dd></div>
+          </dl>
+        </article>
+
+        <article class="agent-card reveal">
+          <div class="agent-top">
+            <span class="agent-id">A3</span>
+            <h3>Payer Surveillance Agent</h3>
+          </div>
+          <p>
+            Watches payer behavior over time and detects drift early, before the team is looking at a large denial pile.
+          </p>
+          <dl>
+            <div><dt>Trigger</dt><dd>835 received, denial cluster detected, policy bulletin updated</dd></div>
+            <div><dt>Inputs</dt><dd>835, CARC or RARC, contract terms, payer policies</dd></div>
+            <div><dt>Outputs</dt><dd>watchlists, risk alerts, bulk correction opportunities</dd></div>
+            <div><dt>Human Gate</dt><dd>contract interpretation and payer negotiation</dd></div>
+          </dl>
+        </article>
+
+        <article class="agent-card reveal">
+          <div class="agent-top">
+            <span class="agent-id">A4</span>
+            <h3>Denial Management Agent</h3>
+          </div>
+          <p>
+            Turns a denial from a one-off task into a closed loop that explains root cause, drafts the next action, and feeds
+            prevention back upstream.
+          </p>
+          <dl>
+            <div><dt>Trigger</dt><dd>277 or 835 denial, appeal due date, underpayment variance</dd></div>
+            <div><dt>Inputs</dt><dd>claim timeline, remittance codes, chart, policy text, history</dd></div>
+            <div><dt>Outputs</dt><dd>appeal packet, corrected claim task, prevention insight</dd></div>
+            <div><dt>Human Gate</dt><dd>high-dollar appeals and medical necessity disputes</dd></div>
+          </dl>
+        </article>
+
+        <article class="agent-card reveal">
+          <div class="agent-top">
+            <span class="agent-id">A5</span>
+            <h3>Payer Policy Agent</h3>
+          </div>
+          <p>
+            Converts policy documents and guide changes into operational rules, affected worklists, and specific billing actions.
+          </p>
+          <dl>
+            <div><dt>Trigger</dt><dd>policy update, companion guide revision, denial pattern shift</dd></div>
+            <div><dt>Inputs</dt><dd>payer PDFs, CMS coverage documents, guide deltas, claim outcomes</dd></div>
+            <div><dt>Outputs</dt><dd>structured policy graph, ruleset changes, targeted queues</dd></div>
+            <div><dt>Human Gate</dt><dd>policy validation before production release</dd></div>
+          </dl>
+        </article>
+
+        <article class="agent-card reveal">
+          <div class="agent-top">
+            <span class="agent-id">A6</span>
+            <h3>Billing Service Agent and Expert Team</h3>
+          </div>
+          <p>
+            If the company also offers managed billing services, the AI layer and the human execution layer should live inside
+            the same operating surface, not in two disconnected systems.
+          </p>
+          <dl>
+            <div><dt>Trigger</dt><dd>backlog growth, aged exceptions, SLA risk, posting mismatch</dd></div>
+            <div><dt>Inputs</dt><dd>all upstream artifacts plus staffing capacity and service rules</dd></div>
+            <div><dt>Outputs</dt><dd>assignment routing, QA sampling, client visibility, service metrics</dd></div>
+            <div><dt>Human Gate</dt><dd>always present as the supervisory tier</dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Shared Data Model</p>
+        <h2>Standardize the core entity model before scaling agent behavior.</h2>
+        <p>
+          This is a PM decision as much as an engineering decision. Without a shared operating model, each feature becomes
+          another silo and the platform loses coherence.
+        </p>
+      </div>
+
+      <div class="entity-grid">
+        <article class="entity-card reveal"><strong>Patient</strong><span>identity, demographics, financial profile</span></article>
+        <article class="entity-card reveal"><strong>Coverage</strong><span>plan, benefits, eligibility snapshots, COB</span></article>
+        <article class="entity-card reveal"><strong>Encounter</strong><span>appointment, visit, site, provider, specialty</span></article>
+        <article class="entity-card reveal"><strong>Authorization</strong><span>status, reference, evidence, expiration</span></article>
+        <article class="entity-card reveal"><strong>Claim</strong><span>header, payer, status, timeline, ownership</span></article>
+        <article class="entity-card reveal"><strong>Claim Line</strong><span>codes, modifiers, diagnoses, units, charge</span></article>
+        <article class="entity-card reveal"><strong>Remittance</strong><span>835, payment, adjustments, posting result</span></article>
+        <article class="entity-card reveal"><strong>Denial</strong><span>reason codes, root cause, appeal status, aging</span></article>
+        <article class="entity-card reveal"><strong>Policy</strong><span>coverage logic, attachment rules, medical necessity</span></article>
+        <article class="entity-card reveal"><strong>Contract</strong><span>fee schedule, carve-outs, expected reimbursement</span></article>
+        <article class="entity-card reveal"><strong>Balance</strong><span>payer balance, patient balance, plan, write-off</span></article>
+        <article class="entity-card reveal"><strong>Work Item</strong><span>owner, SLA, evidence, action history, resolution</span></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Execution Playbooks</p>
+        <h2>Prove the platform with three closed-loop workflows before promising end-to-end autonomy.</h2>
+      </div>
+
+      <div class="workflow-list">
+        <details class="workflow-card reveal" open>
+          <summary>Playbook 01 · Pre-Service Collection and Authorization</summary>
+          <div class="workflow-body">
+            <ol>
+              <li>An appointment event enters the platform with patient, coverage, procedure, and site-of-service context.</li>
+              <li>The pre-service agent runs eligibility and benefit checks using 270 or 271 and payer APIs where available.</li>
+              <li>If authorization is needed, the system checks policy requirements and prior authorization rules.</li>
+              <li>If supporting information is missing, the product creates a checklist task for staff instead of free-form model behavior.</li>
+              <li>The system estimates patient responsibility and recommends the right collection path.</li>
+              <li>Sensitive balances and special financial cases move to a human queue with the evidence already assembled.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="workflow-card reveal">
+          <summary>Playbook 02 · Documentation, Coding, Claim Creation, and Scrub</summary>
+          <div class="workflow-body">
+            <ol>
+              <li>When the note is signed, document intelligence extracts diagnoses, procedure candidates, and missing evidence.</li>
+              <li>The coding agent compares the extracted facts against code sets, edits, specialty playbooks, and payer rules.</li>
+              <li>The output is structured: code suggestions, rationale, and a list of documentation tasks.</li>
+              <li>The claim builder creates a draft claim and runs payer-specific rule packs before clearinghouse submission.</li>
+              <li>Complex cases move into governed coding review before release.</li>
+              <li>After submission, 277CA and downstream status are tracked so rejections feed prevention logic upstream.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="workflow-card reveal">
+          <summary>Playbook 03 · Denial Recovery and Payer Surveillance</summary>
+          <div class="workflow-body">
+            <ol>
+              <li>When the 835 arrives, the system parses remittance codes, payment variance, and patient responsibility.</li>
+              <li>The denial agent clusters root cause while the surveillance agent checks whether the issue reflects broader payer drift.</li>
+              <li>Single-claim issues become correction or appeal tasks. Payer-wide issues become bulk action opportunities.</li>
+              <li>The policy agent checks recent policy or guide changes that may explain the variance.</li>
+              <li>Appeals, rebills, and underpayment recovery pass through release gates before execution.</li>
+              <li>The resolution outcome updates prevention logic across coding, documentation, and front-end workflow.</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Standards and Constraints</p>
+        <h2>Design the product around industry constraints from the start.</h2>
+        <p>
+          These are not reference notes. They are design inputs that determine the data model, integration model, release process,
+          and credibility of the product in the market.
+        </p>
+      </div>
+
+      <div class="standards-grid">
+        <article class="standard-card reveal">
+          <h3>X12 and HIPAA Transactions</h3>
+          <p>
+            Eligibility, claim status, prior authorization, claims, and remittance workflows must align with the standard transaction
+            model. The product should treat those transactions as first-class operating objects, not imported files.
+          </p>
+          <div class="note-callout">Design implication: every workflow needs a transaction view, an acknowledgement path, and an exception path.</div>
+        </article>
+
+        <article class="standard-card reveal">
+          <h3>CAQH CORE and Payer Variance</h3>
+          <p>
+            Supporting the transaction standard is not enough. Payers still vary through operating rules and companion guides. The
+            platform needs an adapter model that can preserve those differences cleanly.
+          </p>
+          <div class="note-callout">Design implication: standard transactions and payer-specific rules need to be versioned together.</div>
+        </article>
+
+        <article class="standard-card reveal">
+          <h3>FHIR and Prior Authorization APIs</h3>
+          <p>
+            The CMS interoperability and prior authorization direction means the product cannot stop at X12. As of March 13, 2026,
+            parts of the operational requirements are already in effect and the broader API requirements are approaching the 2027 deadline.
+          </p>
+          <div class="note-callout">Design implication: one canonical model should support both transaction and API-based execution.</div>
+        </article>
+
+        <article class="standard-card reveal">
+          <h3>Code Sets and Effective Dates</h3>
+          <p>
+            ICD-10, HCPCS, NCCI, LCD, and NCD rules all change over time. Recommendations must be date-aware or they become brittle
+            the moment a rule set changes.
+          </p>
+          <div class="note-callout">Design implication: every decision should store service date, policy date, and rule version.</div>
+        </article>
+
+        <article class="standard-card reveal">
+          <h3>HIPAA Security and Audit Controls</h3>
+          <p>
+            Permissions, unique identity, auditability, integrity, and transmission security are not infrastructure details. They
+            determine whether an AI-assisted action can be trusted and reviewed later.
+          </p>
+          <div class="note-callout">Design implication: audit is a visible product feature, not a hidden back-office concern.</div>
+        </article>
+
+        <article class="standard-card reveal">
+          <h3>Licensed Content Boundaries</h3>
+          <p>
+            Some code systems and mappings live behind licensing boundaries. The knowledge layer needs to respect that reality instead
+            of treating all rule sources as generic training data.
+          </p>
+          <div class="note-callout">Design implication: build a license-aware knowledge plane with entitlement checks.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Autonomy Boundaries</p>
+        <h2>State clearly what the product can automate and what must remain governed.</h2>
+      </div>
+
+      <div class="table-shell reveal">
+        <table class="autonomy-table">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Assist</th>
+              <th>Guarded Execute</th>
+              <th>Human Required</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Eligibility and claim status checks</td>
+              <td>Summarize results and explain exceptions</td>
+              <td>Run checks automatically</td>
+              <td>Only access exceptions</td>
+            </tr>
+            <tr>
+              <td>Code and modifier suggestions</td>
+              <td>Draft rationale and missing documentation prompts</td>
+              <td>Low-risk governed scopes only</td>
+              <td>Final coding release</td>
+            </tr>
+            <tr>
+              <td>Claim corrections and rebills</td>
+              <td>Prepare corrected claim package</td>
+              <td>Bulk low-risk corrections</td>
+              <td>Complex or high-dollar claims</td>
+            </tr>
+            <tr>
+              <td>Appeal drafting</td>
+              <td>Build packet and evidence list</td>
+              <td>Auto-submit only under explicit policy and thresholds</td>
+              <td>Medical necessity and high-risk cases</td>
+            </tr>
+            <tr>
+              <td>ERA and EOB posting</td>
+              <td>Flag mismatch and explain adjustments</td>
+              <td>Touchless posting for clean matches</td>
+              <td>Variance or ambiguity</td>
+            </tr>
+            <tr>
+              <td>Patient collections outreach</td>
+              <td>Generate scripts and estimate explanations</td>
+              <td>Standard reminders and payment-plan nudges</td>
+              <td>Hardship and sensitive cases</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="roadmap" class="section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Delivery Roadmap</p>
+        <h2>Ship the platform in three phases.</h2>
+        <p>
+          Large provider organizations usually accept AI through a progression: better visibility first, then assisted execution,
+          then bounded automation. The roadmap should follow that reality.
+        </p>
+      </div>
+
+      <div class="roadmap-grid">
+        <article class="roadmap-card reveal">
+          <div class="roadmap-phase">Phase 1</div>
+          <h3>Visibility and Structured Assist</h3>
+          <p>
+            Start with the command center, claim timeline, policy graph, denial clustering, and payer surveillance. The first goal is
+            better operational visibility and faster root-cause analysis.
+          </p>
+          <ul>
+            <li>Core deliverables: queue model, policy ingestion, claim graph, surveillance views.</li>
+            <li>Primary outcome: make the work legible and measurable.</li>
+          </ul>
+        </article>
+
+        <article class="roadmap-card reveal">
+          <div class="roadmap-phase">Phase 2</div>
+          <h3>Guarded Workflow Execution</h3>
+          <p>
+            Add approval gates, coding assist, pre-service collection workflows, low-risk rebill paths, and touchless posting where
+            reconciliation is clean.
+          </p>
+          <ul>
+            <li>Core deliverables: bulk actions, reviewer routing, exception queues, rule-bound execution.</li>
+            <li>Primary outcome: measurable productivity and cleaner downstream operations.</li>
+          </ul>
+        </article>
+
+        <article class="roadmap-card reveal">
+          <div class="roadmap-phase">Phase 3</div>
+          <h3>Bounded Automation and Optimization</h3>
+          <p>
+            Only after the control plane is mature would I allow bounded auto mode for defined low-risk workflows, with continuous
+            evaluation and clear rollback paths.
+          </p>
+          <ul>
+            <li>Core deliverables: automation policies, adaptive payer playbooks, online evaluation.</li>
+            <li>Primary outcome: higher throughput without losing governance.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section sources-section">
+      <div class="section-head reveal">
+        <p class="section-kicker">Reference Backbone</p>
+        <h2>The page is grounded in public market signals and official standards.</h2>
+      </div>
+
+      <div class="sources-grid">
+        <article class="source-card reveal">
+          <h3>Market</h3>
+          <ul>
+            <li><a href="https://www.youlify.ai/" target="_blank" rel="noreferrer">Youlify home</a></li>
+            <li><a href="https://www.youlify.ai/solutions/rcm-platform" target="_blank" rel="noreferrer">Youlify RCM Platform</a></li>
+            <li><a href="https://www.youlify.ai/who-we-serve/hospitals-healthcare-systems" target="_blank" rel="noreferrer">Youlify hospitals and health systems</a></li>
+            <li><a href="https://nexxgenaircm.com/" target="_blank" rel="noreferrer">NexxGen AIRCM</a></li>
+          </ul>
+        </article>
+
+        <article class="source-card reveal">
+          <h3>Administrative Standards</h3>
+          <ul>
+            <li><a href="https://www.cms.gov/priorities/key-initiatives/burden-reduction/administrative-simplification/transactions" target="_blank" rel="noreferrer">CMS transaction overview</a></li>
+            <li><a href="https://www.caqh.org/core/operating-rules" target="_blank" rel="noreferrer">CAQH CORE operating rules</a></li>
+            <li><a href="https://www.cms.gov/Medicare/Billing/ElectronicBillingEDITrans/CompanionGuides.html" target="_blank" rel="noreferrer">CMS companion guides</a></li>
+          </ul>
+        </article>
+
+        <article class="source-card reveal">
+          <h3>FHIR and Prior Authorization</h3>
+          <ul>
+            <li><a href="https://www.cms.gov/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f" target="_blank" rel="noreferrer">CMS final rule CMS-0057-F</a></li>
+            <li><a href="https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f" target="_blank" rel="noreferrer">CMS fact sheet</a></li>
+            <li><a href="https://www.hl7.org/fhir/us/davinci-pas/" target="_blank" rel="noreferrer">HL7 Da Vinci PAS</a></li>
+            <li><a href="https://www.hl7.org/fhir/claim.html" target="_blank" rel="noreferrer">HL7 Claim</a></li>
+            <li><a href="https://www.hl7.org/fhir/explanationofbenefit.html" target="_blank" rel="noreferrer">HL7 ExplanationOfBenefit</a></li>
+          </ul>
+        </article>
+
+        <article class="source-card reveal">
+          <h3>Coding, Coverage, and Security</h3>
+          <ul>
+            <li><a href="https://www.cms.gov/medicare/coding-billing/national-correct-coding-initiative-ncci-edits/medicare-ncci-policy-manual" target="_blank" rel="noreferrer">CMS NCCI manual</a></li>
+            <li><a href="https://www.cms.gov/medicare/coding-billing/healthcare-common-procedure-system" target="_blank" rel="noreferrer">CMS HCPCS</a></li>
+            <li><a href="https://www.cms.gov/medicare/coding-billing/icd-10-codes" target="_blank" rel="noreferrer">CMS ICD-10</a></li>
+            <li><a href="https://www.cms.gov/medicare-coverage-database/" target="_blank" rel="noreferrer">CMS Medicare Coverage Database</a></li>
+            <li><a href="https://www.law.cornell.edu/cfr/text/45/164.312" target="_blank" rel="noreferrer">45 CFR 164.312</a></li>
+            <li><a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noreferrer">NIST AI RMF</a></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <p>
+      A long-form product and architecture page for a governed RCM AI platform.
+    </p>
+  </footer>
+
+  <script src="rcm-script.js" defer></script>
+</body>
+</html>
