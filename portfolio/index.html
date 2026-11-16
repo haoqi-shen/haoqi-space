@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore Haoqi Shen’s product work across AI, healthcare technology, and advertising.">
+  <title>Haoqi Shen | Product Portfolio</title>
+  <style>:root { color-scheme: light; --bg:#fff; --ink:#171a23; --muted:#535c6e; --line:#dce2eb; --sans:Inter,system-ui,sans-serif; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.45; }
+h1,h2,p { margin:0; }
+a { color:inherit; text-decoration:none; }
+a:focus-visible,button:focus-visible,select:focus-visible { outline:2px solid #3e5dc8; outline-offset:5px; }
+button { font:inherit; }
+[hidden] { display:none!important; }
+.wrap { width:min(1480px,calc(100% - 80px)); margin-inline:auto; }
+.top { border-bottom:1px solid var(--line); }
+.nav { display:flex; justify-content:space-between; align-items:center; min-height:70px; gap:18px; }
+.brand { display:block; font-size:1rem; font-weight:730; line-height:1.2; }
+.brand small { display:block; color:var(--muted); margin-top:3px; font-weight:520; font-size:.72rem; }
+nav { display:flex; gap:26px; align-items:center; font-size:.87rem; }
+nav a:hover,.back:hover { text-decoration:underline; text-underline-offset:4px; }
+.gallery { padding:30px 0 55px; }
+.gallery-head { display:flex; align-items:baseline; gap:14px; margin-bottom:15px; }
+.gallery-head h1 { font-size:clamp(1.75rem,3vw,2.5rem); letter-spacing:-.055em; line-height:1.05; }
+#results { color:var(--muted); font-size:.82rem; }
+.filters { display:flex; align-items:center; justify-content:space-between; gap:12px 20px; flex-wrap:wrap; margin-bottom:22px; }
+.categories { display:flex; gap:7px; flex-wrap:wrap; }
+.filters button { border:1px solid var(--line); border-radius:8px; padding:7px 12px; background:#fff; color:var(--ink); cursor:pointer; font-size:.8rem; font-weight:650; }
+.filters button[class] { color:var(--accent); border-color:var(--cover-edge); }
+.filters button:hover { background:var(--cover-bg,#f0f3f8); }
+.filters button[aria-pressed=true] { background:var(--accent,#222b3d); border-color:var(--accent,#222b3d); color:#fff; }
+.category-ai { --cover-bg:#e9efff; --cover-edge:#d7e2ff; --cover-ink:#1d3574; --accent:#2b4fab; }
+.category-health { --cover-bg:#dff5ec; --cover-edge:#c7eadc; --cover-ink:#113d32; --accent:#166651; }
+.category-ads { --cover-bg:#fff1d9; --cover-edge:#f7dfb6; --cover-ink:#533215; --accent:#92501b; }
+.card-category { display:inline-block; margin-top:6px; color:var(--accent); font-size:.69rem; font-weight:680; }
+.grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:23px 16px; }
+.project { min-width:0; }
+.project-link { display:block; border-radius:12px; }
+.card-info { padding:10px 2px 0; }
+.card-info h2 { font-size:.98rem; line-height:1.25; letter-spacing:-.014em; font-weight:710; }
+.card-info p { color:var(--muted); font-size:.72rem; margin-top:5px; }
+.cover { color:var(--cover-ink); position:relative; isolation:isolate; overflow:hidden; aspect-ratio:1.88; border-radius:12px; background:linear-gradient(125deg,var(--cover-bg),var(--cover-edge)); container-type:inline-size; }
+.cover::before { content:""; position:absolute; inset:0; opacity:.16; z-index:-1; background-image:linear-gradient(90deg,currentColor 1px,transparent 1px),linear-gradient(currentColor 1px,transparent 1px); background-size:25px 25px; mask-image:linear-gradient(100deg,transparent 22%,black 95%); }
+.project-link:hover .cover { box-shadow:inset 0 0 0 2px currentColor; filter:brightness(.98); }
+.project-link:hover h2 { text-decoration:underline; text-underline-offset:4px; }
+.cover-topic,.cover-title,.cover-tags { position:absolute; left:7%; }
+.cover-topic { top:15%; letter-spacing:.14em; font-weight:750; font-size:clamp(8px,3.25cqw,13px); color:var(--accent); }
+.cover-title { top:35%; width:72%; font-size:clamp(14px,9cqw,40px); font-weight:770; line-height:1; letter-spacing:-.07em; text-wrap:balance; }
+.cover-tags { display:flex; gap:4px; bottom:12%; font-size:clamp(8px,3cqw,12px); }
+.cover-tags span { border:1px solid rgb(0 0 0 / .13); border-radius:4px; background:rgb(255 255 255 / .63); padding:2px 4px; white-space:nowrap; }
+.graphic { position:absolute; left:64%; right:7%; top:30%; bottom:24%; z-index:-1; color:var(--accent); opacity:.44; }
+.graphic i { display:block; position:absolute; }
+.bars .graphic { display:flex; align-items:end; gap:8%; }
+.bars .graphic i { position:static; width:20%; background:currentColor; border-radius:3px 3px 0 0; height:25%; }
+.bars .graphic i:nth-child(2) { height:48%; opacity:.74; }
+.bars .graphic i:nth-child(3) { height:64%; opacity:.84; }
+.bars .graphic i:nth-child(4) { height:95%; }
+.trace .graphic { border-bottom:2px solid; border-left:2px solid; }
+.trace .graphic i:nth-child(-n+3) { width:32%; height:2px; background:currentColor; transform:rotate(-34deg); }
+.trace .graphic i:nth-child(1) { left:6%; bottom:27%; }
+.trace .graphic i:nth-child(2) { left:36%; bottom:45%; transform:rotate(12deg); }
+.trace .graphic i:nth-child(3) { left:62%; bottom:60%; transform:rotate(-46deg); }
+.trace .graphic i:nth-child(4) { right:4%; top:18%; width:9%; aspect-ratio:1; border-radius:50%; background:currentColor; }
+.stack .graphic i:nth-child(-n+3),.frames .graphic i:nth-child(-n+3),.chat .graphic i:nth-child(-n+2) { border:2px solid; border-radius:6px; width:71%; height:43%; background:color-mix(in srgb,currentColor 17%,transparent); }
+.stack .graphic i:nth-child(1),.chat .graphic i:nth-child(1) { right:0; top:2%; }
+.stack .graphic i:nth-child(2),.chat .graphic i:nth-child(2) { right:14%; top:27%; }
+.stack .graphic i:nth-child(3) { right:28%; top:52%; }
+.chat .graphic i:nth-child(3),.chat .graphic i:nth-child(4) { background:currentColor; right:13%; top:18%; width:35%; height:2px; }
+.chat .graphic i:nth-child(4) { right:34%; top:43%; }
+.frames .graphic i:nth-child(1) { right:3%; top:7%; transform:rotate(11deg); }
+.frames .graphic i:nth-child(2) { right:13%; top:28%; transform:rotate(-5deg); }
+.frames .graphic i:nth-child(3) { right:24%; top:49%; transform:rotate(-17deg); }
+.scan .graphic { border:2px dashed; border-radius:13px; }
+.scan .graphic i:first-child { inset:46% 8% auto; height:2px; background:currentColor; }
+.scan .graphic i:nth-child(2) { left:35%; top:13%; width:32%; height:66%; border:1px solid; border-radius:50%; }
+.shop .graphic { top:36%; right:9%; bottom:21%; border:2px solid; border-radius:5px; }
+.shop .graphic i:first-child { inset:-12% -6% auto; height:26%; background:repeating-linear-gradient(90deg,currentColor 0 12%,transparent 12% 22%); border:1px solid; }
+.shop .graphic i:nth-child(2) { left:12%; top:32%; width:38%; height:38%; border:1px solid; }
+.shop .graphic i:nth-child(3) { right:11%; bottom:0; width:27%; height:66%; border:1px solid; }
+.case { display:none; outline:none; padding:26px 0 55px; }
+.case:target { display:block; }
+main:has(.case:target) :is(.hero,.experience,.gallery) { display:none; }
+.back { display:inline-block; font-size:.89rem; color:#2b4fab; margin-bottom:24px; }
+.case-head { display:grid; grid-template-columns:1fr minmax(245px,33%); gap:28px; align-items:center; padding-bottom:24px; border-bottom:1px solid var(--line); }
+.case-head h1 { font-size:clamp(2.2rem,5vw,4.1rem); line-height:1.02; letter-spacing:-.06em; margin:8px 0 11px; }
+.case-head p,.story p { color:var(--muted); max-width:760px; }
+.role { font-size:.8rem; font-weight:650; }
+.flow { display:flex; flex-wrap:wrap; gap:8px; padding:0; list-style:none; margin:20px 0 24px; }
+.flow li { background:#f0f3f8; border-radius:6px; font-size:.83rem; padding:6px 10px; }
+.story { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.story div { background:#f7f9fc; border:1px solid var(--line); border-radius:12px; padding:18px; }
+.story h2 { font-size:1.04rem; margin-bottom:8px; }
+.story p { font-size:.94rem; }
+.skip { position:absolute; z-index:2; top:-100px; left:10px; padding:8px; background:#f3f1f8; color:#111; }
+.skip:focus { top:6px; }
+@media(max-width:1080px) { .grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .wrap { width:calc(100% - 52px); } }
+@media(max-width:760px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px 13px; } .wrap { width:calc(100% - 36px); } .story { grid-template-columns:1fr; gap:10px; } }
+@media(max-width:510px) { .nav { min-height:60px; } nav { gap:12px; font-size:.77rem; } .brand { gap:7px; font-size:.83rem; } .brand small { font-size:.63rem; } .gallery { padding-top:23px; } .filters { gap:6px; margin-bottom:16px; } .filters button { padding:6px 8px; font-size:.72rem; } .grid { gap:16px 10px; } .cover { aspect-ratio:1.39; border-radius:8px; } .cover-title { top:38%; } .cover-tags { bottom:11%; } .cover-tags span { padding:1px 3px; } .cover-tags span:last-child { display:none; } .card-info h2 { font-size:.84rem; } .card-info p { font-size:.67rem; } .case-head { grid-template-columns:1fr; } .case-head .cover { max-width:320px; aspect-ratio:1.88; } }
+@media(max-width:340px) { .wrap { width:calc(100% - 24px); } .grid { grid-template-columns:1fr; } .cover { aspect-ratio:1.8; } }
+
+.hero { padding:25px 0; border-bottom:1px solid var(--line); }
+.hero-intro { color:#354056; font-size:clamp(.96rem,1.4vw,1.08rem); max-width:820px; line-height:1.55; }
+.experience { padding:17px 0 21px; border-bottom:1px solid var(--line); }
+.experience h2 { font-size:.91rem; font-weight:730; margin-bottom:9px; }
+.timeline { padding:0; margin:0 0 0 3px; list-style:none; max-width:800px; }
+.timeline li { display:grid; grid-template-columns:111px minmax(135px,185px) minmax(0,1fr); gap:10px; align-items:baseline; position:relative; border-left:1px solid #cdd6e6; min-width:0; padding:3px 0 3px 13px; }
+.timeline li::before { content:''; position:absolute; top:10px; left:-3px; width:5px; height:5px; border-radius:50%; background:#64769a; }
+.tenure { color:var(--muted); font-size:.72rem; font-variant-numeric:tabular-nums; }
+.employer { font-size:.81rem; font-weight:720; }
+.job-title { color:var(--muted); font-size:.75rem; line-height:1.28; }
+@media(max-width:560px) {
+  .hero { padding:17px 0; }
+  .experience { padding:13px 0 16px; }
+  .timeline li { grid-template-columns:83px minmax(0,1fr); column-gap:7px; row-gap:0; padding-block:3px; }
+  .employer,.job-title { grid-column:2; }
+  .tenure { grid-row:span 2; font-size:.67rem; }
+}
+.filters { justify-content:flex-start; }
+.filters .reset-filter { border:0; background:transparent; color:var(--muted); padding-inline:4px; }
+.filters .reset-filter:hover { background:transparent; color:var(--ink); text-decoration:underline; }
+</style>
+</head>
+<body>
+  <a class="skip" href="#work">Skip to case studies</a>
+  <header class="top">
+    <div class="wrap nav">
+      <a class="brand" href="#"><span>Haoqi Shen</span><small>Product Portfolio</small></a>
+      <nav aria-label="Professional profiles"><a href="https://www.linkedin.com/in/shenhaoqi/">LinkedIn</a><a href="https://github.com/haoqi-shen">GitHub</a></nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero" aria-label="Introduction">
+      <p class="hero-intro" id="portfolio-intro">I’m a product manager with three years of experience building products for international markets. My work spans advertising and monetization, AI agents and evaluation, and healthcare workflow automation. I use measurement to understand where products work and what to improve next.</p>
+    </section>
+    <section class="experience" aria-labelledby="experience-title">
+      <h2 id="experience-title">Experience</h2>
+      <ol class="timeline" aria-label="Career timeline">
+        <li><span class="tenure">Apr–Sep 2026</span><span class="employer">Youlify</span><span class="job-title">Product Manager</span></li>
+        <li><span class="tenure">2024–Present</span><span class="employer">Avo AI</span><span class="job-title">Founding Product Engineer</span></li>
+        <li><span class="tenure">May–Aug 2024</span><span class="employer">Amazon AGI Lab</span><span class="job-title">Software Development Engineer Intern</span></li>
+        <li><span class="tenure">May–Aug 2023</span><span class="employer">Ping An Technology</span><span class="job-title">AI Solutions Intern</span></li>
+        <li><span class="tenure">May–Aug 2021</span><span class="employer">Tencent Ads</span><span class="job-title">Product Operations Intern</span></li>
+        <li><span class="tenure">Jan–Apr 2021</span><span class="employer">ByteDance / TikTok</span><span class="job-title">Product Operations Intern</span></li>
+      </ol>
+    </section>
+    <!-- Add a <template data-intro="audience-id">Introduction text</template> here. -->
+    <section class="gallery" id="work" aria-labelledby="work-title" tabindex="-1">
+      <div class="gallery-head">
+        <h1 id="work-title">Product Case Studies</h1>
+        <p id="results" aria-live="polite">12 case studies · Newest first</p>
+      </div>
+      <div class="filters" hidden>
+        <div class="categories" role="group" aria-label="Product category">
+          <button type="button" class="category-ai" data-filter="ai" aria-pressed="false">AI Systems &amp; Evaluation</button>
+          <button type="button" class="category-health" data-filter="health" aria-pressed="false">Healthcare &amp; RCM</button>
+          <button type="button" class="category-ads" data-filter="ads" aria-pressed="false">Advertising &amp; Growth</button>
+        </div>
+        <button type="button" class="reset-filter" hidden>← All case studies</button>
+      </div>
+      <div class="grid">
+      <article class="project" data-track="ai" data-company="youlify">
+        <a class="project-link" href="#ask-ai" aria-labelledby="title-ask-ai">
+          
+        <div class="cover category-ai chat" aria-hidden="true">
+          <span class="cover-topic">LLM EVALS</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Ask AI</span>
+          <div class="cover-tags"><span>Golden set</span><span>Rubric</span><span>Regression</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-ask-ai">Ask AI &amp; LLM evaluation</h2>
+            <p>Youlify <span aria-hidden="true">·</span> 2026</p><span class="card-category category-ai">AI Systems &amp; Evaluation</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="health" data-company="youlify">
+        <a class="project-link" href="#claims" aria-labelledby="title-claims">
+          
+        <div class="cover category-health stack" aria-hidden="true">
+          <span class="cover-topic">REVENUE CYCLE</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Smart claims</span>
+          <div class="cover-tags"><span>Classify</span><span>Prioritize</span><span>Route</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-claims">Intelligent claim workflows</h2>
+            <p>Youlify <span aria-hidden="true">·</span> 2026</p><span class="card-category category-health">Healthcare &amp; RCM</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="health" data-company="youlify">
+        <a class="project-link" href="#denial-automation" aria-labelledby="title-denial-automation">
+          
+        <div class="cover category-health trace" aria-hidden="true">
+          <span class="cover-topic">WORKFLOW AUTOMATION</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">AI appeals</span>
+          <div class="cover-tags"><span>Detect</span><span>Submit</span><span>Track</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-denial-automation">Denial management &amp; AI appeals</h2>
+            <p>Youlify <span aria-hidden="true">·</span> 2026</p><span class="card-category category-health">Healthcare &amp; RCM</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="health" data-company="youlify">
+        <a class="project-link" href="#command-center" aria-labelledby="title-command-center">
+          
+        <div class="cover category-health bars" aria-hidden="true">
+          <span class="cover-topic">MEASUREMENT</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Denial insights</span>
+          <div class="cover-tags"><span>Rates</span><span>Drivers</span><span>Claims</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-command-center">Revenue cycle measurement</h2>
+            <p>Youlify <span aria-hidden="true">·</span> 2026</p><span class="card-category category-health">Healthcare &amp; RCM</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="ads" data-company="avo">
+        <a class="project-link" href="#market-entry" aria-labelledby="title-market-entry">
+          
+        <div class="cover category-ads shop" aria-hidden="true">
+          <span class="cover-topic">U.S. MARKET ENTRY</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Storefront</span>
+          <div class="cover-tags"><span>Research</span><span>Position</span><span>Launch</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-market-entry">U.S. brand launch &amp; storefront</h2>
+            <p>Avo AI <span aria-hidden="true">·</span> 2024–Present</p><span class="card-category category-ads">Advertising &amp; Growth</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="ads" data-company="avo">
+        <a class="project-link" href="#paid-acquisition" aria-labelledby="title-paid-acquisition">
+          
+        <div class="cover category-ads trace" aria-hidden="true">
+          <span class="cover-topic">PAID ACQUISITION</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">U.S. campaigns</span>
+          <div class="cover-tags"><span>Creative</span><span>Track</span><span>Convert</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-paid-acquisition">U.S. paid acquisition &amp; marketing analytics</h2>
+            <p>Avo AI <span aria-hidden="true">·</span> 2024–Present</p><span class="card-category category-ads">Advertising &amp; Growth</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="ai" data-company="amazon">
+        <a class="project-link" href="#nova-act" aria-labelledby="title-nova-act">
+          
+        <div class="cover category-ai trace" aria-hidden="true">
+          <span class="cover-topic">WEB AGENTS</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Nova Act</span>
+          <div class="cover-tags"><span>Trace</span><span>Train</span><span>Evaluate</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-nova-act">Nova Act training &amp; evaluation infrastructure</h2>
+            <p>Amazon AGI Lab <span aria-hidden="true">·</span> 2024</p><span class="card-category category-ai">AI Systems &amp; Evaluation</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="ai" data-company="amazon">
+        <a class="project-link" href="#cloud-delivery" aria-labelledby="title-cloud-delivery">
+          
+        <div class="cover category-ai stack" aria-hidden="true">
+          <span class="cover-topic">RESEARCH TOOLING</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">AWS delivery</span>
+          <div class="cover-tags"><span>CDK</span><span>CI/CD</span><span>Deploy</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-cloud-delivery">Research infrastructure automation</h2>
+            <p>Amazon AGI Lab <span aria-hidden="true">·</span> 2024</p><span class="card-category category-ai">AI Systems &amp; Evaluation</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="ai" data-company="ping-an">
+        <a class="project-link" href="#bank-fraud" aria-labelledby="title-bank-fraud">
+          
+        <div class="cover category-ai scan" aria-hidden="true">
+          <span class="cover-topic">COMPUTER VISION</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Video fraud</span>
+          <div class="cover-tags"><span>Speech</span><span>Movement</span><span>Review</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-bank-fraud">Computer vision for bank fraud detection</h2>
+            <p>Ping An Technology <span aria-hidden="true">·</span> 2023</p><span class="card-category category-ai">AI Systems &amp; Evaluation</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="ads" data-company="tencent">
+        <a class="project-link" href="#advertiser-growth" aria-labelledby="title-advertiser-growth">
+          
+        <div class="cover category-ads bars" aria-hidden="true">
+          <span class="cover-topic">PERFORMANCE ADS</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Cold start</span>
+          <div class="cover-tags"><span>Audience</span><span>Delivery</span><span>Spend</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-advertiser-growth">Advertiser cold start &amp; spend growth</h2>
+            <p>Tencent Advertising <span aria-hidden="true">·</span> 2021</p><span class="card-category category-ads">Advertising &amp; Growth</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="ads" data-company="tencent">
+        <a class="project-link" href="#creative-optimization" aria-labelledby="title-creative-optimization">
+          
+        <div class="cover category-ads frames" aria-hidden="true">
+          <span class="cover-topic">DYNAMIC CREATIVE</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Creative fit</span>
+          <div class="cover-tags"><span>Assets</span><span>Placements</span><span>Adoption</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-creative-optimization">Dynamic creative optimization</h2>
+            <p>Tencent Advertising <span aria-hidden="true">·</span> 2021</p><span class="card-category category-ads">Advertising &amp; Growth</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="project" data-track="ads" data-company="bytedance">
+        <a class="project-link" href="#brand-accounts" aria-labelledby="title-brand-accounts">
+          
+        <div class="cover category-ads bars" aria-hidden="true">
+          <span class="cover-topic">GROWTH ANALYTICS</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Brand accounts</span>
+          <div class="cover-tags"><span>Followers</span><span>Channels</span><span>Tool use</span></div>
+        </div>
+          <div class="card-info">
+            <h2 id="title-brand-accounts">Brand account growth &amp; metrics</h2>
+            <p>ByteDance · Douyin <span aria-hidden="true">·</span> 2021</p><span class="card-category category-ads">Advertising &amp; Growth</span>
+          </div>
+        </a>
+      </article></div>
+    </section>
+    <div class="case-pages">
+      <article class="case" id="ask-ai" aria-labelledby="heading-ask-ai" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Youlify <span aria-hidden="true">·</span> Product Manager</p>
+            <h1 id="heading-ask-ai">Ask AI &amp; LLM evaluation</h1><p>How do you tell whether an AI-generated business answer is good enough to use?</p></div>
+          
+        <div class="cover category-ai chat" aria-hidden="true">
+          <span class="cover-topic">LLM EVALS</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Ask AI</span>
+          <div class="cover-tags"><span>Golden set</span><span>Rubric</span><span>Regression</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Define expected answers</li><li>Score output</li><li>Triage failures</li><li>Regression-test fixes</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Conversational analytics gave operations teams a way to ask questions over structured revenue-cycle data. A plausible answer could still use the wrong metric, apply the wrong filter, or draw an unsupported conclusion.</p></div>
+          <div><h2>My contribution</h2><p>I owned the product and evaluation work. I built a scenario-based golden set, wrote scoring rubrics, and grouped recurring failures so engineering and product could distinguish metric, data, prompt, and reasoning issues.</p></div>
+          <div><h2>Outcome</h2><p>The team could turn real failure cases into regression checks. A wrong metric definition could go back to the data or product layer, while a correct metric with an unsupported explanation called for a different fix.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="claims" aria-labelledby="heading-claims" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Youlify <span aria-hidden="true">·</span> Product Manager</p>
+            <h1 id="heading-claims">Intelligent claim workflows</h1><p>What should a billing specialist see and be able to do when a claim needs attention?</p></div>
+          
+        <div class="cover category-health stack" aria-hidden="true">
+          <span class="cover-topic">REVENUE CYCLE</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Smart claims</span>
+          <div class="cover-tags"><span>Classify</span><span>Prioritize</span><span>Route</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Classify claim</li><li>Set priority</li><li>Route work</li><li>Review exceptions</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Billing teams had to understand what went wrong with individual claims, decide what to tackle first, and route the work to the right queue.</p></div>
+          <div><h2>My contribution</h2><p>I translated denial patterns and operational exceptions into feature requirements for claim classification, prioritization, and work-queue assignment. I used feedback from operations and active learning to refine the rules.</p></div>
+          <div><h2>Outcome</h2><p>The workflow made claim triage more consistent and gave the team a way to review assignment errors and improve routing.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="denial-automation" aria-labelledby="heading-denial-automation" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Youlify <span aria-hidden="true">·</span> Product Manager</p>
+            <h1 id="heading-denial-automation">Denial management &amp; AI appeals</h1><p>How much of a denied claim can an AI workflow handle end to end?</p></div>
+          
+        <div class="cover category-health trace" aria-hidden="true">
+          <span class="cover-topic">WORKFLOW AUTOMATION</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">AI appeals</span>
+          <div class="cover-tags"><span>Detect</span><span>Submit</span><span>Track</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Detect denial</li><li>Draft and validate</li><li>Submit to payer</li><li>Track outcome</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Revenue-cycle staff had to connect separate steps for finding a denial, preparing the appeal, submitting it, and checking the outcome.</p></div>
+          <div><h2>My contribution</h2><p>I defined the workflow from denial recognition through appeal drafting and validation, payer-portal submission, and outcome tracking.</p></div>
+          <div><h2>Outcome</h2><p>The product supported touchless AI appeals and captured outcomes that could inform future prioritization and workflow improvements.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="command-center" aria-labelledby="heading-command-center" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Youlify <span aria-hidden="true">·</span> Product Manager</p>
+            <h1 id="heading-command-center">Revenue cycle measurement</h1><p>How do you turn a denial-rate change into an operational decision?</p></div>
+          
+        <div class="cover category-health bars" aria-hidden="true">
+          <span class="cover-topic">MEASUREMENT</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Denial insights</span>
+          <div class="cover-tags"><span>Rates</span><span>Drivers</span><span>Claims</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Track metrics</li><li>Identify denial drivers</li><li>Inspect claims</li><li>Prioritize action</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>An aggregate rate tells leaders that performance moved. Teams still need to identify which claims and denial drivers warrant investigation.</p></div>
+          <div><h2>My contribution</h2><p>I built a Command Center for denial rates, financial and operational KPIs, recurring denial patterns, and claim-level drill-downs. I used frequency, claim-dollar exposure, recovery likelihood, and handling cost to prioritize interventions.</p></div>
+          <div><h2>Outcome</h2><p>The team could trace rate changes to recurring denial drivers and individual claims, then prioritize prevention or recovery work. The analysis helped diagnose operational causes.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="market-entry" aria-labelledby="heading-market-entry" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Avo AI <span aria-hidden="true">·</span> Founding Product Engineer</p>
+            <h1 id="heading-market-entry">U.S. brand launch &amp; storefront</h1><p>How do you connect a brand’s market-entry decisions to the path customers take to purchase?</p></div>
+          
+        <div class="cover category-ads shop" aria-hidden="true">
+          <span class="cover-topic">U.S. MARKET ENTRY</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Storefront</span>
+          <div class="cover-tags"><span>Research</span><span>Position</span><span>Launch</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Research customers</li><li>Define positioning</li><li>Coordinate suppliers</li><li>Plan storefront</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>A U.S.-focused consumer brand needed a market position, a workable supply path, and an independent online storefront.</p></div>
+          <div><h2>My contribution</h2><p>I connected customer research and positioning with supplier coordination, storefront planning, and the discovery-to-purchase journey.</p></div>
+          <div><h2>Outcome</h2><p>This work brought market entry and the storefront into a single launch plan, spanning product positioning, acquisition, and conversion measurement.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="paid-acquisition" aria-labelledby="heading-paid-acquisition" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Avo AI <span aria-hidden="true">·</span> Founding Product Engineer</p>
+            <h1 id="heading-paid-acquisition">U.S. paid acquisition &amp; marketing analytics</h1><p>How do you use campaign and storefront signals to decide what to improve next?</p></div>
+          
+        <div class="cover category-ads trace" aria-hidden="true">
+          <span class="cover-topic">PAID ACQUISITION</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">U.S. campaigns</span>
+          <div class="cover-tags"><span>Creative</span><span>Track</span><span>Convert</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Prepare content</li><li>Track campaigns</li><li>Review conversion signals</li><li>Plan next iteration</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Paid acquisition required a way to connect campaign activity with downstream storefront behavior and make the reporting repeatable.</p></div>
+          <div><h2>My contribution</h2><p>I worked on U.S. advertising and built AI-assisted workflows for content, campaign tracking, performance forecasting, and marketing analytics.</p></div>
+          <div><h2>Outcome</h2><p>The workflows connected acquisition activity with conversion measurement and created a basis for reviewing campaign performance.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="nova-act" aria-labelledby="heading-nova-act" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Amazon AGI Lab <span aria-hidden="true">·</span> Software Development Engineer Intern</p>
+            <h1 id="heading-nova-act">Nova Act training &amp; evaluation infrastructure</h1><p>How do you make web-agent runs useful for both training and debugging?</p></div>
+          
+        <div class="cover category-ai trace" aria-hidden="true">
+          <span class="cover-topic">WEB AGENTS</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Nova Act</span>
+          <div class="cover-tags"><span>Trace</span><span>Train</span><span>Evaluate</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Capture browser traces</li><li>Extract training samples</li><li>Classify failures</li><li>Feed findings into iteration</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Browser-agent runs generated execution traces. Researchers needed training-ready samples and a consistent way to diagnose failures across scenarios.</p></div>
+          <div><h2>My contribution</h2><p>I built trace extraction for state, action, and reward data and added automated root-cause analysis to the evaluation workflow.</p></div>
+          <div><h2>Outcome</h2><p>Usable training-sample conversion rose 35%. Mean time to detect research failures dropped 60%.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="cloud-delivery" aria-labelledby="heading-cloud-delivery" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Amazon AGI Lab <span aria-hidden="true">·</span> Software Development Engineer Intern</p>
+            <h1 id="heading-cloud-delivery">Research infrastructure automation</h1><p>How do you shorten the time from an infrastructure change to a usable research environment?</p></div>
+          
+        <div class="cover category-ai stack" aria-hidden="true">
+          <span class="cover-topic">RESEARCH TOOLING</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">AWS delivery</span>
+          <div class="cover-tags"><span>CDK</span><span>CI/CD</span><span>Deploy</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Define infrastructure</li><li>Automate image and release steps</li><li>Deploy consistently</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>The team needed repeatable cloud environments and a faster way to roll out changes to its browser-agent training and evaluation stack.</p></div>
+          <div><h2>My contribution</h2><p>I standardized deployment and CI/CD workflows with AWS CDK and automated machine-image workflows to reduce configuration drift.</p></div>
+          <div><h2>Outcome</h2><p>Infrastructure release lead time fell 85%, giving the research team a faster path to updated environments.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="bank-fraud" aria-labelledby="heading-bank-fraud" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Ping An Technology <span aria-hidden="true">·</span> AI Solutions Intern</p>
+            <h1 id="heading-bank-fraud">Computer vision for bank fraud detection</h1><p>How do you flag suspicious video interactions while keeping human review available?</p></div>
+          
+        <div class="cover category-ai scan" aria-hidden="true">
+          <span class="cover-topic">COMPUTER VISION</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Video fraud</span>
+          <div class="cover-tags"><span>Speech</span><span>Movement</span><span>Review</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Capture video signals</li><li>Evaluate checks</li><li>Surface cases for review</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Remote identity verification required a way to surface suspicious behavior during video interactions and give reviewers actionable signals.</p></div>
+          <div><h2>My contribution</h2><p>I helped adapt multimodal checks for enterprise deployments, including speech, movement, and lip-reading signals, and supported their placement in the review workflow.</p></div>
+          <div><h2>Outcome</h2><p>The work supported fraud screening and human review in a production banking context.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="advertiser-growth" aria-labelledby="heading-advertiser-growth" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Tencent Advertising <span aria-hidden="true">·</span> Product Operations Intern</p>
+            <h1 id="heading-advertiser-growth">Advertiser cold start &amp; spend growth</h1><p>How do you help an e-commerce advertiser get a new campaign off the ground?</p></div>
+          
+        <div class="cover category-ads bars" aria-hidden="true">
+          <span class="cover-topic">PERFORMANCE ADS</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Cold start</span>
+          <div class="cover-tags"><span>Audience</span><span>Delivery</span><span>Spend</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Diagnose readiness</li><li>Segment audiences</li><li>Adjust live delivery</li><li>Review outcomes</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Large advertisers needed to ramp auction-based delivery for new categories and promotion periods. The challenge was deciding where targeting, traffic support, or campaign settings would make a difference.</p></div>
+          <div><h2>My contribution</h2><p>I worked on pre-launch diagnostics, product and audience segmentation, in-flight oCPM and traffic adjustments, and post-campaign reviews. I turned repeatable findings into playbooks and product improvement requests.</p></div>
+          <div><h2>Outcome</h2><p>Among 30+ advertiser growth initiatives reviewed, 80% increased campaign spend more than fivefold within two weeks.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="creative-optimization" aria-labelledby="heading-creative-optimization" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">Tencent Advertising <span aria-hidden="true">·</span> Advertising product project</p>
+            <h1 id="heading-creative-optimization">Dynamic creative optimization</h1><p>How do you improve creative quality and get advertisers to use the tooling?</p></div>
+          
+        <div class="cover category-ads frames" aria-hidden="true">
+          <span class="cover-topic">DYNAMIC CREATIVE</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Creative fit</span>
+          <div class="cover-tags"><span>Assets</span><span>Placements</span><span>Adoption</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Review assets</li><li>Improve creative fit</li><li>Test performance</li><li>Track adoption</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Automated video creatives needed to work across placements and meet visual requirements. Product adoption and playback performance provided distinct signals about the experience.</p></div>
+          <div><h2>My contribution</h2><p>I worked on creative reconstruction and placement-aware framing, using campaign adoption and video view-through rate as separate measures of usage and creative performance.</p></div>
+          <div><h2>Outcome</h2><p>The project gave the team a way to evaluate whether creative improvements translated into both advertiser adoption and stronger playback results.</p></div>
+        </section>
+      </article>
+
+      <article class="case" id="brand-accounts" aria-labelledby="heading-brand-accounts" tabindex="-1">
+        <a class="back" href="#work">‹ Back to case studies</a>
+        <header class="case-head">
+          <div><p class="role">ByteDance · Douyin <span aria-hidden="true">·</span> Product Operations Intern</p>
+            <h1 id="heading-brand-accounts">Brand account growth &amp; metrics</h1><p>Which signals show that brand accounts and their marketing tools are gaining traction?</p></div>
+          
+        <div class="cover category-ads bars" aria-hidden="true">
+          <span class="cover-topic">GROWTH ANALYTICS</span>
+          <div class="graphic"><i></i><i></i><i></i><i></i></div>
+          <span class="cover-title">Brand accounts</span>
+          <div class="cover-tags"><span>Followers</span><span>Channels</span><span>Tool use</span></div>
+        </div>
+        </header>
+        <ol class="flow" aria-label="Workflow"><li>Define growth signals</li><li>Compare channels</li><li>Build dashboards</li><li>Share playbooks</li></ol>
+        <section class="story" aria-label="Case study">
+          <div><h2>Problem</h2><p>Brands needed to understand which channels attracted valuable followers and how those audiences behaved across monetization scenarios.</p></div>
+          <div><h2>My contribution</h2><p>I analyzed follower value across four monetization scenarios and six acquisition channels, built a recurring dashboard for account growth and tool use, and used benchmarks to inform traffic incentives.</p></div>
+          <div><h2>Outcome</h2><p>I produced 15 advertiser diagnostic reports and developed reusable playbooks for beauty and food and beverage clients.</p></div>
+        </section>
+      </article></div>
+  </main>
+  <script>const introKey = new URLSearchParams(location.search).get('intro');
+const introTemplate = [...document.querySelectorAll('template[data-intro]')]
+  .find(template => template.dataset.intro === introKey);
+if (introTemplate) {
+  const paragraph = document.querySelector('#portfolio-intro');
+  paragraph.textContent = introTemplate.content.textContent.trim() || paragraph.textContent;
+}
+
+const projects = [...document.querySelectorAll('.project')];
+const gallery = document.querySelector('#work');
+const filters = document.querySelector('.filters');
+const buttons = [...filters.querySelectorAll('[data-filter]')];
+const results = document.querySelector('#results');
+const resetFilter = filters.querySelector('.reset-filter');
+const cases = new Set([...document.querySelectorAll('.case')].map(item => item.id));
+let returnLink;
+let returnScroll = 0;
+let viewingCase = false;
+
+function showCategory(category) {
+  for (const card of projects) {
+    card.hidden = Boolean(category) && card.dataset.track !== category;
+  }
+  for (const button of buttons) {
+    button.setAttribute('aria-pressed', String(button.dataset.filter === category));
+  }
+  resetFilter.hidden = !category;
+  const count = projects.filter(card => !card.hidden).length;
+  results.textContent = count + ' ' + (count === 1 ? 'case study' : 'case studies') + ' · Newest first';
+}
+
+filters.hidden = false;
+for (const button of buttons) {
+  button.addEventListener('click', () => showCategory(button.dataset.filter));
+}
+resetFilter.addEventListener('click', () => {
+  const selected = buttons.find(button => button.getAttribute('aria-pressed') === 'true');
+  showCategory();
+  selected?.focus();
+});
+
+gallery.addEventListener('click', event => {
+  const link = event.target.closest('.project-link');
+  if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  returnLink = link;
+  returnScroll = window.scrollY;
+});
+
+document.querySelector('.case-pages').addEventListener('click', event => {
+  if (!event.target.closest('.back') || !returnLink) return;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  history.back();
+});
+
+function updatePage() {
+  const slug = location.hash.slice(1);
+  if (cases.has(slug)) {
+    viewingCase = true;
+    const page = document.getElementById(slug);
+    document.title = page.querySelector('h1').textContent + ' | Haoqi Shen';
+    page.focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  document.title = 'Haoqi Shen | Product Portfolio';
+  if (viewingCase && returnLink && (slug === 'work' || !slug)) {
+    returnLink.focus({ preventScroll: true });
+    window.scrollTo(0, returnScroll);
+  }
+  viewingCase = false;
+  returnLink = undefined;
+}
+
+window.addEventListener('hashchange', updatePage);
+updatePage();
+</script>
+</body>
+</html>
